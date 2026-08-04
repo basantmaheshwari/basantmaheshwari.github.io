@@ -1,0 +1,57 @@
+name: Add a news item
+description: An event, visit, award, launch or milestone to put on the News page.
+title: "News: "
+labels:
+  - website
+  - news
+body:
+  - type: input
+    id: headline
+    attributes:
+      label: What happened?
+      description: One line, as you would say it out loud.
+      placeholder: "Second cohort of Indian dam safety officers hosted in NSW"
+    validations:
+      required: true
+
+  - type: input
+    id: when
+    attributes:
+      label: When
+      description: A month and year is enough. Exact dates are welcome if they matter.
+      placeholder: "March 2025"
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: The details
+      description: >
+        Who was involved, where, how many people, what the outcome was. Please give
+        names and numbers you are sure of — anything not supplied here will be left
+        out rather than guessed.
+    validations:
+      required: true
+
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      description: Optional. A news article, programme page or announcement.
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Photograph
+      description: >
+        Optional, and please keep it small — images are embedded directly in the page,
+        so a large photograph makes the site slower for everyone. Drag the file here.
+
+  - type: checkboxes
+    id: approval
+    attributes:
+      label: Confirmation
+      options:
+        - label: The names, dates and facts above are correct and approved for publication.
+          required: true

@@ -1,0 +1,1121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Distinguished Professor Basant Maheshwari — water, environment and sustainability at Western Sydney University. Director of the Australia India Water Centre and leader of the MARVI groundwater programme.">
+  <meta name="theme-color" content="#f6f4ef">
+  <meta name="color-scheme" content="light">
+  <meta name="author" content="Basant Maheshwari">
+  <meta property="og:title" content="Basant Maheshwari — Distinguished Professor, Western Sydney University">
+  <meta property="og:description" content="Water, environment and sustainability. Director, Australia India Water Centre. Leader of the MARVI village-scale groundwater programme.">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="https://basantmaheshwari.github.io/basantmaheshwari/">
+  <title>Basant Maheshwari</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f6f4ef'/%3E%3Cpath d='M2 21c5-7 9-7 14 0s9 7 14 0' stroke='%2312617f' stroke-width='1.8' fill='none'/%3E%3Cpath d='M2 26c5-7 9-7 14 0s9 7 14 0' stroke='%2312617f' stroke-opacity='.35' stroke-width='1.4' fill='none'/%3E%3Cpath d='M2 12h28' stroke='%23a9691a' stroke-width='1.2' stroke-dasharray='3 3'/%3E%3C/svg%3E">
+  <style>
+  /* ══════════════════════════════════════════════════════════════════
+     WATER TABLE
+     A researcher's page, set like an academic monograph rather than a
+     brochure. The one piece of art direction is a hydrogeological
+     section whose water table is solved from the Dupuit–Forchheimer
+     equation — the instrument of the subject's own field, and a picture
+     of the argument his research makes: recharge at the village scale
+     raises the water table, and wells that were dry come back.
+
+     The page commits to a light ground on purpose. Academic pages are
+     read at length, cited, and printed; there is no dark counterpart.
+     ══════════════════════════════════════════════════════════════════ */
+  :root{
+    --paper:#f6f4ef;         /* ground — warm paper */
+    --paper-2:#efebe2;
+    --card:#fbfaf7;
+    --ink:#15222b;           /* type — deep blue-black */
+    --muted:#5b6b74;
+    --faint:#8f9ba1;
+    --water:#12617f;         /* accent — river blue */
+    --water-soft:rgba(18,97,127,.10);
+    --ochre:#a9691a;         /* second accent, used sparingly */
+    --line:rgba(21,34,43,.13);
+    --line-soft:rgba(21,34,43,.07);
+    --rail:216px;
+    --shell:1010px;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    --ease:cubic-bezier(.22,.68,.28,1);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{color:inherit}
+  img{display:block;max-width:100%}
+  button,input{font:inherit;color:inherit}
+  ::selection{background:var(--water);color:var(--paper)}
+  :focus-visible{outline:2px solid var(--water);outline-offset:3px}
+  .skip{position:fixed;z-index:300;top:14px;left:14px;padding:10px 16px;background:var(--paper);
+    border:1px solid var(--water);transform:translateY(-200%)}
+  .skip:focus{transform:none}
+
+  /* ─── Type roles ───────────────────────────────────────────────── */
+  .display{font-family:var(--serif);font-weight:400;letter-spacing:-.02em;line-height:1.04}
+  .tag{font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+  .tc{font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--water)}
+
+  /* ─── Rail ─────────────────────────────────────────────────────── */
+  .rail{position:fixed;z-index:20;inset:0 auto 0 0;width:var(--rail);
+    display:flex;flex-direction:column;gap:28px;padding:36px 24px 28px;
+    background:var(--paper-2);border-right:1px solid var(--line-soft)}
+  .mark-a{text-decoration:none;display:block}
+  .mark-a b{display:block;font-family:var(--serif);font-size:1.32rem;font-weight:400;letter-spacing:-.015em;line-height:1.15}
+  .mark-a span{display:block;margin-top:8px;font-family:var(--mono);font-size:.56rem;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--faint);line-height:1.7}
+
+  .nav{display:grid;gap:1px;margin-top:-4px}
+  .nav button{position:relative;display:grid;grid-template-columns:22px 1fr;align-items:baseline;gap:9px;
+    width:100%;padding:7px 0;border:0;background:none;text-align:left;cursor:pointer;
+    color:var(--muted);transition:color .35s var(--ease)}
+  .nav button i{font-family:var(--mono);font-size:.57rem;font-style:normal;color:var(--faint);transition:color .35s var(--ease)}
+  .nav button span{font-family:var(--serif);font-size:1.01rem}
+  .nav button::after{content:"";position:absolute;left:22px;right:100%;bottom:3px;height:1px;
+    background:var(--water);opacity:.6;transition:right .45s var(--ease)}
+  .nav button:hover{color:var(--ink)}
+  .nav button:hover::after{right:38%}
+  .nav button[aria-selected=true]{color:var(--ink)}
+  .nav button[aria-selected=true] i{color:var(--water)}
+  .nav button[aria-selected=true]::after{right:0;opacity:1}
+
+  .rail-note{margin-top:auto;font-family:var(--mono);font-size:.6rem;line-height:1.9;color:var(--faint)}
+  .rail-note b{display:block;color:var(--muted);font-weight:400;letter-spacing:.06em}
+
+  /* ─── Mobile bar ───────────────────────────────────────────────── */
+  .bar{display:none;position:sticky;top:0;z-index:40;align-items:center;justify-content:space-between;
+    gap:14px;padding:13px 20px;background:rgba(246,244,239,.93);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft)}
+  .bar .mark-a b{font-size:1.05rem}
+  .bar details{position:relative}
+  .bar summary{list-style:none;cursor:pointer;padding:7px 13px;border:1px solid var(--line);
+    font-family:var(--mono);font-size:.61rem;letter-spacing:.17em;text-transform:uppercase}
+  .bar summary::-webkit-details-marker{display:none}
+  .bar details[open] summary{background:var(--water);color:var(--paper);border-color:var(--water)}
+  .bar nav{position:absolute;right:0;top:calc(100% + 10px);z-index:50;display:grid;min-width:210px;padding:8px;
+    background:var(--card);border:1px solid var(--line);box-shadow:0 22px 50px rgba(21,34,43,.16)}
+  .bar nav button{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:10px 12px;
+    border:0;background:none;text-align:left;cursor:pointer;font-family:var(--serif);font-size:1rem}
+  .bar nav button:hover{color:var(--water)}
+
+  /* ─── Page & panels ────────────────────────────────────────────── */
+  .page{position:relative;margin-left:var(--rail);min-height:100vh}
+  .shell{width:min(100% - 64px,var(--shell));margin-inline:auto}
+  .panel[hidden]{display:none}
+  .panel > *{animation:rise .75s var(--ease) both}
+  .panel > *:nth-child(2){animation-delay:.08s}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+  /* ─── Hero ─────────────────────────────────────────────────────── */
+  .hero{padding:12vh 0 5vh}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 168px;gap:56px;align-items:start}
+  .hero h1{margin:16px 0 0;font-size:clamp(2.5rem,6.4vw,4.5rem)}
+  .hero h1 em{font-style:italic;color:var(--water)}
+  .hero .role{margin:26px 0 0;font-family:var(--serif);font-size:1.28rem;line-height:1.45;max-width:30ch;color:var(--ink)}
+  .hero p.bio{max-width:58ch;margin:24px 0 0;font-size:1.04rem;color:var(--muted)}
+  .portrait{width:168px}
+  .portrait img{width:168px;height:168px;object-fit:cover;border-radius:2px;
+    filter:grayscale(1) contrast(1.03);border:1px solid var(--line)}
+  .portrait figcaption{margin-top:10px;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint);line-height:1.7}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:36px}
+
+  .btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:12px 22px;
+    border:1px solid var(--line);background:none;color:var(--ink);text-decoration:none;cursor:pointer;
+    font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;overflow:hidden;
+    transition:color .45s var(--ease),border-color .45s var(--ease)}
+  .btn::before{content:"";position:absolute;inset:auto 0 0 0;height:0;background:var(--water);z-index:0;
+    transition:height .45s var(--ease)}
+  .btn span{position:relative;z-index:1}
+  .btn:hover{border-color:var(--water);color:var(--paper)}
+  .btn:hover::before{height:100%}
+  .btn.solid{border-color:var(--water);color:var(--paper)}
+  .btn.solid::before{height:100%}
+  .btn.solid:hover::before{height:0}
+  .btn.solid:hover{color:var(--water)}
+
+  /* ─── The section ──────────────────────────────────────────────────
+     A hydrogeological cross-section. The water table is not drawn by
+     hand: it is solved each frame from the Dupuit–Forchheimer equation
+     for unconfined flow with areal recharge, and driven through a
+     monsoon-and-recession cycle. See the script for the derivation. */
+  .section-fig{margin:5vh 0 0;padding:26px 28px 22px;background:var(--card);border:1px solid var(--line-soft)}
+  .section-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:14px}
+  .section-fig svg{width:100%;height:auto;display:block;overflow:visible}
+  .xs-sky{fill:none}
+  .xs-soil{fill:rgba(169,105,26,.055)}
+  .xs-sat{fill:rgba(18,97,127,.13)}
+  .xs-rock{fill:rgba(21,34,43,.07)}
+  .xs-surface{fill:none;stroke:var(--ink);stroke-opacity:.5;stroke-width:1.4}
+  .xs-wt{fill:none;stroke:var(--water);stroke-width:2;stroke-linecap:round}
+  .xs-wt-ghost{fill:none;stroke:var(--water);stroke-opacity:.22;stroke-width:1.2;stroke-dasharray:4 4}
+  .xs-rockline{fill:none;stroke:var(--ink);stroke-opacity:.28;stroke-width:1.2}
+  .xs-well{stroke:var(--ink);stroke-opacity:.42;stroke-width:1.3}
+  .xs-well-water{fill:var(--water)}
+  .xs-well-dry{fill:none;stroke:var(--ochre);stroke-width:1.4}
+  .xs-dam{fill:var(--ochre);fill-opacity:.75}
+  .xs-lbl{font-family:var(--mono);font-size:8.6px;letter-spacing:.13em;text-transform:uppercase;fill:var(--faint)}
+  .xs-rain{stroke:var(--water);stroke-opacity:.35;stroke-width:1.1;stroke-linecap:round}
+  .readout{display:flex;flex-wrap:wrap;gap:26px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line-soft)}
+  .readout div{display:grid;gap:3px}
+  .readout b{font-family:var(--serif);font-size:1.3rem;font-weight:400;font-variant-numeric:tabular-nums}
+  .readout b.dry{color:var(--ochre)}
+  .fig-note{margin:16px 0 0;font-size:.87rem;color:var(--muted);max-width:74ch}
+  .fig-note code{font-family:var(--mono);font-size:.85em;background:var(--water-soft);padding:1px 5px}
+
+  /* ─── Metrics ──────────────────────────────────────────────────── */
+  .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line-soft);
+    border:1px solid var(--line-soft);margin:0}
+  .metrics div{background:var(--paper);padding:22px 20px;display:grid;gap:5px}
+  .metrics b{font-family:var(--serif);font-size:2rem;font-weight:400;line-height:1;font-variant-numeric:tabular-nums}
+  .metrics span{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--faint);line-height:1.6}
+
+  /* ─── Content ──────────────────────────────────────────────────── */
+  .head{position:relative;padding:12vh 0 6vh}
+  .head::before{content:attr(data-numeral);position:absolute;z-index:0;
+    right:4vw;top:7vh;font-family:var(--serif);font-size:clamp(8rem,22vw,18rem);
+    line-height:.8;color:var(--ink);opacity:.036;pointer-events:none;user-select:none}
+  .head .shell{position:relative;z-index:1}
+  .head .tc{display:block;margin-bottom:24px}
+  .head h1{margin:0;font-size:clamp(2.3rem,5.8vw,4rem)}
+  .head .lede{max-width:56ch;margin:26px 0 0;font-size:1.04rem;color:var(--muted)}
+  .body{padding-bottom:14vh}
+
+  .split{display:grid;grid-template-columns:minmax(0,196px) minmax(0,1fr);gap:48px;
+    padding:56px 0;border-top:1px solid var(--line-soft)}
+  .split:first-child{border-top:0}
+  .split h2{margin:8px 0 0;font-family:var(--serif);font-weight:400;font-size:1.62rem;letter-spacing:-.015em;line-height:1.18}
+  .prose{max-width:64ch}
+  .prose p{margin:0 0 16px}
+  .prose p:last-child{margin-bottom:0}
+  .prose strong{font-weight:600}
+  .prose a{color:var(--water);text-decoration:none;border-bottom:1px solid rgba(18,97,127,.3)}
+  .prose a:hover{border-bottom-color:var(--water)}
+
+  .list{display:grid;margin:0;padding:0;list-style:none}
+  .item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 26px;align-items:baseline;
+    padding:28px 0;border-top:1px solid var(--line-soft)}
+  .item:first-child{border-top:0}
+  .item h3{margin:0;font-family:var(--serif);font-weight:400;font-size:1.35rem;letter-spacing:-.01em;line-height:1.25}
+  .item h3 a{text-decoration:none;transition:color .35s var(--ease)}
+  .item h3 a:hover{color:var(--water)}
+  .item p{grid-column:1/-1;max-width:66ch;margin:10px 0 0;color:var(--muted);font-size:.95rem}
+  .item .meta{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}
+  .item .tags{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .item[hidden]{display:none}
+
+  .chip{padding:3px 10px;border:1px solid var(--line);border-radius:999px;
+    font-family:var(--mono);font-size:.57rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .chip.live{border-color:rgba(18,97,127,.45);color:var(--water)}
+  .links{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:20px;margin-top:16px}
+  .links a{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--water);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .35s var(--ease)}
+  .links a:hover{border-bottom-color:var(--water)}
+
+  /* ─── Publications ─────────────────────────────────────────────── */
+  .search{display:flex;align-items:center;gap:14px;margin:0;padding:14px 0;border-bottom:1px solid var(--line)}
+  .search input{flex:1;min-width:0;border:0;background:none;outline:none;
+    font-family:var(--serif);font-size:1.08rem;color:var(--ink)}
+  .search input::placeholder{color:var(--faint)}
+  .search .count{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;color:var(--faint);white-space:nowrap}
+
+  .pub-year{display:grid;grid-template-columns:minmax(0,72px) minmax(0,1fr);gap:28px;
+    padding:26px 0;border-top:1px solid var(--line-soft)}
+  .pub-year:first-child{border-top:0}
+  .pub-year[hidden]{display:none}
+  .pub-year > .yr{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;color:var(--water);padding-top:5px}
+  .pub{padding:0 0 20px;max-width:70ch}
+  .pub:last-child{padding-bottom:0}
+  .pub[hidden]{display:none}
+  .pub .t{font-family:var(--serif);font-size:1.09rem;line-height:1.36;margin:0}
+  .pub .t a{text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s var(--ease)}
+  .pub .t a:hover{border-bottom-color:var(--water);color:var(--water)}
+  .pub .a{margin:5px 0 0;font-size:.88rem;color:var(--muted)}
+  .pub .a b{font-weight:600;color:var(--ink)}
+  .pub .v{margin:3px 0 0;font-family:var(--mono);font-size:.68rem;color:var(--faint);letter-spacing:.02em}
+  .pub .v i{font-style:normal;color:var(--water)}
+  .empty{padding:40px 0;color:var(--faint);font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}
+  .empty[hidden]{display:none}
+
+  .contact-links{display:grid}
+  .contact-links a{display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+    padding:24px 0;border-top:1px solid var(--line-soft);text-decoration:none;transition:padding-left .45s var(--ease)}
+  .contact-links a:first-child{border-top:0}
+  .contact-links a:hover{padding-left:12px}
+  .contact-links strong{font-family:var(--serif);font-weight:400;font-size:1.32rem}
+  .contact-links a:hover strong{color:var(--water)}
+  .contact-links span{font-family:var(--mono);font-size:.64rem;color:var(--faint);letter-spacing:.05em;text-align:right}
+
+  .note{margin-top:30px;padding:18px 20px;border-left:2px solid var(--ochre);background:rgba(169,105,26,.045);
+    font-size:.9rem;color:var(--muted);max-width:66ch}
+
+  /* ─── Responsive ───────────────────────────────────────────────── */
+  @media (max-width:960px){
+    .rail{display:none}
+    .bar{display:flex}
+    .page{margin-left:0}
+    .shell{width:min(100% - 36px,var(--shell))}
+    .split{grid-template-columns:1fr;gap:18px;padding:42px 0}
+    .hero{padding:7vh 0 4vh}
+    .hero-grid{grid-template-columns:1fr;gap:28px}
+    .portrait,.portrait img{width:120px}
+    .portrait img{height:120px}
+    .head{padding:8vh 0 5vh}
+    .item{grid-template-columns:1fr}
+    .item .meta{justify-content:flex-start}
+    .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .pub-year{grid-template-columns:1fr;gap:12px}
+    .section-fig{padding:18px 16px 16px;margin-inline:-4px}
+    .fig-scroll{overflow-x:auto;scrollbar-width:none}
+    .fig-scroll::-webkit-scrollbar{display:none}
+    .section-fig svg{min-width:640px}
+  }
+
+  /* ─── Reduced motion ───────────────────────────────────────────────
+     Everything still arrives; nothing moves. The section freezes at the
+     post-monsoon state (handled in script) rather than disappearing. */
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;
+      animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+    /* !important on purpose. The entrance animation starts at opacity:0
+       with fill:both, so content is visible only once the animation has
+       run — and a frozen document timeline (a background tab) holds it at
+       the first keyframe indefinitely. An !important author declaration
+       outranks an animation in the cascade, so this makes the panels
+       visible without depending on anything running at all. The failure
+       mode of a reveal system is invisible content; it should not be
+       reachable. */
+    .panel > *{opacity:1!important;transform:none!important}
+  }
+
+  /* ─── Print ────────────────────────────────────────────────────────
+     Academic pages get printed and cited. Every panel prints, the
+     chrome does not, and links resolve to their addresses. */
+  @media print{
+    .rail,.bar,.search,.hero-actions,.section-fig,.skip{display:none!important}
+    .page{margin:0}
+    .panel[hidden]{display:block!important}
+    body{background:#fff;color:#000;font-size:11pt}
+    .head{padding:18pt 0 8pt;page-break-before:always}
+    .head::before{display:none}
+    .hero{padding:0 0 12pt}
+    .pub{page-break-inside:avoid}
+    .pub .t a::after{content:" (doi:" attr(data-doi) ")";font-family:var(--mono);font-size:.7em;color:#555}
+    .item{page-break-inside:avoid}
+  }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+
+  <aside class="rail" aria-label="Sections">
+    <a class="mark-a" href="#home" data-go="home">
+      <b>Basant<br>Maheshwari</b>
+      <span>Distinguished Professor<br>Western Sydney University</span>
+    </a>
+    <nav class="nav" role="tablist" id="rail-nav"></nav>
+    <div class="rail-note">
+      <b>Richmond, NSW</b>
+      School of Science<br>Western Sydney University
+    </div>
+  </aside>
+
+  <header class="bar">
+    <a class="mark-a" href="#home" data-go="home"><b>Basant Maheshwari</b></a>
+    <details id="bar-menu"><summary>Index</summary><nav id="bar-nav"></nav></details>
+  </header>
+
+  <main class="page" id="content">
+
+    <!-- ── HOME ────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-home" data-panel="home">
+      <div class="hero"><div class="shell">
+        <div class="hero-grid">
+          <div>
+            <p class="tc">Water · Environment · Sustainability</p>
+            <h1 class="display">The water table is<br>a <em>shared</em> account.</h1>
+            <p class="role">Distinguished Professor at Western Sydney University. Director of the Australia India Water Centre. Leader of the MARVI programme.</p>
+            <p class="bio">Thirty years of research on water and its interactions with the landscape — groundwater, irrigation, river health and urban water — built on a conviction that the people who draw from an aquifer are the ones who can manage it. MARVI turned that into method: village volunteers monitoring their own wells, and a shared record that makes a common resource visible to everyone drawing on it.</p>
+            <div class="hero-actions">
+              <a class="btn solid" href="#research" data-go="research"><span>Research</span></a>
+              <a class="btn" href="#publications" data-go="publications"><span>Publications</span></a>
+              <a class="btn" href="#programs" data-go="programs"><span>Programmes</span></a>
+            </div>
+          </div>
+          <figure class="portrait">
+            <img src="data:image/webp;base64,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" alt="Portrait of Basant Maheshwari" width="168" height="168">
+            <figcaption>Distinguished Professor<br>School of Science, WSU</figcaption>
+          </figure>
+        </div>
+
+        <figure class="section-fig">
+          <div class="section-head">
+            <div>
+              <p class="tag" style="margin:0 0 3px">Unconfined aquifer · seasonal recharge</p>
+              <p class="tag" style="margin:0;color:var(--muted)" id="xs-season">Pre-monsoon</p>
+            </div>
+            <p class="tag" style="margin:0" id="xs-clock"></p>
+          </div>
+          <div class="fig-scroll"><div id="xs"></div></div>
+          <div class="readout">
+            <div><b id="xs-head">—</b><span class="tag">Peak head in section</span></div>
+            <div><b id="xs-wells">—</b><span class="tag">Monitored wells holding water</span></div>
+            <div><b id="xs-recharge">—</b><span class="tag">Recharge N (m/yr)</span></div>
+          </div>
+          <figcaption class="fig-note">
+            The water table here is solved, not drawn. For steady unconfined flow between two fixed heads with
+            areal recharge <code>N</code> over an aquifer of conductivity <code>K</code>, the Dupuit–Forchheimer
+            equation gives <code>h(x)² = h₁² + (h₂² − h₁²)·x/L + (N/K)·x(L − x)</code>. The last term is the
+            recharge mound: zero at both boundaries, greatest in between. Drive <code>N</code> through a monsoon
+            and a recession and the mound rises and falls — which is the argument the MARVI work makes, and the
+            reason a check dam upstream shows up as water in a well downstream.
+          </figcaption>
+        </figure>
+      </div></div>
+
+      <div class="body"><div class="shell">
+        <div class="split">
+          <div><p class="tag">At a glance</p></div>
+          <div>
+            <div class="metrics" id="metrics"></div>
+            <p class="fig-note" style="margin-top:14px">Citation metrics from Google Scholar. Publication counts as
+              reported by the Australia India Water Centre; the list on this site covers the works carrying a DOI.</p>
+          </div>
+        </div>
+
+        <div class="split">
+          <div><p class="tag">Position</p><h2 class="display">Current focus.</h2></div>
+          <div class="prose">
+            <p><strong>Distinguished Professor in water, environment and sustainability</strong> at the School of Science, Western Sydney University, and <strong>Director of the Australia India Water Centre</strong> — a bilateral centre connecting researchers, government, industry and communities across Australia and India through research, education, training and outreach.</p>
+            <p>The current work runs along three lines: groundwater monitoring and village-scale managed aquifer recharge; transdisciplinary training for the next generation of water professionals; and the water quality, urban water and irrigation questions that decide whether a catchment stays liveable.</p>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- ── RESEARCH ────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-research" data-panel="research" hidden>
+      <div class="head" data-numeral="01"><div class="shell">
+        <p class="tc">01 — Research</p>
+        <h1 class="display">Research.</h1>
+        <p class="lede">Water and its interactions with the landscape — and the social, economic, policy and institutional arrangements that decide how it is shared.</p>
+      </div></div>
+      <div class="body"><div class="shell">
+        <ul class="list" id="research-list"></ul>
+        <div class="note" id="research-note"></div>
+      </div></div>
+    </section>
+
+    <!-- ── PUBLICATIONS ────────────────────────────────────────────── -->
+    <section class="panel" id="panel-publications" data-panel="publications" hidden>
+      <div class="head" data-numeral="02"><div class="shell">
+        <p class="tc">02 — Publications</p>
+        <h1 class="display">Publications.</h1>
+        <p class="lede">Journal articles carrying a registered DOI, newest first, with authors and venues taken from Crossref. Search by topic, co-author, journal or year.</p>
+      </div></div>
+      <div class="body"><div class="shell">
+        <label class="search">
+          <span class="tag">Search</span>
+          <input id="pub-search" type="search" placeholder="groundwater rajasthan, hagare, world water policy…" aria-label="Search publications">
+          <span class="count" id="pub-count"></span>
+        </label>
+        <div id="pub-list"></div>
+        <p class="empty" hidden id="pub-empty">No publication matches that</p>
+        <div class="note" id="pub-note"></div>
+      </div></div>
+    </section>
+
+    <!-- ── PROGRAMMES ──────────────────────────────────────────────── -->
+    <section class="panel" id="panel-programs" data-panel="programs" hidden>
+      <div class="head" data-numeral="03"><div class="shell">
+        <p class="tc">03 — Programmes</p>
+        <h1 class="display">Programmes.</h1>
+        <p class="lede">Long-running work with partners in India, Australia and beyond — research programmes, a bilateral centre, and training that puts practitioners in the field.</p>
+      </div></div>
+      <div class="body"><div class="shell">
+        <ul class="list" id="programs-list"></ul>
+      </div></div>
+    </section>
+
+    <!-- ── TEACHING ────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-teaching" data-panel="teaching" hidden>
+      <div class="head" data-numeral="04"><div class="shell">
+        <p class="tc">04 — Teaching</p>
+        <h1 class="display">Teaching &amp; capacity building.</h1>
+        <p class="lede">Training water professionals who can work across disciplines — and across the boundary between a research finding and a village decision.</p>
+      </div></div>
+      <div class="body"><div class="shell" id="teaching-body"></div></div>
+    </section>
+
+    <!-- ── NEWS ────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-news" data-panel="news" hidden>
+      <div class="head" data-numeral="05"><div class="shell">
+        <p class="tc">05 — News</p>
+        <h1 class="display">News.</h1>
+        <p class="lede">Recent events, visits and milestones.</p>
+      </div></div>
+      <div class="body"><div class="shell">
+        <ul class="list" id="news-list"></ul>
+        <p class="empty" hidden id="news-empty">Nothing posted yet</p>
+      </div></div>
+    </section>
+
+    <!-- ── CONTACT ─────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-contact" data-panel="contact" hidden>
+      <div class="head" data-numeral="06"><div class="shell">
+        <p class="tc">06 — Contact</p>
+        <h1 class="display">Contact.</h1>
+        <p class="lede">For research collaborations, student enquiries, media, and the Australia India Water Centre.</p>
+      </div></div>
+      <div class="body"><div class="shell">
+        <div class="split" style="border-top:0;padding-top:4px">
+          <div><p class="tag">Channels</p></div>
+          <div>
+            <div class="contact-links" id="contact-links"></div>
+            <p class="prose" style="margin-top:30px;color:var(--muted)">School of Science, Western Sydney University,
+              Locked Bag 1797, Penrith NSW 2751, Australia.</p>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+  </main>
+
+  <script>
+  /* ═══════════════════════════════════════════════════════════════════
+     CONTENT
+     Everything this site says lives in the arrays below. To change the
+     site, change an object — the markup is generated from it. Nothing
+     here should be edited in the HTML above.
+
+     House rule: do not add a fact that is not traceable to a source.
+     See AGENTS.md.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  const SECTIONS = [
+    {id:"home",         label:"Profile",      tc:"00"},
+    {id:"research",     label:"Research",     tc:"01"},
+    {id:"publications", label:"Publications", tc:"02"},
+    {id:"programs",     label:"Programmes",   tc:"03"},
+    {id:"teaching",     label:"Teaching",     tc:"04"},
+    {id:"news",         label:"News",         tc:"05"},
+    {id:"contact",      label:"Contact",      tc:"06"},
+  ];
+
+  /* Google Scholar, retrieved 2026-08-04. Re-check when you update. */
+  const METRICS = [
+    {value:"5,498", label:"Citations<br>Google Scholar"},
+    {value:"36",    label:"h-index"},
+    {value:"100",   label:"i10-index"},
+    {value:"30+",   label:"Years in water<br>research & practice"},
+  ];
+
+  const RESEARCH = [
+    {
+      name:"Village-scale managed aquifer recharge", year:"Ongoing", status:"current",
+      blurb:"Whether check dams, recharge ponds and farm pits actually raise the water table, by how much, and for how long — measured rather than assumed. The work covers specific yield from watertable fluctuations, hydrologic and cost–benefit analysis of check dam cascades, and the recharge structures that decide whether a hardrock aquifer carries a village through the dry season.",
+      tags:["Groundwater recharge","Hardrock aquifers","Rajasthan","Gujarat"],
+    },
+    {
+      name:"Groundwater as a commons", year:"Ongoing", status:"current",
+      blurb:"An aquifer is a common-pool resource: every well draws on the same account, and no individual pump reveals the balance. This strand studies village groundwater cooperatives against Ostrom's design principles, irrigator attitudes to shared management, and the role groundwater plays in the lives of rural women.",
+      tags:["Common-pool resources","Ostrom","Groundwater governance","Citizen science"],
+    },
+    {
+      name:"Transdisciplinary water research and training", year:"Ongoing", status:"current",
+      blurb:"Water problems fail at the seams between disciplines, so the method has to cross them. Published work here covers the transdisciplinary approach to village-scale groundwater management, mentoring and leadership in the Young Water Professionals programme, and water policy labs that turn dialogue into policy learning.",
+      tags:["Transdisciplinary method","Capacity building","Water policy"],
+    },
+    {
+      name:"Urban and peri-urban water", year:"Ongoing", status:"active",
+      blurb:"River health monitoring in peri-urban landscapes, stormwater harvesting from urban lakes in Western Sydney, urban flooding and recharge in Bengaluru, and the ecohydrological question of what makes a rapidly urbanising region liveable.",
+      tags:["River health","Stormwater","Peri-urban","Liveability"],
+    },
+    {
+      name:"Irrigation, water quality and reuse", year:"Ongoing", status:"active",
+      blurb:"Irrigation water quality and its consequences for soil and crop: recycled water and soil salinity, greywater irrigation, treated wastewater on pasture, emerging contaminants in rivers receiving untreated wastewater, and closed-loop nutrient recovery in hydroponic systems.",
+      tags:["Irrigation","Water reuse","Soil salinity","Water quality"],
+    },
+  ];
+
+  const PROGRAMS = [
+    {
+      name:"MARVI — Managed Aquifer Recharge through Village-level Intervention", year:"2012 –", status:"current",
+      blurb:"The programme the rest of the work orbits. MARVI trains village volunteers — Bhujal Jaankaars, 'groundwater informed' — to monitor their own wells and share the readings, so that a resource nobody can see becomes something a village can discuss and manage together. First funded by the Australian Centre for International Agricultural Research, it has since shaped groundwater management practice across more than 10,000 villages in India.",
+      tags:["ACIAR","Citizen science","Rajasthan","Gujarat","Groundwater"],
+      links:[{label:"Programme site", href:"https://www.westernsydney.edu.au/marvi"}],
+    },
+    {
+      name:"Australia India Water Centre", year:"2020 –", status:"current",
+      blurb:"A bilateral centre connecting Australian and Indian researchers, educators, government, industry and communities on water security, sustainable agriculture and climate resilience — organised around equal partnership and a transdisciplinary approach. Basant Maheshwari is its Director and chairs the programme leaders' committee. The Centre marked five years at the AIWC@5 Partners Forum and International Symposium in November 2025.",
+      tags:["Bilateral","Research","Education","Training","Outreach"],
+      links:[{label:"Centre site", href:"https://aiwc.org.au/"}],
+    },
+    {
+      name:"Young Water Professionals training programme", year:"Ongoing", status:"active",
+      blurb:"A training and mentoring programme for early-career water professionals across Australia and India, built on action research and transdisciplinary competencies. The programme has itself been studied and published on — what mentoring actually contributes, and what participants learn that a technical course does not teach.",
+      tags:["Capacity building","Mentoring","Action research"],
+    },
+    {
+      name:"Dam Safety and Risk Management training", year:"2024 –", status:"active",
+      blurb:"A two-week programme bringing cohorts of Indian dam safety officers to New South Wales, run with the Ministry of Jal Shakti, Dam Safety NSW, WaterNSW, Hunter Water and Snowy Hydro. The second cohort of 15 officers began in March 2025, with field visits to Warragamba, Cotter, Talbingo and Blowering dams and the Snowy scheme.",
+      tags:["Dam safety","Ministry of Jal Shakti","NSW","Training"],
+    },
+  ];
+
+  const TEACHING = [
+    {name:"Higher degree research supervision", when:"Ongoing",
+     blurb:"Doctoral and masters supervision in groundwater management, irrigation, water quality and water governance. Recent co-authored work with research students spans village groundwater cooperatives, drought dynamics in western Rajasthan, cadmium uptake in hydroponic and soil systems, and water sustainability assessment frameworks."},
+    {name:"Transdisciplinary training design", when:"Ongoing",
+     blurb:"Designing and evaluating training that crosses disciplines — the Young Water Professionals programme, water policy labs, and the dam safety programme — and publishing on what makes such training work rather than assuming it does."},
+    {name:"Field-based capacity building", when:"Ongoing",
+     blurb:"Training village volunteers and water professionals in the field: groundwater monitoring, well observation and the shared record-keeping that lets a community act on what it measures."},
+  ];
+
+  /* Recent, verifiable items only. Add an object here and the panel fills
+     itself; the honest empty state is better than invented entries. */
+  const NEWS = [
+    {
+      name:"AIWC@5 Partners Forum and International Symposium", year:"Nov 2025", status:"event",
+      blurb:"Five years of the Australia India Water Centre, marked at the Whitlam Institute, Western Sydney University, over 17–19 November. Around 80 delegates from India and Australia, the launch of the AIWC Five-Year Report, and an MOU signed with IIT Roorkee to establish a dual degree programme.",
+      tags:["AIWC","Western Sydney University","IIT Roorkee"],
+    },
+    {
+      name:"Second cohort of Indian dam safety officers hosted in NSW", year:"Mar 2025", status:"training",
+      blurb:"Fifteen senior officials from India's Central Water Commission, National Dam Safety Authority and state water resource departments completed a two-week Dam Safety and Risk Management programme across NSW, beginning 17 March 2025.",
+      tags:["Dam safety","Ministry of Jal Shakti","Snowy Hydro"],
+    },
+  ];
+
+  const CONTACT = [
+    {label:"Email", detail:"b.maheshwari@westernsydney.edu.au", href:"mailto:b.maheshwari@westernsydney.edu.au"},
+    {label:"Google Scholar", detail:"5,498 citations · h-index 36", href:"https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&hl=en"},
+    {label:"ORCID", detail:"0000-0002-5496-4345", href:"https://orcid.org/0000-0002-5496-4345"},
+    {label:"ResearchGate", detail:"Research profile", href:"https://www.researchgate.net/profile/Basant-Maheshwari"},
+    {label:"Australia India Water Centre", detail:"aiwc.org.au", href:"https://aiwc.org.au/"},
+    {label:"MARVI programme", detail:"westernsydney.edu.au/marvi", href:"https://www.westernsydney.edu.au/marvi"},
+  ];
+
+  /* Publications: y year · t title · a authors · v venue · d DOI · c Crossref citation count.
+     Generated from ORCID 0000-0002-5496-4345 and enriched from Crossref. */
+  const PUBLICATIONS = [
+    {y:2026, t:"Assessing Water Sustainability for the Sustainable Development Goals: A Systematic Review and Bibliometric Analysis Highlighting Gaps in Current Assessment Frameworks", a:"Dhanasekaran, N.C., Maheshwari, B., Donovan-Mak, M., Huda, S.", v:"Sustainability", d:"10.3390/su18052514", c:2},
+    {y:2026, t:"Evaluating the Effectiveness of Village Groundwater Cooperatives for Groundwater Commons in Gujarat and Rajasthan Using Ostrom’s Design Principles", a:"Gajurel, S., Maheshwari, B., Hagare, D., Ward, J., Singh, P.K.", v:"Sustainability", d:"10.3390/su18031561", c:1},
+    {y:2026, t:"Understanding Drought Dynamics in Semiarid Regions: A Multidecadal, Multi‐Index Case Study From Western Rajasthan, India", a:"Upadhyay, E., Biswas, J., Mishra, A., Kumar, P., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70081", c:0},
+    {y:2026, t:"Comparison of Uptake of Cadmium at Low Concentrations Under Hydroponic and Soil‐Based Agriculture Systems for Lettuce, Indian Spinach and Methi", a:"Kotresh, D.J., Jayadeva, H.M., Hagare, D., Kadalli, G.G., Maheshwari, B., Saraswathy, B.P. et al.", v:"Journal of Sustainable Agriculture and Environment", d:"10.1002/sae2.70138", c:0},
+    {y:2026, t:"From Crisis to Resilience: Rethinking Urban Flooding and Groundwater Recharge in Bengaluru City, India", a:"Biswas, S., Patel, S.V.B., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70098", c:0},
+    {y:2026, t:"Farm‐Scale Recharge Pits for Improving Local Groundwater Availability: Insights From a Hardrock Watershed in Rajasthan, India", a:"Soni, P., Maheshwari, B., Dashora, Y., Dillon, P., Singh, P.K.", v:"World Water Policy", d:"10.1002/wwp2.70094", c:0},
+    {y:2026, t:"Revitalizing Traditional Tank Systems: Case Study Insights From Sri Lanka's Village Tank Cascade Systems for Climate Resilience and Water Governance", a:"Nanthakumaran, A., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70097", c:0},
+    {y:2025, t:"From Dialogue to Policy Learning: Water Policy Labs for Transformative Water Governance", a:"Ojha, H., Maheshwari, B., Camkin, J., Bhattarai, B., Banjade, P., Gurung, P. et al.", v:"World Water Policy", d:"10.1002/wwp2.70041", c:0},
+    {y:2025, t:"Assessing Urban Lake Performance for Stormwater Harvesting: Insights from Two Lake Systems in Western Sydney, Australia", a:"Natarajan, S.K., Hagare, D., Maheshwari, B.", v:"Water", d:"10.3390/w17172504", c:0},
+    {y:2025, t:"Closed Loop Phosphorus Recovery and Recycling for Sustainable Hydroponic Farming", a:"Malkawi, S., Hagare, D., Maheshwari, B.", v:"Journal of Sustainable Agriculture and Environment", d:"10.1002/sae2.70094", c:0},
+    {y:2024, t:"Rejuvenation of the Springs in the Hindu Kush Himalayas Through Transdisciplinary Approaches—A Review", a:"Pant, N., Hagare, D., Maheshwari, B., Rai, S.P., Sharma, M., Dollin, J. et al.", v:"Water", d:"10.3390/w16243675", c:19},
+    {y:2024, t:"Assessing groundwater quality, health risks, and policy implications: A case study of West Medinipur District, West Bengal, India", a:"Alam, M.A., Mailapalli, D.R., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12160", c:2},
+    {y:2023, t:"Managing floods in Chennai City as part of situation understanding and improvement project", a:"Shivakumar, S., Shanmuganathan, M., Goonetilleke, A., Day, D., Sarkar, A., Hagare, D. et al.", v:"World Water Policy", d:"10.1002/wwp2.12119", c:4},
+    {y:2023, t:"Training young water professionals in leadership and transdisciplinary competencies for sustainable water management in India", a:"Maheshwari, B., Hagare, D., Spencer, R., Dollin, J., Reynolds, J., Atkins, D. et al.", v:"World Water Policy", d:"10.1002/wwp2.12114", c:4},
+    {y:2023, t:"A reflective evaluation of young water professionals' transdisciplinary learning", a:"Dollin, J., Hagare, D., Maheshwari, B., Packham, R., Reynolds, J., Garg, A. et al.", v:"World Water Policy", d:"10.1002/wwp2.12121", c:3},
+    {y:2023, t:"Training and capacity building of young water professionals—role of an innovative and transformative program for sustainable water futures", a:"Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12103", c:3},
+    {y:2023, t:"The impact of irrigation with treated wastewaters on soil and kikuyu grass nutrient compositions", a:"Shahrivar, A.A., Hagare, D., Maheshwari, B., Rahman, M.M.", v:"Water Environment Research", d:"10.1002/wer.10873", c:3},
+    {y:2023, t:"Mentoring in the young water professionals' training program: Lessons for effective capacity development", a:"Maheshwari, B., Atkins, D., Hagare, D., Spencer, R., Dillon, P., Jain, S. et al.", v:"World Water Policy", d:"10.1002/wwp2.12129", c:2},
+    {y:2023, t:"Building capacity of young water professionals through action research and transdisciplinary approaches", a:"Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12127", c:1},
+    {y:2023, t:"Transdisciplinary approach for planning the expansion of irrigation infrastructure at a regional scale", a:"Issac, A.M., Mullassery, H.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Dollin, J. et al.", v:"World Water Policy", d:"10.1002/wwp2.12120", c:1},
+    {y:2023, t:"Geospatial data and web based tools for managing irrigation infrastructure expansion projects", a:"Issac, A.M., Harshitha, M.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Reynolds, J.K. et al.", v:"World Water Policy", d:"10.1002/wwp2.12130", c:0},
+    {y:2022, t:"Impact of Recycled Water Irrigation on Soil Salinity and Its Remediation", a:"Rahman, M.M., Shahrivar, A.A., Hagare, D., Maheshwari, B.", v:"Soil Systems", d:"10.3390/soilsystems6010013", c:22},
+    {y:2022, t:"Hydrologic and Cost–Benefit Analysis of Multiple Check Dams in Catchments of Ephemeral Streams, Rajasthan, India", a:"Dashora, Y., Cresswell, D., Dillon, P., Maheshwari, B., Clark, R., Soni, P. et al.", v:"Water", d:"10.3390/w14152378", c:9},
+    {y:2022, t:"Understanding the role of groundwater in the lives of rural women in India", a:"Swaraj, A., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12085", c:7},
+    {y:2022, t:"Assessment of Urban Land Use and Cover on Groundwater Recharge and Quality", a:"Hagare, D., Ezemba, S.N., Pant, N., Rahman, M.M., Maheshwari, B., Siddiqui, Z.", v:"CivilEng", d:"10.3390/civileng3020029", c:5},
+    {y:2021, t:"Adaptation of EVIAVE methodology to landfill environmental impact assessment in Uganda – A case study of Kiteezi landfill", a:"Aryampa, S., Maheshwari, B., Zamorano, M., Sabiiti, E.N., Olobo, C., Bateganya, N.L.", v:"Journal of African Earth Sciences", d:"10.1016/j.jafrearsci.2021.104310", c:13},
+    {y:2020, t:"Is urbanisation also the culprit of climate change? – Evidence from Australian cities", a:"Maheshwari, B., Pinto, U., Akbar, S., Fahey, P.", v:"Urban Climate", d:"10.1016/j.uclim.2020.100581", c:48},
+    {y:2019, t:"Status of Waste Management in the East African Cities: Understanding the Drivers of Waste Generation, Collection and Disposal and Their Impacts on Kampala City’s Sustainability", a:"Aryampa, S., Maheshwari, B., Sabiiti, E., Bateganya, N.L., Bukenya, B.", v:"Sustainability", d:"10.3390/su11195523", c:49},
+    {y:2019, t:"Qualitative and quantitative analysis of perceived liveability in the context of socio-ecohydrology: evidence from the urban and peri-urban Cirebon-Indonesia", a:"Titisari Danielaini, T., Maheshwari, B., Hagare, D.", v:"Journal of Environmental Planning and Management", d:"10.1080/09640568.2018.1524576", c:5},
+    {y:2018, t:"Estimation of specific yield using water table fluctuations and cropped area in a hardrock aquifer system of Rajasthan, India", a:"Chinnasamy, P., Maheshwari, B., Dillon, P., Purohit, R., Dashora, Y., Soni, P. et al.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2018.02.016", c:28},
+    {y:2018, t:"Defining rural–urban interfaces for understanding ecohydrological processes in West Java, Indonesia: Part I. Development of methodology to delineate peri-urban areas", a:"Danielaini, T.T., Maheshwari, B., Hagare, D.", v:"Ecohydrology & Hydrobiology", d:"10.1016/j.ecohyd.2017.11.006", c:25},
+    {y:2018, t:"Adaptation of Standardised Precipitation Index for understanding watertable fluctuations and groundwater resilience in hard-rock areas of India", a:"Chinnasamy, P., Maheshwari, B., Prathapar, S.A.", v:"Environmental Earth Sciences", d:"10.1007/s12665-018-7734-6", c:23},
+    {y:2018, t:"Combining imaging techniques with nonparametric modelling to predict seepage hotspots in irrigation channels", a:"Akbar, S., Kathuria, A., Maheshwari, B.", v:"Irrigation Science", d:"10.1007/s00271-018-0596-6", c:7},
+    {y:2018, t:"A framework for evaluating ecohydrological-based liveability in a rapidly urbanising region of Indonesia", a:"Danielaini, T.T., Maheshwari, B., Hagare, D.", v:"International Journal of Urban Sustainable Development", d:"10.1080/19463138.2018.1531874", c:6},
+    {y:2017, t:"Perspectives on impacts of water quality on agriculture and community well-being—a key informant study from Sri Lanka", a:"Thoradeniya, B., Pinto, U., Maheshwari, B.", v:"Environmental Science and Pollution Research", d:"10.1007/s11356-017-0493-1", c:12},
+    {y:2016, t:"Assisting community management of groundwater: Irrigator attitudes in two watersheds in Rajasthan and Gujarat, India", a:"Varua, M., Ward, J., Maheshwari, B., Oza, S., Purohit, R., Hakimuddin et al.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2016.02.003", c:21},
+    {y:2015, t:"Evaluating the effectiveness of water infrastructures for increasing groundwater recharge and agricultural production – A case study of Gujarat, India", a:"Chinnasamy, P., Misra, G., Shah, T., Maheshwari, B., Prathapar, S.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2015.05.009", c:28},
+    {y:2013, t:"TREATED EFFLUENT AND SALINE WATER IRRIGATION INFLUENCES SOIL PROPERTIES, YIELD, WATER PRODUCTIVITY AND SODIUM CONTENT OF SNOW PEAS AND CELERY", a:"Grewal, H.S., Maheshwari, B.L.", v:"Journal of Plant Nutrition", d:"10.1080/01904167.2013.776080", c:9},
+    {y:2013, t:"The hydrological and economic impacts of changing water allocation in political regions within the peri-urban South Creek catchment in Western Sydney I: Model development", a:"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2013.06.052", c:7},
+    {y:2013, t:"The hydrological and economic impacts of changing water allocations in political regions within the peri-urban South Creek catchment in Western Sydney II: Scenarios", a:"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2013.06.030", c:7},
+    {y:2012, t:"Analysis of long-term water quality for effective river health monitoring in peri-urban landscapes—a case study of the Hawkesbury–Nepean river system in NSW, Australia", a:"Pinto, U., Maheshwari, B.L., Ollerton, R.L.", v:"Environmental Monitoring and Assessment", d:"10.1007/s10661-012-2888-2", c:35},
+    {y:2012, t:"Modelling eutrophication and microbial risks in peri-urban river systems using discriminant function analysis", a:"Pinto, U., Maheshwari, B., Shrestha, S., Morris, C.", v:"Water Research", d:"10.1016/j.watres.2012.09.025", c:27},
+    {y:2012, t:"Understanding the meaning of river health for a community: perspectives from the peri-urban region of the Hawkesbury–Nepean catchment, Australia", a:"Pinto, U., Maheshwari, B.L., Shrestha, S., Morris, C.", v:"Water Policy", d:"10.2166/wp.2012.074", c:9},
+    {y:2012, t:"Role and Complexity of Integrated Water-Resources Management for Periurban Landscapes in Australia", a:"Maheshwari, B.L., Simmons, B.L., Singh, V.P.", v:"Journal of Hydrologic Engineering", d:"10.1061/(asce)he.1943-5584.0000471", c:8},
+    {y:2012, t:"Impacts of Water Quality on the Harvest of School Prawn (Metapenaeus macleayi) in a Peri-Urban River System", a:"Pinto, U., Maheshwari, B.L.", v:"Journal of Shellfish Research", d:"10.2983/035.031.0332", c:4},
+    {y:2012, t:"WATER CONSERVATION AROUND HOMES—THE ROLE OF AUDIT IN IMPROVING IRRIGATION SYSTEM PERFORMANCE", a:"Maheshwari, B.", v:"Irrigation and Drainage", d:"10.1002/ird.1668", c:2},
+    {y:2011, t:"Water and nutrient use efficiency of a low-cost hydroponic greenhouse for a cucumber crop: An Australian case study", a:"Grewal, H.S., Maheshwari, B., Parks, S.E.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2010.12.010", c:144},
+    {y:2011, t:"River health assessment in peri-urban landscapes: An application of multivariate analysis to identify the key variables", a:"Pinto, U., Maheshwari, B.", v:"Water Research", d:"10.1016/j.watres.2011.04.044", c:72},
+    {y:2010, t:"Effects of greywater irrigation on plant growth, water use and soil properties", a:"Pinto, U., Maheshwari, B., Grewal, H.", v:"Resources, Conservation and Recycling", d:"10.1016/j.resconrec.2009.09.007", c:90},
+    {y:2010, t:"Magnetic treatment of irrigation water and snow pea and chickpea seeds enhances early growth and nutrient contents of seedlings", a:"Grewal, H.S., Maheshwari, B.L.", v:"Bioelectromagnetics", d:"10.1002/bem.20615", c:74},
+    {y:2010, t:"Reuse of greywater for irrigation around homes in Australia: Understanding community views, issues and practices", a:"Pinto, U., Maheshwari, B.L.", v:"Urban Water Journal", d:"10.1080/15730620903447639", c:43},
+    {y:2010, t:"Natural spaces – how do they influence stewardship attitudes and actions of university students?", a:"Burgin, S., Williamson, D., Maheshwari, B.", v:"International Journal of Environmental Studies", d:"10.1080/00207230902738925", c:2},
+    {y:2009, t:"Magnetic treatment of irrigation water: Its effects on vegetable crop yield and water productivity", a:"Maheshwari, B.L., Grewal, H.S.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2009.03.016", c:150},
+    {y:2009, t:"Community awareness of the use of alternative water sources for irrigation of golf courses: a case study of a selected site within the Sydney metropolitan area", a:"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.", v:"International Journal of Management and Decision Making", d:"10.1504/ijmdm.2009.024991", c:0},
+    {y:2008, t:"Action Research for Sustainable Water Futures in Western Sydney: Reaching Beyond Traditional Stakeholder Engagement to Understand Community Stakeholder Language and Its Implications for Action", a:"Webb, T., Burgin, S., Maheshwari, B.", v:"Systemic Practice and Action Research", d:"10.1007/s11213-008-9102-z", c:10},
+    {y:2008, t:"Integrating alternative water sources in urbanised environments", a:"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.", v:"WIT Transactions on Ecology and the Environment", d:"10.2495/si080341", c:3},
+    {y:2007, t:"Sustainable use of stormwater for irrigation case study: Manly Golf Course", a:"Schwecke, M., Simmons, B., Maheshwari, B.", v:"The Environmentalist", d:"10.1007/s10669-007-9013-z", c:9},
+    {y:2005, t:"Local provenance in rehabilitation of degraded landscapes: a case study from the Hawkesbury–Nepean catchment, Australia", a:"Burgin, S., Carson, J., Maheshwari, B.", v:"Area", d:"10.1111/j.1475-4762.2005.00636.x", c:8},
+    {y:2004, t:"Temporal variations in water quality of farm dams: impacts of land use and water sources", a:"Brainwood, M., Burgin, S., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2004.03.006", c:70},
+    {y:2004, t:"Field Evaluation of Selected Soil Erosion Models for Catchment Management in Indonesia", a:"Moehansyah, H., Maheshwari, B., Armstrong, J.", v:"Biosystems Engineering", d:"10.1016/j.biosystemseng.2004.04.013", c:23},
+    {y:2002, t:"Options for alternative irrigation water supplies in the Murray–Darling Basin, Australia: a case study of the Shepparton Irrigation Region", a:"Smith, A., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(02)00002-1", c:7},
+    {y:2001, t:"SW—Soil and Water", a:"Esfandiari, M., Maheshwari, B.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.2001.0717", c:11},
+    {y:1997, t:"Application of the optimization method for estimating infiltration characteristics in furrow irrigation and its comparison with other methods", a:"Esfandiari, M., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(97)00007-3", c:19},
+    {y:1997, t:"Field values of the shape factor for estimating surface storage in furrows on a clay soil", a:"Esfandiari, M., Maheshwari, B.L.", v:"Irrigation Science", d:"10.1007/s002710050034", c:11},
+    {y:1997, t:"Estimating recession times in furrows with small longitudinal slope on a clay soil", a:"Esfandiari, M., Maheshwari, B., Cornish, P.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(97)00013-9", c:2},
+    {y:1993, t:"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 1, Advance and Recession Characteristics", a:"Maheshwari, B., McMahon, T.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1993.1005", c:7},
+    {y:1993, t:"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 2, Overall Suitability for Field Applications", a:"Maheshwari, B., McMahon, T.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1993.1008", c:5},
+    {y:1992, t:"Suitability of different flow equations and hydraulic resistance parameters for flows in surface irrigation: A review", a:"Maheshwari, B.L.", v:"Water Resources Research", d:"10.1029/92wr00424", c:14},
+  ];
+
+  /* ═══════════════════════════════════════════════════════════════════
+     SEARCH MATCHING
+
+     This is the one piece of behaviour worth arguing about, so it is
+     isolated here rather than buried in the filter loop.
+
+     Plain substring matching fails the query people actually type into
+     a publication list: "groundwater rajasthan" finds nothing, because
+     no single string contains those two words adjacently, while
+     "rajasthan groundwater" would also fail. Splitting on whitespace
+     and requiring every token to appear somewhere makes word order
+     irrelevant, which is how a bibliography search is expected to
+     behave — author plus topic, topic plus year.
+
+     Trade-off taken: AND across tokens rather than OR. AND narrows as
+     you type, which is what a long list needs. OR would widen with each
+     word and rank instead of filter — better for discovery, worse for
+     finding the paper you already have in mind.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /**
+   * Decide whether one entry stays visible for a given query.
+   * @param {string} haystack  Lowercased searchable text for the entry.
+   * @param {string} query     Lowercased, trimmed text the user typed.
+   * @returns {boolean}        true to keep the entry visible.
+   */
+  function matchesQuery(haystack, query){
+    return query.split(/\s+/).every(token => haystack.includes(token));
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     RENDERING
+     ═══════════════════════════════════════════════════════════════════ */
+
+  const esc = v => String(v).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+  const searchText = e => [e.name, e.blurb, ...(e.tags||[])].join(" ").toLowerCase();
+
+  function entryHTML(entry){
+    const title = entry.links?.[0]
+      ? `<a href="${esc(entry.links[0].href)}" target="_blank" rel="noreferrer">${esc(entry.name)}</a>`
+      : esc(entry.name);
+    const tags = (entry.tags||[]).map(t => `<span class="chip">${esc(t)}</span>`).join("");
+    const links = (entry.links||[]).map(l =>
+      `<a href="${esc(l.href)}" target="_blank" rel="noreferrer">${esc(l.label)} &#8599;</a>`).join("");
+    const hot = entry.status === "current" || entry.status === "live";
+    return `<li class="item" data-search="${esc(searchText(entry))}">
+      <h3>${title}</h3>
+      <div class="meta">
+        <span class="chip${hot ? " live" : ""}">${esc(entry.status)}</span>
+        <span class="chip">${esc(entry.year)}</span>
+      </div>
+      <p>${esc(entry.blurb)}</p>
+      ${tags ? `<div class="tags">${tags}</div>` : ""}
+      ${links ? `<div class="links">${links}</div>` : ""}
+    </li>`;
+  }
+
+  const renderList = (id, entries) => {
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = entries.map(entryHTML).join("");
+  };
+
+  renderList("research-list", RESEARCH);
+  renderList("programs-list", PROGRAMS);
+  renderList("news-list", NEWS);
+
+  if(!NEWS.length){
+    const empty = document.getElementById("news-empty");
+    empty.hidden = false;
+  }
+
+  document.getElementById("metrics").innerHTML = METRICS.map(m =>
+    `<div><b>${esc(m.value)}</b><span>${m.label}</span></div>`).join("");
+
+  document.getElementById("research-note").innerHTML =
+    `The complete list of more than 230 publications, including book chapters, conference papers and technical
+     reports, is on <a href="https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&amp;hl=en" target="_blank"
+     rel="noreferrer">Google Scholar</a> and <a href="https://orcid.org/0000-0002-5496-4345" target="_blank"
+     rel="noreferrer">ORCID</a>.`;
+
+  document.getElementById("teaching-body").innerHTML = `
+    <div class="split">
+      <div><p class="tag">Areas</p><h2 class="display">What the teaching covers.</h2></div>
+      <div><ul class="list">${TEACHING.map(t => `
+        <li class="item">
+          <h3>${esc(t.name)}</h3>
+          <div class="meta"><span class="chip live">${esc(t.when)}</span></div>
+          <p>${esc(t.blurb)}</p>
+        </li>`).join("")}</ul></div>
+    </div>
+    <div class="split">
+      <div><p class="tag">Enquiries</p><h2 class="display">Prospective students.</h2></div>
+      <div class="prose">
+        <p>Enquiries about higher degree research in groundwater management, irrigation, water quality or water
+        governance are welcome by <a href="mailto:b.maheshwari@westernsydney.edu.au">email</a>. Please include a
+        short statement of the problem you want to work on and your background.</p>
+        <div class="note">Unit codes, current course convening and a list of completed higher degree candidates
+        are not yet on this page. Open a “Website change” issue with the details and they will be added.</div>
+      </div>
+    </div>`;
+
+  document.getElementById("contact-links").innerHTML = CONTACT.map(c => `
+    <a href="${esc(c.href)}"${c.href.startsWith("http") ? ' target="_blank" rel="noreferrer"' : ""}>
+      <strong>${esc(c.label)}</strong><span>${esc(c.detail)}</span>
+    </a>`).join("");
+
+  document.getElementById("rail-nav").innerHTML = SECTIONS.map(s =>
+    `<button type="button" role="tab" data-tab="${s.id}" aria-selected="${s.id === "home"}">
+      <i>${s.tc}</i><span>${s.label}</span></button>`).join("");
+
+  document.getElementById("bar-nav").innerHTML = SECTIONS.map(s =>
+    `<button type="button" data-tab="${s.id}">${s.label}<span class="tag">${s.tc}</span></button>`).join("");
+
+  /* ═══════════════════════════════════════════════════════════════════
+     PUBLICATIONS
+     Grouped by year. His own name is emphasised in the author string so
+     the reader can find his position in the list at a glance.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  (function renderPubs(){
+    const byYear = new Map();
+    for(const p of PUBLICATIONS){
+      const y = p.y || "Undated";
+      if(!byYear.has(y)) byYear.set(y, []);
+      byYear.get(y).push(p);
+    }
+
+    const emphasise = a =>
+      esc(a).replace(/Maheshwari, B\./g, "<b>Maheshwari, B.</b>");
+
+    document.getElementById("pub-list").innerHTML = [...byYear.entries()].map(([year, list]) => `
+      <div class="pub-year" data-year="${esc(year)}">
+        <div class="yr">${esc(year)}</div>
+        <div>${list.map(p => `
+          <article class="pub" data-search="${esc([p.t, p.a, p.v, p.y].join(" ").toLowerCase())}">
+            <p class="t"><a href="https://doi.org/${esc(p.d)}" target="_blank" rel="noreferrer"
+              data-doi="${esc(p.d)}">${esc(p.t)}</a></p>
+            <p class="a">${emphasise(p.a)}</p>
+            <p class="v">${esc(p.v)}${p.c ? ` &middot; <i>${p.c} citations</i>` : ""}</p>
+          </article>`).join("")}</div>
+      </div>`).join("");
+
+    document.getElementById("pub-count").textContent = PUBLICATIONS.length + " with DOI";
+
+    document.getElementById("pub-note").innerHTML =
+      `This list is generated from <a href="https://orcid.org/0000-0002-5496-4345" target="_blank"
+       rel="noreferrer">ORCID</a> and enriched with authors, venues and citation counts from Crossref, so every
+       entry resolves to a registered DOI. It is therefore a subset: the full record of more than 230 publications,
+       including book chapters, conference papers and reports without a DOI, is on
+       <a href="https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&amp;hl=en" target="_blank"
+       rel="noreferrer">Google Scholar</a>.`;
+  })();
+
+  /* ═══════════════════════════════════════════════════════════════════
+     PANEL ENGINE
+     Every panel is in the DOM; `hidden` picks one, and the hash keeps
+     deep links working.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  const panels = [...document.querySelectorAll("[data-panel]")];
+  const names = new Set(SECTIONS.map(s => s.id));
+
+  function showPanel(name, updateHash = true){
+    if(!names.has(name)) name = "home";
+    panels.forEach(p => p.hidden = p.dataset.panel !== name);
+    document.querySelectorAll("[data-tab]").forEach(t =>
+      t.setAttribute("aria-selected", String(t.dataset.tab === name)));
+    const section = SECTIONS.find(s => s.id === name);
+    document.title = name === "home"
+      ? "Basant Maheshwari"
+      : `${section.label} — Basant Maheshwari`;
+    if(updateHash) history.replaceState(null, "", "#" + name);
+    window.scrollTo({top:0, behavior:"smooth"});
+    document.getElementById("bar-menu").removeAttribute("open");
+  }
+
+  document.querySelectorAll("[data-tab]").forEach(t =>
+    t.addEventListener("click", () => showPanel(t.dataset.tab)));
+  document.querySelectorAll("[data-go]").forEach(link =>
+    link.addEventListener("click", e => { e.preventDefault(); showPanel(link.dataset.go); }));
+
+  const resolveHash = () => showPanel(decodeURIComponent(location.hash.slice(1)) || "home", false);
+  addEventListener("hashchange", resolveHash);
+  resolveHash();
+
+  /* ─── Publication search ───────────────────────────────────────── */
+  (function wirePubSearch(){
+    const input = document.getElementById("pub-search");
+    const empty = document.getElementById("pub-empty");
+    const count = document.getElementById("pub-count");
+    input.addEventListener("input", () => {
+      const query = input.value.trim().toLowerCase();
+      let shown = 0;
+      document.querySelectorAll(".pub-year").forEach(group => {
+        let inGroup = 0;
+        group.querySelectorAll(".pub").forEach(pub => {
+          const hit = !query || matchesQuery(pub.dataset.search, query);
+          pub.hidden = !hit;
+          if(hit){ inGroup++; shown++; }
+        });
+        /* A year with nothing left in it hides its heading too, so the
+           result reads as a list rather than a column of empty years. */
+        group.hidden = inGroup === 0;
+      });
+      empty.hidden = shown > 0;
+      count.textContent = query
+        ? shown + " of " + PUBLICATIONS.length
+        : PUBLICATIONS.length + " with DOI";
+    });
+  })();
+
+  /* ═══════════════════════════════════════════════════════════════════
+     THE CROSS-SECTION
+
+     A hydrogeological section through an unconfined aquifer, with the
+     water table solved rather than drawn.
+
+     Dupuit–Forchheimer assumes flow is essentially horizontal, so the
+     hydraulic gradient equals the slope of the water table. Discharge
+     per unit width is then q = -K·h·dh/dx, and continuity with areal
+     recharge N gives
+
+         d/dx ( K h dh/dx ) + N = 0
+     =>  d²(h²)/dx² = -2N/K
+
+     which integrates to a parabola in h². Applying h(0)=h1, h(L)=h2:
+
+         h(x)² = h1² + (h2² - h1²)·x/L + (N/K)·x·(L - x)
+
+     The final term is the recharge mound — identically zero at both
+     boundaries, maximum in between, and proportional to N. That single
+     term is the whole argument: raise N with a check dam and the water
+     table between the boundaries rises with it.
+
+     The groundwater divide sits where dh/dx = 0:
+
+         x_d = L/2 + K·(h2² - h1²) / (2·N·L)
+
+     Recession follows Maillet: after the monsoon, N decays as e^(-t/τ),
+     which is why the fall is slow and the rise is not.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  (function crossSection(){
+    const host = document.getElementById("xs");
+    if(!host) return;
+
+    const W = 900, H = 268;
+    const L = 900;              /* aquifer width, m — one metre per unit x */
+    const BASE_Y = 236;         /* impermeable base, in svg units */
+    const M = 7.6;              /* vertical scale: svg units per metre */
+    const H1 = 9.2, H2 = 11.4;  /* fixed heads at the boundaries, m */
+    const K = 1000;             /* hydraulic conductivity, m/yr */
+    const SURFACE = 22;         /* land surface above the base, m */
+
+    /* Six monitored wells. `depth` is how far the bore reaches below the
+       land surface, in metres — a shallow dug well goes dry first, which
+       is the thing the readout is there to show. */
+    const WELLS = [
+      {x:0.13, depth:12.5}, {x:0.28, depth:14.0}, {x:0.42, depth:11.0},
+      {x:0.58, depth:15.0}, {x:0.73, depth:12.0}, {x:0.88, depth:14.5},
+    ];
+    const DAM_X = 0.42;
+
+    /* Land surface: a gentle undulation so the section reads as ground
+       rather than as a chart axis. Deterministic, not random. */
+    const surfaceAt = xr =>
+      SURFACE + 0.85 * Math.sin(xr * 5.1 + 0.7) + 0.5 * Math.sin(xr * 11.3 + 2.1);
+
+    /* h(x) from the Dupuit–Forchheimer solution above. Guarded with
+       max(0,…) because h² can go negative for absurd parameters, and a
+       NaN in a path `d` blanks the whole drawing rather than failing
+       visibly. */
+    function headAt(x, NK){
+      const h2 = H1 * H1 + (H2 * H2 - H1 * H1) * (x / L) + NK * x * (L - x);
+      return Math.sqrt(Math.max(0, h2));
+    }
+
+    const yOf = h => BASE_Y - h * M;
+    const xOf = xr => xr * W;
+
+    /* Static furniture: drawn once. Only the water table, the well
+       markers and the readout change per frame. */
+    const surfacePts = [];
+    for(let i = 0; i <= 60; i++){
+      const xr = i / 60;
+      surfacePts.push(`${xOf(xr).toFixed(1)},${yOf(surfaceAt(xr)).toFixed(1)}`);
+    }
+    const surfaceD = "M" + surfacePts.join(" L");
+
+    host.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" role="img"
+           aria-label="Cross-section through an unconfined aquifer. The water table, solved from the Dupuit–Forchheimer equation, rises into a mound between two boundaries as monsoon recharge increases, then recedes.">
+        <path class="xs-soil" d="${surfaceD} L${W},${BASE_Y} L0,${BASE_Y} Z"/>
+        <path class="xs-sat" id="xs-sat-fill" d=""/>
+        <rect class="xs-rock" x="0" y="${BASE_Y}" width="${W}" height="${H - BASE_Y}"/>
+        <line class="xs-rockline" x1="0" y1="${BASE_Y}" x2="${W}" y2="${BASE_Y}"/>
+        <path class="xs-surface" d="${surfaceD}"/>
+        <g id="xs-rain"></g>
+        <path class="xs-wt-ghost" id="xs-ghost" d=""/>
+        <path class="xs-wt" id="xs-wt" d=""/>
+        <g id="xs-wellgroup"></g>
+        <g id="xs-dam"></g>
+        <text class="xs-lbl" x="4" y="${BASE_Y + 15}">Impermeable base</text>
+        <text class="xs-lbl" x="${W - 4}" y="${BASE_Y + 15}" text-anchor="end">Land surface &#8212; hardrock watershed</text>
+      </svg>`;
+
+    const wtEl    = host.querySelector("#xs-wt");
+    const ghostEl = host.querySelector("#xs-ghost");
+    const satEl   = host.querySelector("#xs-sat-fill");
+    const wellsEl = host.querySelector("#xs-wellgroup");
+    const damEl   = host.querySelector("#xs-dam");
+    const rainEl  = host.querySelector("#xs-rain");
+    const seasonEl   = document.getElementById("xs-season");
+    const clockEl    = document.getElementById("xs-clock");
+    const outHead    = document.getElementById("xs-head");
+    const outWells   = document.getElementById("xs-wells");
+    const outRech    = document.getElementById("xs-recharge");
+
+    /* The check dam sits on the surface at DAM_X — the intervention the
+       whole programme is about. */
+    (function drawDam(){
+      const sx = xOf(DAM_X), sy = yOf(surfaceAt(DAM_X));
+      damEl.innerHTML = `
+        <path class="xs-dam" d="M${sx - 13},${sy} L${sx - 5},${sy - 13} L${sx + 5},${sy - 13} L${sx + 13},${sy} Z"/>
+        <text class="xs-lbl" x="${sx}" y="${sy - 19}" text-anchor="middle" style="fill:var(--ochre)">Check dam</text>`;
+    })();
+
+    /* Rain ticks above the surface, their opacity following N. */
+    rainEl.innerHTML = Array.from({length:26}, (_, i) => {
+      const xr = (i + 0.5) / 26, sx = xOf(xr), sy = yOf(surfaceAt(xr));
+      return `<line class="xs-rain" x1="${sx}" y1="${(sy - 30).toFixed(1)}" x2="${(sx - 3).toFixed(1)}" y2="${(sy - 17).toFixed(1)}"/>`;
+    }).join("");
+
+    /* Peak-season water table, drawn once as a dashed ghost so the fall
+       is legible even when you arrive mid-recession. */
+    /* N/K at the monsoon peak and at the driest point. NK_PEAK = 4.6e-4
+       means N = 0.46 m/yr against K = 1000 m/yr — a plausible monsoon
+       in a watershed with recharge structures working. It puts the crest
+       of the mound about 3.6 m above the no-recharge profile and still
+       leaves roughly 8 m of unsaturated zone below the land surface, so
+       the water table never breaches the ground. */
+    const NK_PEAK = 4.6e-4, NK_MIN = 0.18e-4;
+    const pathFor = NK => {
+      let d = "";
+      for(let i = 0; i <= 90; i++){
+        const x = (i / 90) * L;
+        d += (i ? " L" : "M") + xOf(x / L).toFixed(1) + "," + yOf(headAt(x, NK)).toFixed(1);
+      }
+      return d;
+    };
+    ghostEl.setAttribute("d", pathFor(NK_PEAK));
+
+    const SEASONS = [
+      {upto:0.10, name:"Monsoon &#8212; recharge rising"},
+      {upto:0.26, name:"Post-monsoon &#8212; mound at its peak"},
+      {upto:0.62, name:"Recession &#8212; the mound draining"},
+      {upto:1.01, name:"Pre-monsoon &#8212; the driest the wells get"},
+    ];
+
+    function draw(phase){
+      /* Monsoon is short and steep; recession is long and exponential.
+         That asymmetry is the shape of a real hydrograph, and it is why
+         a village feels the dry season for so much longer than the rain. */
+      let NK;
+      if(phase < 0.10){
+        NK = NK_MIN + (NK_PEAK - NK_MIN) * (phase / 0.10);        /* rise */
+      } else {
+        const t = (phase - 0.10) / 0.90;
+        NK = NK_MIN + (NK_PEAK - NK_MIN) * Math.exp(-3.1 * t);    /* Maillet recession */
+      }
+
+      const d = pathFor(NK);
+      wtEl.setAttribute("d", d);
+      satEl.setAttribute("d", `${d} L${W},${BASE_Y} L0,${BASE_Y} Z`);
+
+      /* The groundwater divide, where dh/dx = 0. Because d²(h²)/dx² is
+         -2N/K and therefore negative, the profile is concave in h² and
+         this stationary point is the maximum. Clamped into the domain:
+         with a strong boundary gradient and weak recharge the divide
+         leaves the section entirely, and the clamp then reports the
+         peak head *within* the section — which is what the readout is
+         labelled, so it stays true in both regimes. */
+      const xd = Math.min(L, Math.max(0, L / 2 + K * (H2 * H2 - H1 * H1) / (2 * (NK * K) * L)));
+      const hd = headAt(xd, NK);
+
+      let wet = 0;
+      wellsEl.innerHTML = WELLS.map(w => {
+        const sx = xOf(w.x);
+        const surf = surfaceAt(w.x);
+        const bottom = surf - w.depth;          /* well bottom, m above base */
+        const wt = headAt(w.x * L, NK);         /* water table at the well */
+        const hasWater = wt > bottom;
+        if(hasWater) wet++;
+        const yTop = yOf(surf), yBot = yOf(bottom);
+        const marker = hasWater
+          ? `<circle class="xs-well-water" cx="${sx}" cy="${yOf(wt).toFixed(1)}" r="3.4"/>`
+          : `<path class="xs-well-dry" d="M${sx - 3.6},${(yBot - 3.6).toFixed(1)} l7.2,7.2 M${sx + 3.6},${(yBot - 3.6).toFixed(1)} l-7.2,7.2"/>`;
+        return `<line class="xs-well" x1="${sx}" y1="${yTop.toFixed(1)}" x2="${sx}" y2="${yBot.toFixed(1)}"/>${marker}`;
+      }).join("");
+
+      rainEl.style.opacity = ((NK - NK_MIN) / (NK_PEAK - NK_MIN)).toFixed(3);
+
+      outHead.textContent = hd.toFixed(1) + " m";
+      outWells.textContent = wet + " of " + WELLS.length;
+      outWells.className = wet < WELLS.length ? "dry" : "";
+      outRech.textContent = (NK * K).toFixed(2);
+      seasonEl.innerHTML = (SEASONS.find(s => phase < s.upto) || SEASONS[3]).name;
+      clockEl.textContent = "Month " + String(Math.floor(phase * 12) + 1).padStart(2, "0") + " of 12";
+    }
+
+    /* One full year every 26 seconds. Slow enough to read as weather
+       rather than as an animation asking for attention. */
+    const PERIOD = 26000;
+    const still = matchMedia("(prefers-reduced-motion:reduce)");
+
+    if(still.matches){
+      draw(0.18);   /* the post-monsoon peak: the single most informative frame */
+      return;
+    }
+
+    let raf = 0, t0 = 0, running = false;
+    function tick(ts){
+      if(!t0) t0 = ts;
+      draw(((ts - t0) % PERIOD) / PERIOD);
+      raf = requestAnimationFrame(tick);
+    }
+    function start(){ if(!running){ running = true; raf = requestAnimationFrame(tick); } }
+    function stop(){ running = false; cancelAnimationFrame(raf); t0 = 0; }
+
+    draw(0.18);
+    start();
+
+    /* requestAnimationFrame does not run in a hidden tab anyway; stopping
+       explicitly releases the loop instead of leaving it queued. */
+    document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+  })();
+  </script>
+</body>
+</html>

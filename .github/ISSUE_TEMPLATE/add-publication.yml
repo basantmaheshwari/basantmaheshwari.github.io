@@ -1,0 +1,52 @@
+name: Add a publication
+description: A new paper is out, or one is missing from the list.
+title: "Publication: "
+labels:
+  - website
+  - publication
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If the paper has a DOI, that is all that is really needed — everything
+        else can be looked up from it. Fill in the rest only if you have it to hand.
+
+  - type: input
+    id: doi
+    attributes:
+      label: DOI
+      description: Just the DOI, or the full doi.org link. Authors, journal and year are taken from this.
+      placeholder: "10.1002/wwp2.70094"
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Optional. Only needed if the DOI is very new and not yet registered.
+
+  - type: dropdown
+    id: featured
+    attributes:
+      label: Should this be highlighted?
+      description: The list is otherwise ordered by year, newest first.
+      options:
+        - "No — file it in the list normally"
+        - "Yes — this is a significant paper"
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Corrections to an existing entry, a preferred author order, or a note about the work.
+
+  - type: checkboxes
+    id: approval
+    attributes:
+      label: Confirmation
+      options:
+        - label: This paper is published or accepted, and may appear on the public website.
+          required: true

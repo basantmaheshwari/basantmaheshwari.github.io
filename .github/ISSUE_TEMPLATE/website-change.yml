@@ -1,0 +1,75 @@
+name: Request a website change
+description: Anything else — wording, a correction, a new section, a photograph.
+title: "Website: "
+labels:
+  - website
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe what should change in ordinary language. You do not need to mention
+        code, files or how the site is built — a website editor or an AI coding
+        assistant can work directly from this.
+
+  - type: dropdown
+    id: page
+    attributes:
+      label: Which page?
+      options:
+        - Profile (the front page)
+        - Research
+        - Publications
+        - Programmes
+        - Teaching
+        - News
+        - Contact
+        - A new page
+        - Not sure / more than one
+    validations:
+      required: true
+
+  - type: textarea
+    id: request
+    attributes:
+      label: What should change?
+      description: Describe the result you want, not how to achieve it.
+      placeholder: "Example: The opening paragraph should mention the AIWC dual degree programme with IIT Roorkee."
+    validations:
+      required: true
+
+  - type: textarea
+    id: content
+    attributes:
+      label: Approved wording or factual details
+      description: >
+        Exact wording, names, dates, titles, numbers or links that must be used.
+        Anything not supplied here will be left out rather than invented — so if a
+        detail matters, please include it.
+      placeholder: "Paste approved content here."
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Images or documents
+      description: >
+        Optional. Please keep images small — they are embedded directly in the page.
+        You can also point at an image already used on the site.
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Timing
+      options:
+        - Routine
+        - Needed this week
+        - Urgent correction
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: approval
+    attributes:
+      label: Content approval
+      options:
+        - label: The facts and wording supplied above are approved for the public website.
+          required: true
