@@ -372,6 +372,39 @@ try {
         warn(`content/${file} is not in admin/config.yml — it cannot be edited through the editor`);
       }
     }
+
+    /* Every editable file should have a preview, or its form is the only
+       thing the editor shows and you are back to guessing what a change
+       will look like. The names must match: a renderer keyed to a name no
+       collection uses is dead code that nothing reports. */
+    let js = null;
+    try { js = readFileSync(join(ROOT, "admin/preview.js"), "utf8"); } catch { /* below */ }
+    if (js === null) warn("admin/preview.js is missing — the editor falls back to a generic preview");
+    else {
+      const fileNames = [...cfg.matchAll(/^\s*-\s*name:\s*([\w-]+)\s*$/gm)].map(m => m[1])
+        .filter(n => cfg.includes(`name: ${n}`) && /_/.test(n));
+      const rendered = [...js.matchAll(/^\s{2}([A-Za-z0-9_]+)\s*:/gm)].map(m => m[1]);
+      for (const n of fileNames) {
+        if (!rendered.includes(n)) warn(`admin/config.yml has "${n}" but admin/preview.js has no preview for it`);
+      }
+      for (const n of rendered) {
+        if (!fileNames.includes(n)) warn(`admin/preview.js renders "${n}", which no collection file is called`);
+      }
+    }
+
+    /* The preview stylesheet is generated from index.html. If it is stale
+       the preview is styled by an older design than the page. */
+    const cssFile = (() => {
+      try { return readFileSync(join(ROOT, "admin/preview.css"), "utf8"); } catch { return null; }
+    })();
+    if (cssFile === null) warn("admin/preview.css is missing — run: node scripts/build.mjs");
+    else {
+      const {previewCss} = await import("../scripts/content.mjs");
+      if (cssFile !== previewCss(html)) {
+        warn("admin/preview.css is out of date with the stylesheet in index.html — " +
+             "the editor would preview an older design. Run: node scripts/build.mjs");
+      }
+    }
   }
 } catch (e) {
   fail(`could not compare index.html with content/: ${e.message}`);

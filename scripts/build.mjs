@@ -12,7 +12,8 @@
  *     node scripts/build.mjs --check   exit 1 if it would change anything
  */
 
-import {readHtml, writeHtml, readContentFiles, injectArrays, FILES} from "./content.mjs";
+import {readHtml, writeHtml, readContentFiles, injectArrays, FILES,
+        previewCss, readPreviewCss, writePreviewCss} from "./content.mjs";
 
 const check = process.argv.includes("--check");
 const {content, missing, malformed} = readContentFiles();
@@ -37,16 +38,25 @@ try {
 
 const counts = Object.keys(FILES).map(n => `${content[n].length} ${n.toLowerCase()}`).join(", ");
 
-if (before === after) {
-  console.log(`index.html is already in step with content/ — ${counts}`);
+/* The editor's preview stylesheet is a copy of the site's own, so it is
+   regenerated here rather than maintained by hand. */
+const css = previewCss(after);
+const cssStale = readPreviewCss() !== css;
+
+const htmlStale = before !== after;
+
+if (!htmlStale && !cssStale) {
+  console.log(`index.html and admin/preview.css are in step with content/ — ${counts}`);
   process.exit(0);
 }
 
 if (check) {
-  console.error("ERROR  index.html does not match content/ — run: node scripts/build.mjs");
-  console.error(`       (${(Math.abs(after.length - before.length) / 1024).toFixed(1)} kB difference)`);
+  if (htmlStale) console.error("ERROR  index.html does not match content/");
+  if (cssStale)  console.error("ERROR  admin/preview.css does not match the stylesheet in index.html");
+  console.error("       run: node scripts/build.mjs");
   process.exit(1);
 }
 
-writeHtml(after);
-console.log(`index.html rewritten from content/ — ${counts}`);
+if (htmlStale) writeHtml(after);
+if (cssStale) writePreviewCss(css);
+console.log(`rewritten: ${[htmlStale && "index.html", cssStale && "admin/preview.css"].filter(Boolean).join(" + ")} — ${counts}`);

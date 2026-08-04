@@ -1,14 +1,14 @@
 # Sveltia CMS — the editing interface for basantmaheshwari.github.io
 #
-# Each entry below maps one file in `content/` to a form. Saving commits the
-# JSON straight to `main`; the publish workflow then runs `scripts/build.mjs`
-# to copy the content into `index.html` and deploys the result. Nothing needs
-# to be run by hand.
+# The sidebar mirrors the website: one entry per page of the site, in the same
+# order as its menu. Opening "Publications" here edits the Publications page
+# and nothing else, so it is always clear what a change will affect.
 #
-# `base_url` points at the service that signs editors in with GitHub. It has
-# to exist before saving will work — see MAINTAINING.md, "Setting up the
-# editor". Until it does, this page will load and show the content but every
-# save will fail at the sign-in step.
+# Saving commits JSON to `main`. The publish workflow then runs
+# scripts/build.mjs to copy the content into index.html and deploys it.
+#
+# `base_url` points at the service that signs editors in with GitHub. It must
+# exist before saving will work — see MAINTAINING.md, "Setting up the editor".
 
 backend:
   name: github
@@ -16,13 +16,13 @@ backend:
   branch: main
   base_url: https://REPLACE-ME.workers.dev
   commit_messages:
-    create: 'Add {{collection}} entry via the editor'
-    update: 'Update {{collection}} via the editor'
-    delete: 'Remove a {{collection}} entry via the editor'
+    create: 'Edit {{collection}} in the website editor'
+    update: 'Edit {{collection}} in the website editor'
+    delete: 'Remove an entry from {{collection}}'
 
-# Images are embedded in index.html as data URIs, so there is no media
-# folder to write into. Uploads are turned off rather than left pointing
-# somewhere that would silently do nothing.
+# Images are embedded in index.html as data URIs, so there is no media folder
+# to write into. Uploads are off rather than pointing somewhere that would
+# silently do nothing.
 media_folder: ''
 public_folder: ''
 
@@ -30,105 +30,37 @@ site_url: https://basantmaheshwari.github.io/basantmaheshwari/
 display_url: https://basantmaheshwari.github.io/basantmaheshwari/
 
 collections:
-  # ── The two things edited most often ──────────────────────────────────
-  - name: publications
-    label: Publications
-    label_singular: publication
-    icon: menu_book
+  # ── 00 Profile ────────────────────────────────────────────────────────
+  - name: profile
+    label: '00 · Profile page'
+    icon: person
     files:
-      - name: list
-        label: Publication list
-        file: content/publications.json
+      - name: profile_metrics
+        label: The four figures
+        file: content/metrics.json
         format: json
+        preview_path: ''
         description: >
-          Every paper on the Publications page. Newest first. A DOI is the only
-          thing really needed — the rest can be looked up from it.
+          The four figures shown on the front page. Check them against Google
+          Scholar before changing, and update them together so they agree.
         fields:
           - name: items
-            label: Publications
-            label_singular: publication
+            label: Figures
+            label_singular: figure
             widget: list
-            summary: '{{fields.y}} — {{fields.t}}'
+            max: 4
+            summary: '{{fields.value}} — {{fields.label}}'
             fields:
-              - {name: k, label: Kind, widget: select, default: journal,
-                 options: [{label: Journal article, value: journal},
-                           {label: Conference paper, value: conference},
-                           {label: Thesis, value: thesis},
-                           {label: Other output, value: other}]}
-              - {name: y, label: Year, widget: number, value_type: int, min: 1960, max: 2100}
-              - {name: t, label: Title, widget: string}
-              - {name: a, label: Authors, widget: string, required: false,
-                 hint: 'Family, I. — comma separated, six then "et al." Write his own name exactly "Maheshwari, B." so it is emboldened.'}
-              - {name: v, label: Journal or venue, widget: string}
-              - {name: d, label: DOI, widget: string, required: false,
-                 pattern: ['^$|^10\.\d{4,9}/\S+$', 'Must look like 10.1002/wwp2.70094, or be left empty']}
-              - {name: c, label: Citations, widget: number, value_type: int, required: false, min: 0}
+              - {name: value, label: Figure, widget: string}
+              - {name: label, label: Caption, widget: string,
+                 hint: 'Use <br> to split it over two lines.'}
 
-  - name: team
-    label: Team
-    icon: group
+  # ── 01 Research ───────────────────────────────────────────────────────
+  - name: research
+    label: '01 · Research page'
+    icon: science
     files:
-      - name: people
-        label: People
-        file: content/team.json
-        format: json
-        description: >
-          Only list someone who has agreed to appear. Never infer a role — a
-          co-author is not a student, and a professor is a collaborator rather
-          than a member of the group.
-        fields:
-          - name: items
-            label: People
-            label_singular: person
-            widget: list
-            summary: '{{fields.n}} — {{fields.p}}'
-            fields:
-              - {name: r, label: Role, widget: select, default: phd,
-                 options: [{label: Postdoctoral researcher, value: postdoc},
-                           {label: PhD candidate, value: phd},
-                           {label: Collaborator, value: collaborator},
-                           {label: Other team member, value: other}]}
-              - {name: n, label: Name, widget: string}
-              - {name: p, label: Position, widget: string, required: false}
-              - {name: f, label: What they work on, widget: text, required: false}
-              - {name: w, label: Institution, widget: string, required: false,
-                 hint: 'Only if they are not at Western Sydney University.'}
-              - name: l
-                label: Links
-                widget: list
-                required: false
-                fields:
-                  - {name: label, label: Label, widget: string}
-                  - {name: href, label: Address, widget: string}
-
-  - name: news
-    label: News
-    icon: campaign
-    files:
-      - name: items
-        label: News items
-        file: content/news.json
-        format: json
-        description: Events, visits, awards and milestones. Newest first.
-        fields:
-          - name: items
-            label: News
-            label_singular: item
-            widget: list
-            summary: '{{fields.year}} — {{fields.name}}'
-            fields:
-              - {name: name, label: Headline, widget: string}
-              - {name: year, label: When, widget: string, hint: 'A month and year is enough — "Nov 2025".'}
-              - {name: status, label: Kind, widget: string, default: event}
-              - {name: blurb, label: The details, widget: text}
-              - {name: tags, label: Tags, widget: list, required: false, allow_add: true}
-
-  # ── Pages that change less often ──────────────────────────────────────
-  - name: pages
-    label: Page content
-    icon: description
-    files:
-      - name: research
+      - name: research_themes
         label: Research themes
         file: content/research.json
         format: json
@@ -141,11 +73,71 @@ collections:
             fields:
               - {name: name, label: Theme, widget: string}
               - {name: year, label: When, widget: string, default: Ongoing}
-              - {name: status, label: Status, widget: string, default: current}
+              - {name: status, label: Status, widget: string, default: current,
+                 hint: '"current" is highlighted; anything else is plain.'}
               - {name: blurb, label: Description, widget: text}
               - {name: tags, label: Tags, widget: list, required: false, allow_add: true}
 
-      - name: programs
+  # ── 02 Publications ───────────────────────────────────────────────────
+  - name: publications
+    label: '02 · Publications page'
+    icon: menu_book
+    files:
+      - name: publications_list
+        label: The publication list
+        file: content/publications.json
+        format: json
+        description: >
+          Every paper on the Publications page, newest first. A DOI is the only
+          thing really needed — the rest can be looked up from it.
+        fields:
+          - name: items
+            label: Publications
+            label_singular: publication
+            widget: list
+            summary: '{{fields.y}} · {{fields.t}}'
+            fields:
+              - {name: k, label: Which section it appears in, widget: select, default: journal,
+                 options: [{label: Journal article, value: journal},
+                           {label: Conference paper, value: conference},
+                           {label: Thesis, value: thesis},
+                           {label: Other output, value: other}]}
+              - {name: y, label: Year, widget: number, value_type: int, min: 1960, max: 2100}
+              - {name: t, label: Title, widget: string}
+              - {name: a, label: Authors, widget: string, required: false,
+                 hint: 'Family, I. — comma separated, six then "et al." Write his own name exactly "Maheshwari, B." so it is emboldened.'}
+              - {name: v, label: Journal or venue, widget: string}
+              - {name: d, label: DOI, widget: string, required: false,
+                 hint: 'Leave empty if there is none — the title is then listed without a link.',
+                 pattern: ['^$|^10\.\d{4,9}/\S+$', 'Must look like 10.1002/wwp2.70094, or be empty']}
+              - {name: c, label: Citations, widget: number, value_type: int, required: false, min: 0}
+
+      - name: publications_sections
+        label: Its sections
+        file: content/pub-kinds.json
+        format: json
+        description: >
+          The headings the publication list is grouped under, in order. A
+          section with nothing in it still appears, showing its message.
+        fields:
+          - name: items
+            label: Sections
+            label_singular: section
+            widget: list
+            summary: '{{fields.label}}'
+            fields:
+              - {name: id, label: Identifier, widget: string,
+                 hint: 'Lowercase, no spaces. Publications point at this.'}
+              - {name: label, label: Heading, widget: string}
+              - {name: empty, label: Shown when it is empty, widget: text}
+              - {name: open, label: Starts expanded, widget: boolean, required: false, default: false}
+
+  # ── 03 Programmes ─────────────────────────────────────────────────────
+  - name: programmes
+    label: '03 · Programmes page'
+    icon: water_drop
+    files:
+      - name: programmes_list
         label: Programmes
         file: content/programs.json
         format: json
@@ -169,8 +161,66 @@ collections:
                   - {name: label, label: Label, widget: string}
                   - {name: href, label: Address, widget: string}
 
-      - name: teaching
-        label: Teaching
+  # ── 04 Team ───────────────────────────────────────────────────────────
+  - name: team
+    label: '04 · Team page'
+    icon: group
+    files:
+      - name: team_people
+        label: People
+        file: content/team.json
+        format: json
+        description: >
+          Only list someone who has agreed to appear. Never infer a role — a
+          co-author is not a student, and a professor is a collaborator rather
+          than a member of the group.
+        fields:
+          - name: items
+            label: People
+            label_singular: person
+            widget: list
+            summary: '{{fields.n}} — {{fields.p}}'
+            fields:
+              - {name: r, label: Which section they appear in, widget: select, default: phd,
+                 options: [{label: Postdoctoral researcher, value: postdoc},
+                           {label: PhD candidate, value: phd},
+                           {label: Collaborator, value: collaborator},
+                           {label: Other team member, value: other}]}
+              - {name: n, label: Name, widget: string}
+              - {name: p, label: Position, widget: string, required: false}
+              - {name: f, label: What they work on, widget: text, required: false}
+              - {name: w, label: Institution, widget: string, required: false,
+                 hint: 'Only if they are not at Western Sydney University.'}
+              - name: l
+                label: Links
+                widget: list
+                required: false
+                fields:
+                  - {name: label, label: Label, widget: string}
+                  - {name: href, label: Address, widget: string}
+
+      - name: team_sections
+        label: Its sections
+        file: content/team-roles.json
+        format: json
+        fields:
+          - name: items
+            label: Sections
+            label_singular: section
+            widget: list
+            summary: '{{fields.label}}'
+            fields:
+              - {name: id, label: Identifier, widget: string}
+              - {name: label, label: Heading, widget: string}
+              - {name: empty, label: Shown when it is empty, widget: text}
+
+  # ── 05 Teaching ───────────────────────────────────────────────────────
+  - name: teaching
+    label: '05 · Teaching page'
+    icon: school
+    files:
+      - name: teaching_areas
+        label: Teaching and capacity building
         file: content/teaching.json
         format: json
         fields:
@@ -184,8 +234,37 @@ collections:
               - {name: when, label: When, widget: string, default: Ongoing}
               - {name: blurb, label: Description, widget: text}
 
-      - name: contact
-        label: Contact
+  # ── 06 News ───────────────────────────────────────────────────────────
+  - name: news
+    label: '06 · News page'
+    icon: campaign
+    files:
+      - name: news_items
+        label: News items
+        file: content/news.json
+        format: json
+        description: Events, visits, awards and milestones. Newest first.
+        fields:
+          - name: items
+            label: News
+            label_singular: item
+            widget: list
+            summary: '{{fields.year}} · {{fields.name}}'
+            fields:
+              - {name: name, label: Headline, widget: string}
+              - {name: year, label: When, widget: string,
+                 hint: 'A month and year is enough — "Nov 2025".'}
+              - {name: status, label: Kind, widget: string, default: event}
+              - {name: blurb, label: The details, widget: text}
+              - {name: tags, label: Tags, widget: list, required: false, allow_add: true}
+
+  # ── 07 Contact ────────────────────────────────────────────────────────
+  - name: contact
+    label: '07 · Contact page'
+    icon: mail
+    files:
+      - name: contact_channels
+        label: Contact channels
         file: content/contact.json
         format: json
         fields:
@@ -200,79 +279,29 @@ collections:
               - {name: href, label: Address, widget: string,
                  hint: 'A full https:// address, or mailto: for email.'}
 
-      - name: metrics
-        label: Profile figures
-        file: content/metrics.json
-        format: json
-        description: >
-          The four figures on the front page. Check them against Google Scholar
-          before changing, and update all four together.
-        fields:
-          - name: items
-            label: Figures
-            label_singular: figure
-            widget: list
-            max: 4
-            summary: '{{fields.value}} — {{fields.label}}'
-            fields:
-              - {name: value, label: Figure, widget: string}
-              - {name: label, label: Caption, widget: string,
-                 hint: 'A <br> splits it over two lines.'}
-
-  # ── Structure. Changing these changes the shape of the site ───────────
+  # ── The site itself ───────────────────────────────────────────────────
   - name: structure
-    label: Site structure
+    label: '⚙ Pages and menu'
     icon: account_tree
     files:
-      - name: sections
+      - name: site_sections
         label: Pages and menu order
         file: content/sections.json
         format: json
         description: >
-          The pages of the site, in the order they appear in the menu. Every
-          entry here needs either a panel in index.html or a page definition —
-          removing one that has neither leaves a menu item leading nowhere, and
-          the publish check will refuse it.
+          Every page of the site, in menu order. This is the structure of the
+          website itself — changing it changes what pages exist. Each entry
+          needs a matching panel in index.html or a page definition; the
+          publish check refuses a menu item that leads nowhere.
         fields:
           - name: items
             label: Pages
             label_singular: page
             widget: list
-            summary: '{{fields.tc}} — {{fields.label}}'
+            summary: '{{fields.tc}} · {{fields.label}}'
             fields:
               - {name: id, label: Identifier, widget: string,
                  hint: 'Lowercase, no spaces. Also the #address of the page.'}
               - {name: label, label: Menu label, widget: string}
               - {name: tc, label: Number, widget: string,
-                 hint: 'Two digits, in order: 00, 01, 02…'}
-
-      - name: pub_kinds
-        label: Publication sections
-        file: content/pub-kinds.json
-        format: json
-        fields:
-          - name: items
-            label: Sections
-            label_singular: section
-            widget: list
-            summary: '{{fields.label}}'
-            fields:
-              - {name: id, label: Identifier, widget: string}
-              - {name: label, label: Heading, widget: string}
-              - {name: empty, label: Shown when empty, widget: text}
-              - {name: open, label: Starts expanded, widget: boolean, required: false, default: false}
-
-      - name: team_roles
-        label: Team sections
-        file: content/team-roles.json
-        format: json
-        fields:
-          - name: items
-            label: Sections
-            label_singular: section
-            widget: list
-            summary: '{{fields.label}}'
-            fields:
-              - {name: id, label: Identifier, widget: string}
-              - {name: label, label: Heading, widget: string}
-              - {name: empty, label: Shown when empty, widget: text}
+                 hint: 'Two digits, in menu order: 00, 01, 02…'}

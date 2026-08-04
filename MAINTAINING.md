@@ -6,10 +6,31 @@ Everything you need to change <https://basantmaheshwari.github.io/basantmaheshwa
 
 The editor is at **<https://basantmaheshwari.github.io/basantmaheshwari/admin/>**.
 
-Sign in with GitHub and you get a form for every part of the site —
-publications, team, news, the research and programme lists, the contact
-details, and the page structure. Saving commits the change and the site
-republishes itself within a minute or so. No files, no code.
+Sign in with GitHub and the sidebar shows **one entry per page of the site**,
+in the same order as its menu:
+
+```
+00 · Profile page        the four figures
+01 · Research page       research themes
+02 · Publications page   the list, and the sections it is grouped under
+03 · Programmes page     MARVI, AIWC, the training programmes
+04 · Team page           people, and the sections they appear in
+05 · Teaching page       teaching and capacity building
+06 · News page           events and milestones
+07 · Contact page        contact channels
+ ⚙ · Pages and menu      which pages exist, and their order
+```
+
+Opening *Publications* edits the Publications page and nothing else, so it is
+always clear what a change will affect.
+
+**Every form has a live preview beside it.** It is not an approximation: the
+preview is the site's own markup under the site's own stylesheet, generated
+from `index.html` on each build, so it looks like the page and follows the
+design automatically when that changes.
+
+Saving commits the change and the site republishes itself within a minute or
+so. No files, no code.
 
 > **Before it will save, someone has to set up sign-in once.** See *Setting up
 > the editor* below. Until that is done the editor loads and shows the content,
@@ -95,7 +116,9 @@ an ordinary commit, so the history, review and rollback are git's.
 
 | Piece | What it does |
 | ----- | ------------ |
-| `admin/` | The editor — a form for each part of the site |
+| `admin/` | The editor — one form per page of the site |
+| `admin/preview.js` | The live preview beside each form |
+| `admin/preview.css` | Generated from `index.html`, so previews match the site |
 | `content/*.json` | What it reads and writes |
 | `scripts/build.mjs` | Copies that content into `index.html` |
 | `checks/verify.mjs` | Refuses to publish a broken or unsafe change |

@@ -31,8 +31,10 @@ these five:
    makes the two disagree and your change is lost the next time anyone builds.
 3. **Never invent a fact.** No publication, co-author, student, award, date or
    number that a source did not give you. An honest gap is always correct.
-4. If you add or rename a content file, add it to `admin/config.yml` too, or
-   it stops being editable through the CMS.
+4. If you add or rename a content file, add it to `admin/config.yml` **and**
+   give it a renderer in `admin/preview.js` under the same collection-file
+   name. Miss the first and it stops being editable; miss the second and it
+   loses its preview. The checker warns about both, in either direction.
 5. Finish with `node scripts/build.mjs && node checks/verify.mjs`. Those two
    are the only thing between an edit and the public site.
 
@@ -201,6 +203,23 @@ unreportable — there is no way to file a request against it. `verify.mjs`
 warns on the mismatch in either direction, reading the options list rather
 than the file, because these forms also explain their options in prose and a
 plain text search finds the word after the option itself has gone.
+
+## The editor and its preview
+
+`admin/` is Sveltia CMS. Its collections mirror the site's pages one for one —
+opening *Publications* edits the Publications page and nothing else — and each
+collection *file* has a matching renderer in `admin/preview.js`, keyed by the
+same name.
+
+The previews emit **the site's own class names**, and `admin/preview.css` is a
+generated copy of the `<style>` block in `index.html`. So a preview is the
+page's markup under the page's CSS rather than a second implementation of the
+design, and it follows the site automatically. Never hand-edit `preview.css`;
+`scripts/build.mjs` rewrites it.
+
+The renderers are pure — data in, HTML string out — and exposed on
+`window.__previewRenderers`, so they can be exercised without running the CMS
+or signing in.
 
 ## Which files are public
 

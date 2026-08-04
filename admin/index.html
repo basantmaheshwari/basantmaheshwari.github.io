@@ -45,5 +45,10 @@
        deliberate: the editor is a tool, not part of the published site.
        index.html itself stays entirely self-contained. -->
   <script src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js" type="module"></script>
+
+  <!-- The preview beside each form: the site's own markup under the site's
+       own stylesheet, both generated from index.html so they cannot drift.
+       Loaded after the CMS because it registers against it. -->
+  <script src="./preview.js" defer></script>
 </body>
 </html>
