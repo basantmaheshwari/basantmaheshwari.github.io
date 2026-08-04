@@ -328,6 +328,55 @@ for (const [file, array, labels, what] of FORM_SYNC) {
   }
 }
 
+/* ── 6c. The JSON and the HTML must agree ──────────────────────────────
+   Content is edited as `content/*.json` and copied into index.html by
+   scripts/build.mjs. If the two drift, the editor shows one thing and the
+   published site says another — and the editor is the surface that looks
+   authoritative, so the discrepancy is invisible from there.
+
+   The publish workflow rebuilds before deploying, so this is a warning
+   rather than a failure: the deployed page is correct either way. What is
+   wrong is the copy committed to the repository, which is what a person
+   reads when they open index.html locally. */
+try {
+  const {readContentFiles, readArraysFromHtml, FILES} =
+    await import("../scripts/content.mjs");
+  const {content, missing, malformed} = readContentFiles();
+  if (missing.length)   fail(`content files missing: ${missing.join(", ")} — the editor has nothing to edit`);
+  if (malformed.length) fail(`content files with no "items" array: ${malformed.join(", ")}`);
+
+  const inHtml = readArraysFromHtml(html);
+  const drifted = [];
+  for (const name of Object.keys(FILES)) {
+    if (!(name in content) || !(name in inHtml)) continue;
+    if (JSON.stringify(content[name]) !== JSON.stringify(inHtml[name])) drifted.push(name);
+  }
+  if (drifted.length) {
+    warn(`index.html disagrees with content/ for: ${drifted.join(", ")} — ` +
+         `run "node scripts/build.mjs"`);
+  }
+
+  /* Every content file should be reachable from the editor, or it can only
+     be changed by hand — which defeats the point of having one. */
+  const cfg = (() => {
+    try { return readFileSync(join(ROOT, "admin/config.yml"), "utf8"); } catch { return null; }
+  })();
+  if (cfg === null) warn("admin/config.yml is missing — the editor at /admin/ will not load");
+  else {
+    if (cfg.includes("REPLACE-ME")) {
+      warn("admin/config.yml still has the placeholder base_url — saving from the editor " +
+           "will fail at sign-in until the auth service is set up (see MAINTAINING.md)");
+    }
+    for (const file of Object.values(FILES)) {
+      if (!cfg.includes(`content/${file}`)) {
+        warn(`content/${file} is not in admin/config.yml — it cannot be edited through the editor`);
+      }
+    }
+  }
+} catch (e) {
+  fail(`could not compare index.html with content/: ${e.message}`);
+}
+
 /* ── 7. Things a reader would notice ───────────────────────────────── */
 if (!/<title>[^<]+<\/title>/.test(html)) fail("no <title>");
 if (!/<meta name="description" content="[^"]{40,}"/.test(html)) warn("meta description missing or very short");

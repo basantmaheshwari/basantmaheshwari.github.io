@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "label": "Email",
+      "detail": "b.maheshwari@westernsydney.edu.au",
+      "href": "mailto:b.maheshwari@westernsydney.edu.au"
+    },
+    {
+      "label": "Google Scholar",
+      "detail": "5,498 citations · h-index 36",
+      "href": "https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&hl=en"
+    },
+    {
+      "label": "ORCID",
+      "detail": "0000-0002-5496-4345",
+      "href": "https://orcid.org/0000-0002-5496-4345"
+    },
+    {
+      "label": "ResearchGate",
+      "detail": "Research profile",
+      "href": "https://www.researchgate.net/profile/Basant-Maheshwari"
+    },
+    {
+      "label": "Australia India Water Centre",
+      "detail": "aiwc.org.au",
+      "href": "https://aiwc.org.au/"
+    },
+    {
+      "label": "MARVI programme",
+      "detail": "westernsydney.edu.au/marvi",
+      "href": "https://www.westernsydney.edu.au/marvi"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "name": "Higher degree research supervision",
+      "when": "Ongoing",
+      "blurb": "Doctoral and masters supervision in groundwater management, irrigation, water quality and water governance. Recent co-authored work with research students spans village groundwater cooperatives, drought dynamics in western Rajasthan, cadmium uptake in hydroponic and soil systems, and water sustainability assessment frameworks."
+    },
+    {
+      "name": "Transdisciplinary training design",
+      "when": "Ongoing",
+      "blurb": "Designing and evaluating training that crosses disciplines — the Young Water Professionals programme, water policy labs, and the dam safety programme — and publishing on what makes such training work rather than assuming it does."
+    },
+    {
+      "name": "Field-based capacity building",
+      "when": "Ongoing",
+      "blurb": "Training village volunteers and water professionals in the field: groundwater monitoring, well observation and the shared record-keeping that lets a community act on what it measures."
+    }
+  ]
+}

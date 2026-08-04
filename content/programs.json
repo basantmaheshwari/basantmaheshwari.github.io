@@ -1,0 +1,65 @@
+{
+  "items": [
+    {
+      "name": "MARVI — Managed Aquifer Recharge through Village-level Intervention",
+      "year": "2012 –",
+      "status": "current",
+      "blurb": "The programme the rest of the work orbits. MARVI trains village volunteers — Bhujal Jaankaars, 'groundwater informed' — to monitor their own wells and share the readings, so that a resource nobody can see becomes something a village can discuss and manage together. First funded by the Australian Centre for International Agricultural Research, it has since shaped groundwater management practice across more than 10,000 villages in India.",
+      "tags": [
+        "ACIAR",
+        "Citizen science",
+        "Rajasthan",
+        "Gujarat",
+        "Groundwater"
+      ],
+      "links": [
+        {
+          "label": "Programme site",
+          "href": "https://www.westernsydney.edu.au/marvi"
+        }
+      ]
+    },
+    {
+      "name": "Australia India Water Centre",
+      "year": "2020 –",
+      "status": "current",
+      "blurb": "A bilateral centre connecting Australian and Indian researchers, educators, government, industry and communities on water security, sustainable agriculture and climate resilience — organised around equal partnership and a transdisciplinary approach. Basant Maheshwari is its Director and chairs the programme leaders' committee. The Centre marked five years at the AIWC@5 Partners Forum and International Symposium in November 2025.",
+      "tags": [
+        "Bilateral",
+        "Research",
+        "Education",
+        "Training",
+        "Outreach"
+      ],
+      "links": [
+        {
+          "label": "Centre site",
+          "href": "https://aiwc.org.au/"
+        }
+      ]
+    },
+    {
+      "name": "Young Water Professionals training programme",
+      "year": "Ongoing",
+      "status": "active",
+      "blurb": "A training and mentoring programme for early-career water professionals across Australia and India, built on action research and transdisciplinary competencies. The programme has itself been studied and published on — what mentoring actually contributes, and what participants learn that a technical course does not teach.",
+      "tags": [
+        "Capacity building",
+        "Mentoring",
+        "Action research"
+      ]
+    },
+    {
+      "name": "Dam Safety and Risk Management training",
+      "year": "2024 –",
+      "status": "active",
+      "blurb": "A two-week programme bringing cohorts of Indian dam safety officers to New South Wales, run with the Ministry of Jal Shakti, Dam Safety NSW, WaterNSW, Hunter Water and Snowy Hydro. The second cohort of 15 officers began in March 2025, with field visits to Warragamba, Cotter, Talbingo and Blowering dams and the Snowy scheme.",
+      "tags": [
+        "Dam safety",
+        "Ministry of Jal Shakti",
+        "NSW",
+        "Training"
+      ]
+    }
+  ]
+}

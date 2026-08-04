@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "name": "AIWC@5 Partners Forum and International Symposium",
+      "year": "Nov 2025",
+      "status": "event",
+      "blurb": "Five years of the Australia India Water Centre, marked at the Whitlam Institute, Western Sydney University, over 17–19 November. Around 80 delegates from India and Australia, the launch of the AIWC Five-Year Report, and an MOU signed with IIT Roorkee to establish a dual degree programme.",
+      "tags": [
+        "AIWC",
+        "Western Sydney University",
+        "IIT Roorkee"
+      ]
+    },
+    {
+      "name": "Second cohort of Indian dam safety officers hosted in NSW",
+      "year": "Mar 2025",
+      "status": "training",
+      "blurb": "Fifteen senior officials from India's Central Water Commission, National Dam Safety Authority and state water resource departments completed a two-week Dam Safety and Risk Management programme across NSW, beginning 17 March 2025.",
+      "tags": [
+        "Dam safety",
+        "Ministry of Jal Shakti",
+        "Snowy Hydro"
+      ]
+    }
+  ]
+}

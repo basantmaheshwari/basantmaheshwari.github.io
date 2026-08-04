@@ -669,108 +669,270 @@
      ═══════════════════════════════════════════════════════════════════ */
 
   const SECTIONS = [
-    {id:"home",         label:"Profile",      tc:"00"},
-    {id:"research",     label:"Research",     tc:"01"},
-    {id:"publications", label:"Publications", tc:"02"},
-    {id:"programs",     label:"Programmes",   tc:"03"},
-    {id:"team",         label:"Team",         tc:"04"},
-    {id:"teaching",     label:"Teaching",     tc:"05"},
-    {id:"news",         label:"News",         tc:"06"},
-    {id:"contact",      label:"Contact",      tc:"07"},
+    {
+      "id": "home",
+      "label": "Profile",
+      "tc": "00"
+    },
+    {
+      "id": "research",
+      "label": "Research",
+      "tc": "01"
+    },
+    {
+      "id": "publications",
+      "label": "Publications",
+      "tc": "02"
+    },
+    {
+      "id": "programs",
+      "label": "Programmes",
+      "tc": "03"
+    },
+    {
+      "id": "team",
+      "label": "Team",
+      "tc": "04"
+    },
+    {
+      "id": "teaching",
+      "label": "Teaching",
+      "tc": "05"
+    },
+    {
+      "id": "news",
+      "label": "News",
+      "tc": "06"
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "tc": "07"
+    },
   ];
 
   /* Google Scholar, retrieved 2026-08-04. Re-check when you update. */
   const METRICS = [
-    {value:"5,498", label:"Citations<br>Google Scholar"},
-    {value:"36",    label:"h-index"},
-    {value:"100",   label:"i10-index"},
-    {value:"30+",   label:"Years in water<br>research & practice"},
+    {
+      "value": "5,498",
+      "label": "Citations<br>Google Scholar"
+    },
+    {
+      "value": "36",
+      "label": "h-index"
+    },
+    {
+      "value": "100",
+      "label": "i10-index"
+    },
+    {
+      "value": "30+",
+      "label": "Years in water<br>research & practice"
+    },
   ];
 
   const RESEARCH = [
     {
-      name:"Village-scale managed aquifer recharge", year:"Ongoing", status:"current",
-      blurb:"Whether check dams, recharge ponds and farm pits actually raise the water table, by how much, and for how long — measured rather than assumed. The work covers specific yield from watertable fluctuations, hydrologic and cost–benefit analysis of check dam cascades, and the recharge structures that decide whether a hardrock aquifer carries a village through the dry season.",
-      tags:["Groundwater recharge","Hardrock aquifers","Rajasthan","Gujarat"],
+      "name": "Village-scale managed aquifer recharge",
+      "year": "Ongoing",
+      "status": "current",
+      "blurb": "Whether check dams, recharge ponds and farm pits actually raise the water table, by how much, and for how long — measured rather than assumed. The work covers specific yield from watertable fluctuations, hydrologic and cost–benefit analysis of check dam cascades, and the recharge structures that decide whether a hardrock aquifer carries a village through the dry season.",
+      "tags": [
+        "Groundwater recharge",
+        "Hardrock aquifers",
+        "Rajasthan",
+        "Gujarat"
+      ]
     },
     {
-      name:"Groundwater as a commons", year:"Ongoing", status:"current",
-      blurb:"An aquifer is a common-pool resource: every well draws on the same account, and no individual pump reveals the balance. This strand studies village groundwater cooperatives against Ostrom's design principles, irrigator attitudes to shared management, and the role groundwater plays in the lives of rural women.",
-      tags:["Common-pool resources","Ostrom","Groundwater governance","Citizen science"],
+      "name": "Groundwater as a commons",
+      "year": "Ongoing",
+      "status": "current",
+      "blurb": "An aquifer is a common-pool resource: every well draws on the same account, and no individual pump reveals the balance. This strand studies village groundwater cooperatives against Ostrom's design principles, irrigator attitudes to shared management, and the role groundwater plays in the lives of rural women.",
+      "tags": [
+        "Common-pool resources",
+        "Ostrom",
+        "Groundwater governance",
+        "Citizen science"
+      ]
     },
     {
-      name:"Transdisciplinary water research and training", year:"Ongoing", status:"current",
-      blurb:"Water problems fail at the seams between disciplines, so the method has to cross them. Published work here covers the transdisciplinary approach to village-scale groundwater management, mentoring and leadership in the Young Water Professionals programme, and water policy labs that turn dialogue into policy learning.",
-      tags:["Transdisciplinary method","Capacity building","Water policy"],
+      "name": "Transdisciplinary water research and training",
+      "year": "Ongoing",
+      "status": "current",
+      "blurb": "Water problems fail at the seams between disciplines, so the method has to cross them. Published work here covers the transdisciplinary approach to village-scale groundwater management, mentoring and leadership in the Young Water Professionals programme, and water policy labs that turn dialogue into policy learning.",
+      "tags": [
+        "Transdisciplinary method",
+        "Capacity building",
+        "Water policy"
+      ]
     },
     {
-      name:"Urban and peri-urban water", year:"Ongoing", status:"active",
-      blurb:"River health monitoring in peri-urban landscapes, stormwater harvesting from urban lakes in Western Sydney, urban flooding and recharge in Bengaluru, and the ecohydrological question of what makes a rapidly urbanising region liveable.",
-      tags:["River health","Stormwater","Peri-urban","Liveability"],
+      "name": "Urban and peri-urban water",
+      "year": "Ongoing",
+      "status": "active",
+      "blurb": "River health monitoring in peri-urban landscapes, stormwater harvesting from urban lakes in Western Sydney, urban flooding and recharge in Bengaluru, and the ecohydrological question of what makes a rapidly urbanising region liveable.",
+      "tags": [
+        "River health",
+        "Stormwater",
+        "Peri-urban",
+        "Liveability"
+      ]
     },
     {
-      name:"Irrigation, water quality and reuse", year:"Ongoing", status:"active",
-      blurb:"Irrigation water quality and its consequences for soil and crop: recycled water and soil salinity, greywater irrigation, treated wastewater on pasture, emerging contaminants in rivers receiving untreated wastewater, and closed-loop nutrient recovery in hydroponic systems.",
-      tags:["Irrigation","Water reuse","Soil salinity","Water quality"],
+      "name": "Irrigation, water quality and reuse",
+      "year": "Ongoing",
+      "status": "active",
+      "blurb": "Irrigation water quality and its consequences for soil and crop: recycled water and soil salinity, greywater irrigation, treated wastewater on pasture, emerging contaminants in rivers receiving untreated wastewater, and closed-loop nutrient recovery in hydroponic systems.",
+      "tags": [
+        "Irrigation",
+        "Water reuse",
+        "Soil salinity",
+        "Water quality"
+      ]
     },
   ];
 
   const PROGRAMS = [
     {
-      name:"MARVI — Managed Aquifer Recharge through Village-level Intervention", year:"2012 –", status:"current",
-      blurb:"The programme the rest of the work orbits. MARVI trains village volunteers — Bhujal Jaankaars, 'groundwater informed' — to monitor their own wells and share the readings, so that a resource nobody can see becomes something a village can discuss and manage together. First funded by the Australian Centre for International Agricultural Research, it has since shaped groundwater management practice across more than 10,000 villages in India.",
-      tags:["ACIAR","Citizen science","Rajasthan","Gujarat","Groundwater"],
-      links:[{label:"Programme site", href:"https://www.westernsydney.edu.au/marvi"}],
+      "name": "MARVI — Managed Aquifer Recharge through Village-level Intervention",
+      "year": "2012 –",
+      "status": "current",
+      "blurb": "The programme the rest of the work orbits. MARVI trains village volunteers — Bhujal Jaankaars, 'groundwater informed' — to monitor their own wells and share the readings, so that a resource nobody can see becomes something a village can discuss and manage together. First funded by the Australian Centre for International Agricultural Research, it has since shaped groundwater management practice across more than 10,000 villages in India.",
+      "tags": [
+        "ACIAR",
+        "Citizen science",
+        "Rajasthan",
+        "Gujarat",
+        "Groundwater"
+      ],
+      "links": [
+        {
+          "label": "Programme site",
+          "href": "https://www.westernsydney.edu.au/marvi"
+        }
+      ]
     },
     {
-      name:"Australia India Water Centre", year:"2020 –", status:"current",
-      blurb:"A bilateral centre connecting Australian and Indian researchers, educators, government, industry and communities on water security, sustainable agriculture and climate resilience — organised around equal partnership and a transdisciplinary approach. Basant Maheshwari is its Director and chairs the programme leaders' committee. The Centre marked five years at the AIWC@5 Partners Forum and International Symposium in November 2025.",
-      tags:["Bilateral","Research","Education","Training","Outreach"],
-      links:[{label:"Centre site", href:"https://aiwc.org.au/"}],
+      "name": "Australia India Water Centre",
+      "year": "2020 –",
+      "status": "current",
+      "blurb": "A bilateral centre connecting Australian and Indian researchers, educators, government, industry and communities on water security, sustainable agriculture and climate resilience — organised around equal partnership and a transdisciplinary approach. Basant Maheshwari is its Director and chairs the programme leaders' committee. The Centre marked five years at the AIWC@5 Partners Forum and International Symposium in November 2025.",
+      "tags": [
+        "Bilateral",
+        "Research",
+        "Education",
+        "Training",
+        "Outreach"
+      ],
+      "links": [
+        {
+          "label": "Centre site",
+          "href": "https://aiwc.org.au/"
+        }
+      ]
     },
     {
-      name:"Young Water Professionals training programme", year:"Ongoing", status:"active",
-      blurb:"A training and mentoring programme for early-career water professionals across Australia and India, built on action research and transdisciplinary competencies. The programme has itself been studied and published on — what mentoring actually contributes, and what participants learn that a technical course does not teach.",
-      tags:["Capacity building","Mentoring","Action research"],
+      "name": "Young Water Professionals training programme",
+      "year": "Ongoing",
+      "status": "active",
+      "blurb": "A training and mentoring programme for early-career water professionals across Australia and India, built on action research and transdisciplinary competencies. The programme has itself been studied and published on — what mentoring actually contributes, and what participants learn that a technical course does not teach.",
+      "tags": [
+        "Capacity building",
+        "Mentoring",
+        "Action research"
+      ]
     },
     {
-      name:"Dam Safety and Risk Management training", year:"2024 –", status:"active",
-      blurb:"A two-week programme bringing cohorts of Indian dam safety officers to New South Wales, run with the Ministry of Jal Shakti, Dam Safety NSW, WaterNSW, Hunter Water and Snowy Hydro. The second cohort of 15 officers began in March 2025, with field visits to Warragamba, Cotter, Talbingo and Blowering dams and the Snowy scheme.",
-      tags:["Dam safety","Ministry of Jal Shakti","NSW","Training"],
+      "name": "Dam Safety and Risk Management training",
+      "year": "2024 –",
+      "status": "active",
+      "blurb": "A two-week programme bringing cohorts of Indian dam safety officers to New South Wales, run with the Ministry of Jal Shakti, Dam Safety NSW, WaterNSW, Hunter Water and Snowy Hydro. The second cohort of 15 officers began in March 2025, with field visits to Warragamba, Cotter, Talbingo and Blowering dams and the Snowy scheme.",
+      "tags": [
+        "Dam safety",
+        "Ministry of Jal Shakti",
+        "NSW",
+        "Training"
+      ]
     },
   ];
 
   const TEACHING = [
-    {name:"Higher degree research supervision", when:"Ongoing",
-     blurb:"Doctoral and masters supervision in groundwater management, irrigation, water quality and water governance. Recent co-authored work with research students spans village groundwater cooperatives, drought dynamics in western Rajasthan, cadmium uptake in hydroponic and soil systems, and water sustainability assessment frameworks."},
-    {name:"Transdisciplinary training design", when:"Ongoing",
-     blurb:"Designing and evaluating training that crosses disciplines — the Young Water Professionals programme, water policy labs, and the dam safety programme — and publishing on what makes such training work rather than assuming it does."},
-    {name:"Field-based capacity building", when:"Ongoing",
-     blurb:"Training village volunteers and water professionals in the field: groundwater monitoring, well observation and the shared record-keeping that lets a community act on what it measures."},
+    {
+      "name": "Higher degree research supervision",
+      "when": "Ongoing",
+      "blurb": "Doctoral and masters supervision in groundwater management, irrigation, water quality and water governance. Recent co-authored work with research students spans village groundwater cooperatives, drought dynamics in western Rajasthan, cadmium uptake in hydroponic and soil systems, and water sustainability assessment frameworks."
+    },
+    {
+      "name": "Transdisciplinary training design",
+      "when": "Ongoing",
+      "blurb": "Designing and evaluating training that crosses disciplines — the Young Water Professionals programme, water policy labs, and the dam safety programme — and publishing on what makes such training work rather than assuming it does."
+    },
+    {
+      "name": "Field-based capacity building",
+      "when": "Ongoing",
+      "blurb": "Training village volunteers and water professionals in the field: groundwater monitoring, well observation and the shared record-keeping that lets a community act on what it measures."
+    },
   ];
 
   /* Recent, verifiable items only. Add an object here and the panel fills
      itself; the honest empty state is better than invented entries. */
   const NEWS = [
     {
-      name:"AIWC@5 Partners Forum and International Symposium", year:"Nov 2025", status:"event",
-      blurb:"Five years of the Australia India Water Centre, marked at the Whitlam Institute, Western Sydney University, over 17–19 November. Around 80 delegates from India and Australia, the launch of the AIWC Five-Year Report, and an MOU signed with IIT Roorkee to establish a dual degree programme.",
-      tags:["AIWC","Western Sydney University","IIT Roorkee"],
+      "name": "AIWC@5 Partners Forum and International Symposium",
+      "year": "Nov 2025",
+      "status": "event",
+      "blurb": "Five years of the Australia India Water Centre, marked at the Whitlam Institute, Western Sydney University, over 17–19 November. Around 80 delegates from India and Australia, the launch of the AIWC Five-Year Report, and an MOU signed with IIT Roorkee to establish a dual degree programme.",
+      "tags": [
+        "AIWC",
+        "Western Sydney University",
+        "IIT Roorkee"
+      ]
     },
     {
-      name:"Second cohort of Indian dam safety officers hosted in NSW", year:"Mar 2025", status:"training",
-      blurb:"Fifteen senior officials from India's Central Water Commission, National Dam Safety Authority and state water resource departments completed a two-week Dam Safety and Risk Management programme across NSW, beginning 17 March 2025.",
-      tags:["Dam safety","Ministry of Jal Shakti","Snowy Hydro"],
+      "name": "Second cohort of Indian dam safety officers hosted in NSW",
+      "year": "Mar 2025",
+      "status": "training",
+      "blurb": "Fifteen senior officials from India's Central Water Commission, National Dam Safety Authority and state water resource departments completed a two-week Dam Safety and Risk Management programme across NSW, beginning 17 March 2025.",
+      "tags": [
+        "Dam safety",
+        "Ministry of Jal Shakti",
+        "Snowy Hydro"
+      ]
     },
   ];
 
   const CONTACT = [
-    {label:"Email", detail:"b.maheshwari@westernsydney.edu.au", href:"mailto:b.maheshwari@westernsydney.edu.au"},
-    {label:"Google Scholar", detail:"5,498 citations · h-index 36", href:"https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&hl=en"},
-    {label:"ORCID", detail:"0000-0002-5496-4345", href:"https://orcid.org/0000-0002-5496-4345"},
-    {label:"ResearchGate", detail:"Research profile", href:"https://www.researchgate.net/profile/Basant-Maheshwari"},
-    {label:"Australia India Water Centre", detail:"aiwc.org.au", href:"https://aiwc.org.au/"},
-    {label:"MARVI programme", detail:"westernsydney.edu.au/marvi", href:"https://www.westernsydney.edu.au/marvi"},
+    {
+      "label": "Email",
+      "detail": "b.maheshwari@westernsydney.edu.au",
+      "href": "mailto:b.maheshwari@westernsydney.edu.au"
+    },
+    {
+      "label": "Google Scholar",
+      "detail": "5,498 citations · h-index 36",
+      "href": "https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&hl=en"
+    },
+    {
+      "label": "ORCID",
+      "detail": "0000-0002-5496-4345",
+      "href": "https://orcid.org/0000-0002-5496-4345"
+    },
+    {
+      "label": "ResearchGate",
+      "detail": "Research profile",
+      "href": "https://www.researchgate.net/profile/Basant-Maheshwari"
+    },
+    {
+      "label": "Australia India Water Centre",
+      "detail": "aiwc.org.au",
+      "href": "https://aiwc.org.au/"
+    },
+    {
+      "label": "MARVI programme",
+      "detail": "westernsydney.edu.au/marvi",
+      "href": "https://www.westernsydney.edu.au/marvi"
+    },
   ];
 
   /* ─── Team ─────────────────────────────────────────────────────────
@@ -778,14 +940,26 @@
      PUB_KINDS: adding {id:"alumni", label:"Alumni", empty:"…"} here and
      tagging people r:"alumni" is the whole change. */
   const TEAM_ROLES = [
-    {id:"postdoc", label:"Postdoctoral researchers",
-     empty:"No postdoctoral researchers listed yet. Add one through the “Add a team member” issue form and this section fills itself."},
-    {id:"phd",     label:"PhD candidates",
-     empty:"No doctoral candidates listed yet. Add one through the “Add a team member” issue form — a name, a topic and a start year is enough."},
-    {id:"collaborator", label:"Collaborators",
-     empty:"No collaborators listed yet."},
-    {id:"other",   label:"Other team members",
-     empty:"No other members listed yet."},
+    {
+      "id": "postdoc",
+      "label": "Postdoctoral researchers",
+      "empty": "No postdoctoral researchers listed yet. Add one through the “Add a team member” issue form and this section fills itself."
+    },
+    {
+      "id": "phd",
+      "label": "PhD candidates",
+      "empty": "No doctoral candidates listed yet. Add one through the “Add a team member” issue form — a name, a topic and a start year is enough."
+    },
+    {
+      "id": "collaborator",
+      "label": "Collaborators",
+      "empty": "No collaborators listed yet."
+    },
+    {
+      "id": "other",
+      "label": "Other team members",
+      "empty": "No other members listed yet."
+    },
   ];
 
   /* People.
@@ -807,16 +981,36 @@
      than an inference about any individual, and any assignment can be
      changed through the issue form. */
   const TEAM = [
-    {r:"collaborator", n:"Adjunct Professor Roger Packham", p:"MARVI project team",
-     w:"Western Sydney University"},
-    {r:"collaborator", n:"Adjunct Associate Professor Bruce Simmons", p:"MARVI project team",
-     w:"Western Sydney University"},
-    {r:"other", n:"Dr Harsharn Singh Grewal", p:"MARVI project team",
-     w:"Western Sydney University"},
-    {r:"other", n:"Dr Maria Varua", p:"MARVI project team",
-     w:"Western Sydney University"},
-    {r:"other", n:"Ms Joycelyn Applebee", p:"MARVI project team",
-     w:"Western Sydney University"},
+    {
+      "r": "collaborator",
+      "n": "Adjunct Professor Roger Packham",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
+    {
+      "r": "collaborator",
+      "n": "Adjunct Associate Professor Bruce Simmons",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
+    {
+      "r": "other",
+      "n": "Dr Harsharn Singh Grewal",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
+    {
+      "r": "other",
+      "n": "Dr Maria Varua",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
+    {
+      "r": "other",
+      "n": "Ms Joycelyn Applebee",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
   ];
 
   /* The four kinds the list is grouped into, in display order. This is a
@@ -829,14 +1023,26 @@
      journal articles. A search always expands whatever it matches,
      whatever this says. */
   const PUB_KINDS = [
-    {id:"journal",    label:"Journal articles",
-     empty:"No journal articles listed yet."},
-    {id:"conference", label:"Conference papers",
-     empty:"No conference papers listed yet."},
-    {id:"thesis",     label:"Theses",
-     empty:"No theses listed here yet — neither supervised higher degree theses nor his own doctoral thesis. Add one through the “Add a publication” issue form and this section fills itself."},
-    {id:"other",      label:"Other outputs",
-     empty:"No other outputs listed yet."},
+    {
+      "id": "journal",
+      "label": "Journal articles",
+      "empty": "No journal articles listed yet."
+    },
+    {
+      "id": "conference",
+      "label": "Conference papers",
+      "empty": "No conference papers listed yet."
+    },
+    {
+      "id": "thesis",
+      "label": "Theses",
+      "empty": "No theses listed here yet — neither supervised higher degree theses nor his own doctoral thesis. Add one through the “Add a publication” issue form and this section fills itself."
+    },
+    {
+      "id": "other",
+      "label": "Other outputs",
+      "empty": "No other outputs listed yet."
+    },
   ];
 
   /* Publications.
@@ -856,108 +1062,108 @@
      proceedings or symposium wins — several proceedings papers are typed
      "journal-article" upstream. */
   const PUBLICATIONS = [
-    {k:"journal", y:2026, t:"Assessing Water Sustainability for the Sustainable Development Goals: A Systematic Review and Bibliometric Analysis Highlighting Gaps in Current Assessment Frameworks", a:"Dhanasekaran, N.C., Maheshwari, B., Donovan-Mak, M., Huda, S.", v:"Sustainability", d:"10.3390/su18052514", c:2},
-    {k:"journal", y:2026, t:"Evaluating the Effectiveness of Village Groundwater Cooperatives for Groundwater Commons in Gujarat and Rajasthan Using Ostrom’s Design Principles", a:"Gajurel, S., Maheshwari, B., Hagare, D., Ward, J., Singh, P.K.", v:"Sustainability", d:"10.3390/su18031561", c:1},
-    {k:"journal", y:2026, t:"Understanding Drought Dynamics in Semiarid Regions: A Multidecadal, Multi‐Index Case Study From Western Rajasthan, India", a:"Upadhyay, E., Biswas, J., Mishra, A., Kumar, P., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70081"},
-    {k:"journal", y:2026, t:"Comparison of Uptake of Cadmium at Low Concentrations Under Hydroponic and Soil‐Based Agriculture Systems for Lettuce, Indian Spinach and Methi", a:"Kotresh, D.J., Jayadeva, H.M., Hagare, D., Kadalli, G.G., Maheshwari, B., Saraswathy, B.P. et al.", v:"Journal of Sustainable Agriculture and Environment", d:"10.1002/sae2.70138"},
-    {k:"journal", y:2026, t:"From Crisis to Resilience: Rethinking Urban Flooding and Groundwater Recharge in Bengaluru City, India", a:"Biswas, S., Patel, S.V.B., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70098"},
-    {k:"journal", y:2026, t:"Farm‐Scale Recharge Pits for Improving Local Groundwater Availability: Insights From a Hardrock Watershed in Rajasthan, India", a:"Soni, P., Maheshwari, B., Dashora, Y., Dillon, P., Singh, P.K.", v:"World Water Policy", d:"10.1002/wwp2.70094"},
-    {k:"journal", y:2026, t:"Revitalizing Traditional Tank Systems: Case Study Insights From Sri Lanka's Village Tank Cascade Systems for Climate Resilience and Water Governance", a:"Nanthakumaran, A., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70097"},
-    {k:"journal", y:2025, t:"From Dialogue to Policy Learning: Water Policy Labs for Transformative Water Governance", a:"Ojha, H., Maheshwari, B., Camkin, J., Bhattarai, B., Banjade, P., Gurung, P. et al.", v:"World Water Policy", d:"10.1002/wwp2.70041"},
-    {k:"journal", y:2025, t:"Assessing Urban Lake Performance for Stormwater Harvesting: Insights from Two Lake Systems in Western Sydney, Australia", a:"Natarajan, S.K., Hagare, D., Maheshwari, B.", v:"Water", d:"10.3390/w17172504"},
-    {k:"journal", y:2025, t:"Closed Loop Phosphorus Recovery and Recycling for Sustainable Hydroponic Farming", a:"Malkawi, S., Hagare, D., Maheshwari, B.", v:"Journal of Sustainable Agriculture and Environment", d:"10.1002/sae2.70094"},
-    {k:"journal", y:2024, t:"Rejuvenation of the Springs in the Hindu Kush Himalayas Through Transdisciplinary Approaches—A Review", a:"Pant, N., Hagare, D., Maheshwari, B., Rai, S.P., Sharma, M., Dollin, J. et al.", v:"Water", d:"10.3390/w16243675", c:19},
-    {k:"journal", y:2024, t:"Assessing groundwater quality, health risks, and policy implications: A case study of West Medinipur District, West Bengal, India", a:"Alam, M.A., Mailapalli, D.R., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12160", c:2},
-    {k:"journal", y:2023, t:"Managing floods in Chennai City as part of situation understanding and improvement project", a:"Shivakumar, S., Shanmuganathan, M., Goonetilleke, A., Day, D., Sarkar, A., Hagare, D. et al.", v:"World Water Policy", d:"10.1002/wwp2.12119", c:4},
-    {k:"journal", y:2023, t:"Training young water professionals in leadership and transdisciplinary competencies for sustainable water management in India", a:"Maheshwari, B., Hagare, D., Spencer, R., Dollin, J., Reynolds, J., Atkins, D. et al.", v:"World Water Policy", d:"10.1002/wwp2.12114", c:4},
-    {k:"journal", y:2023, t:"A reflective evaluation of young water professionals' transdisciplinary learning", a:"Dollin, J., Hagare, D., Maheshwari, B., Packham, R., Reynolds, J., Garg, A. et al.", v:"World Water Policy", d:"10.1002/wwp2.12121", c:3},
-    {k:"journal", y:2023, t:"Training and capacity building of young water professionals—role of an innovative and transformative program for sustainable water futures", a:"Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12103", c:3},
-    {k:"journal", y:2023, t:"The impact of irrigation with treated wastewaters on soil and kikuyu grass nutrient compositions", a:"Shahrivar, A.A., Hagare, D., Maheshwari, B., Rahman, M.M.", v:"Water Environment Research", d:"10.1002/wer.10873", c:3},
-    {k:"journal", y:2023, t:"Mentoring in the young water professionals' training program: Lessons for effective capacity development", a:"Maheshwari, B., Atkins, D., Hagare, D., Spencer, R., Dillon, P., Jain, S. et al.", v:"World Water Policy", d:"10.1002/wwp2.12129", c:2},
-    {k:"journal", y:2023, t:"Building capacity of young water professionals through action research and transdisciplinary approaches", a:"Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12127", c:1},
-    {k:"journal", y:2023, t:"Transdisciplinary approach for planning the expansion of irrigation infrastructure at a regional scale", a:"Issac, A.M., Mullassery, H.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Dollin, J. et al.", v:"World Water Policy", d:"10.1002/wwp2.12120", c:1},
-    {k:"journal", y:2023, t:"Geospatial data and web based tools for managing irrigation infrastructure expansion projects", a:"Issac, A.M., Harshitha, M.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Reynolds, J.K. et al.", v:"World Water Policy", d:"10.1002/wwp2.12130"},
-    {k:"journal", y:2022, t:"Impact of Recycled Water Irrigation on Soil Salinity and Its Remediation", a:"Rahman, M.M., Shahrivar, A.A., Hagare, D., Maheshwari, B.", v:"Soil Systems", d:"10.3390/soilsystems6010013", c:22},
-    {k:"journal", y:2022, t:"Hydrologic and Cost–Benefit Analysis of Multiple Check Dams in Catchments of Ephemeral Streams, Rajasthan, India", a:"Dashora, Y., Cresswell, D., Dillon, P., Maheshwari, B., Clark, R., Soni, P. et al.", v:"Water", d:"10.3390/w14152378", c:9},
-    {k:"journal", y:2022, t:"Understanding the role of groundwater in the lives of rural women in India", a:"Swaraj, A., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12085", c:7},
-    {k:"journal", y:2022, t:"Assessment of Urban Land Use and Cover on Groundwater Recharge and Quality", a:"Hagare, D., Ezemba, S.N., Pant, N., Rahman, M.M., Maheshwari, B., Siddiqui, Z.", v:"CivilEng", d:"10.3390/civileng3020029", c:5},
-    {k:"journal", y:2021, t:"Adaptation of EVIAVE methodology to landfill environmental impact assessment in Uganda – A case study of Kiteezi landfill", a:"Aryampa, S., Maheshwari, B., Zamorano, M., Sabiiti, E.N., Olobo, C., Bateganya, N.L.", v:"Journal of African Earth Sciences", d:"10.1016/j.jafrearsci.2021.104310", c:13},
-    {k:"journal", y:2020, t:"Is urbanisation also the culprit of climate change? – Evidence from Australian cities", a:"Maheshwari, B., Pinto, U., Akbar, S., Fahey, P.", v:"Urban Climate", d:"10.1016/j.uclim.2020.100581", c:48},
-    {k:"journal", y:2019, t:"Status of Waste Management in the East African Cities: Understanding the Drivers of Waste Generation, Collection and Disposal and Their Impacts on Kampala City’s Sustainability", a:"Aryampa, S., Maheshwari, B., Sabiiti, E., Bateganya, N.L., Bukenya, B.", v:"Sustainability", d:"10.3390/su11195523", c:49},
-    {k:"journal", y:2019, t:"Qualitative and quantitative analysis of perceived liveability in the context of socio-ecohydrology: evidence from the urban and peri-urban Cirebon-Indonesia", a:"Titisari Danielaini, T., Maheshwari, B., Hagare, D.", v:"Journal of Environmental Planning and Management", d:"10.1080/09640568.2018.1524576", c:5},
-    {k:"journal", y:2018, t:"Estimation of specific yield using water table fluctuations and cropped area in a hardrock aquifer system of Rajasthan, India", a:"Chinnasamy, P., Maheshwari, B., Dillon, P., Purohit, R., Dashora, Y., Soni, P. et al.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2018.02.016", c:28},
-    {k:"journal", y:2018, t:"Defining rural–urban interfaces for understanding ecohydrological processes in West Java, Indonesia: Part I. Development of methodology to delineate peri-urban areas", a:"Danielaini, T.T., Maheshwari, B., Hagare, D.", v:"Ecohydrology & Hydrobiology", d:"10.1016/j.ecohyd.2017.11.006", c:25},
-    {k:"journal", y:2018, t:"Adaptation of Standardised Precipitation Index for understanding watertable fluctuations and groundwater resilience in hard-rock areas of India", a:"Chinnasamy, P., Maheshwari, B., Prathapar, S.A.", v:"Environmental Earth Sciences", d:"10.1007/s12665-018-7734-6", c:23},
-    {k:"journal", y:2018, t:"Combining imaging techniques with nonparametric modelling to predict seepage hotspots in irrigation channels", a:"Akbar, S., Kathuria, A., Maheshwari, B.", v:"Irrigation Science", d:"10.1007/s00271-018-0596-6", c:7},
-    {k:"journal", y:2018, t:"A framework for evaluating ecohydrological-based liveability in a rapidly urbanising region of Indonesia", a:"Danielaini, T.T., Maheshwari, B., Hagare, D.", v:"International Journal of Urban Sustainable Development", d:"10.1080/19463138.2018.1531874", c:6},
-    {k:"journal", y:2017, t:"Perspectives on impacts of water quality on agriculture and community well-being—a key informant study from Sri Lanka", a:"Thoradeniya, B., Pinto, U., Maheshwari, B.", v:"Environmental Science and Pollution Research", d:"10.1007/s11356-017-0493-1", c:12},
-    {k:"journal", y:2016, t:"Assisting community management of groundwater: Irrigator attitudes in two watersheds in Rajasthan and Gujarat, India", a:"Varua, M., Ward, J., Maheshwari, B., Oza, S., Purohit, R., Hakimuddin et al.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2016.02.003", c:21},
-    {k:"journal", y:2015, t:"Framework to assess sources controlling soil salinity resulting from irrigation using recycled water: an application of Bayesian Belief Network", a:"Rahman, M.M., Hagare, D., Maheshwari, B.", v:"Journal of Cleaner Production", d:"10.1016/j.jclepro.2014.04.068", c:29},
-    {k:"journal", y:2015, t:"Evaluating the effectiveness of water infrastructures for increasing groundwater recharge and agricultural production – A case study of Gujarat, India", a:"Chinnasamy, P., Misra, G., Shah, T., Maheshwari, B., Prathapar, S.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2015.05.009", c:28},
-    {k:"journal", y:2014, t:"The Role of Transdisciplinary Approach and Community Participation in Village Scale Groundwater Management: Insights from Gujarat and Rajasthan, India", a:"Maheshwari, B., Varua, M., Ward, J., Packham, R., Chinnasamy, P., Dashora, Y. et al.", v:"Water", d:"10.3390/w6113386", c:70},
-    {k:"journal", y:2013, t:"TREATED EFFLUENT AND SALINE WATER IRRIGATION INFLUENCES SOIL PROPERTIES, YIELD, WATER PRODUCTIVITY AND SODIUM CONTENT OF SNOW PEAS AND CELERY", a:"Grewal, H.S., Maheshwari, B.L.", v:"Journal of Plant Nutrition", d:"10.1080/01904167.2013.776080", c:9},
-    {k:"journal", y:2013, t:"The hydrological and economic impacts of changing water allocation in political regions within the peri-urban South Creek catchment in Western Sydney I: Model development", a:"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2013.06.052", c:7},
-    {k:"journal", y:2013, t:"The hydrological and economic impacts of changing water allocations in political regions within the peri-urban South Creek catchment in Western Sydney II: Scenarios", a:"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2013.06.030", c:7},
-    {k:"journal", y:2012, t:"Analysis of long-term water quality for effective river health monitoring in peri-urban landscapes—a case study of the Hawkesbury–Nepean river system in NSW, Australia", a:"Pinto, U., Maheshwari, B.L., Ollerton, R.L.", v:"Environmental Monitoring and Assessment", d:"10.1007/s10661-012-2888-2", c:35},
-    {k:"journal", y:2012, t:"Modelling eutrophication and microbial risks in peri-urban river systems using discriminant function analysis", a:"Pinto, U., Maheshwari, B., Shrestha, S., Morris, C.", v:"Water Research", d:"10.1016/j.watres.2012.09.025", c:27},
-    {k:"journal", y:2012, t:"Understanding the meaning of river health for a community: perspectives from the peri-urban region of the Hawkesbury–Nepean catchment, Australia", a:"Pinto, U., Maheshwari, B.L., Shrestha, S., Morris, C.", v:"Water Policy", d:"10.2166/wp.2012.074", c:9},
-    {k:"journal", y:2012, t:"Role and Complexity of Integrated Water-Resources Management for Periurban Landscapes in Australia", a:"Maheshwari, B.L., Simmons, B.L., Singh, V.P.", v:"Journal of Hydrologic Engineering", d:"10.1061/(asce)he.1943-5584.0000471", c:8},
-    {k:"journal", y:2012, t:"Impacts of Water Quality on the Harvest of School Prawn (Metapenaeus macleayi) in a Peri-Urban River System", a:"Pinto, U., Maheshwari, B.L.", v:"Journal of Shellfish Research", d:"10.2983/035.031.0332", c:4},
-    {k:"journal", y:2012, t:"WATER CONSERVATION AROUND HOMES—THE ROLE OF AUDIT IN IMPROVING IRRIGATION SYSTEM PERFORMANCE", a:"Maheshwari, B.", v:"Irrigation and Drainage", d:"10.1002/ird.1668", c:2},
-    {k:"journal", y:2012, t:"Water-yield relations of maize (Zea mays L) in temperate climatic conditions", v:"Maydica"},
-    {k:"journal", y:2011, t:"Water and nutrient use efficiency of a low-cost hydroponic greenhouse for a cucumber crop: An Australian case study", a:"Grewal, H.S., Maheshwari, B., Parks, S.E.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2010.12.010", c:144},
-    {k:"journal", y:2011, t:"River health assessment in peri-urban landscapes: An application of multivariate analysis to identify the key variables", a:"Pinto, U., Maheshwari, B.", v:"Water Research", d:"10.1016/j.watres.2011.04.044", c:72},
-    {k:"journal", y:2011, t:"Developing a multimedia package for university teaching and learning - lessons learnt", v:"Asia-Pacific Forum on Science Learning and Teaching"},
-    {k:"journal", y:2010, t:"Effects of greywater irrigation on plant growth, water use and soil properties", a:"Pinto, U., Maheshwari, B., Grewal, H.", v:"Resources, Conservation and Recycling", d:"10.1016/j.resconrec.2009.09.007", c:90},
-    {k:"journal", y:2010, t:"Magnetic treatment of irrigation water and snow pea and chickpea seeds enhances early growth and nutrient contents of seedlings", a:"Grewal, H.S., Maheshwari, B.L.", v:"Bioelectromagnetics", d:"10.1002/bem.20615", c:74},
-    {k:"journal", y:2010, t:"Reuse of greywater for irrigation around homes in Australia: Understanding community views, issues and practices", a:"Pinto, U., Maheshwari, B.L.", v:"Urban Water Journal", d:"10.1080/15730620903447639", c:43},
-    {k:"journal", y:2010, t:"Natural spaces – how do they influence stewardship attitudes and actions of university students?", a:"Burgin, S., Williamson, D., Maheshwari, B.", v:"International Journal of Environmental Studies", d:"10.1080/00207230902738925", c:2},
-    {k:"journal", y:2009, t:"Magnetic treatment of irrigation water: Its effects on vegetable crop yield and water productivity", a:"Maheshwari, B.L., Grewal, H.S.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2009.03.016", c:150},
-    {k:"journal", y:2009, t:"Community awareness of the use of alternative water sources for irrigation of golf courses: a case study of a selected site within the Sydney metropolitan area", a:"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.", v:"International Journal of Management and Decision Making", d:"10.1504/ijmdm.2009.024991"},
-    {k:"conference", y:2009, t:"Developing a conceptual model for water accounting in peri-urban catchments", v:"18th World IMACS Congress and MODSIM09 International Congress on Modelling and Simulation. Modelling and Simulation Society of Australia and New Zealand and International Association for Mathematics and Computers in Simulation, Cairns, Australia"},
-    {k:"conference", y:2009, t:"System harmonisation framework for water resources planning in peri-urban catchments", v:"18th World IMACS Congress and MODSIM09 International Congress on Modelling and Simulation: Interfacing Modelling and Simulation with Mathematical and Computational Sciences, Proceedings"},
-    {k:"journal", y:2008, t:"Action Research for Sustainable Water Futures in Western Sydney: Reaching Beyond Traditional Stakeholder Engagement to Understand Community Stakeholder Language and Its Implications for Action", a:"Webb, T., Burgin, S., Maheshwari, B.", v:"Systemic Practice and Action Research", d:"10.1007/s11213-008-9102-z", c:10},
-    {k:"conference", y:2008, t:"Integrating alternative water sources in urbanised environments", a:"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.", v:"WIT Transactions on Ecology and the Environment", d:"10.2495/si080341", c:3},
-    {k:"conference", y:2008, t:"Evaluating water saving using smart irrigation and harvesting systems", v:"Irrigation Australia Conference"},
-    {k:"journal", y:2007, t:"Sustainable use of stormwater for irrigation case study: Manly Golf Course", a:"Schwecke, M., Simmons, B., Maheshwari, B.", v:"The Environmentalist", d:"10.1007/s10669-007-9013-z", c:9},
-    {k:"journal", y:2007, t:"Sustaining public open spaces through water recycling for irrigation: developing decision support tools and framework", a:"Mulley, P., Simmons, B., Maheshwari, B.", v:"International Journal of Water", d:"10.1504/ijw.2007.016322", c:4},
-    {k:"journal", y:2006, t:"Urban irrigation - Looking at water use in our own backyard", v:"Water"},
-    {k:"journal", y:2005, t:"Local provenance in rehabilitation of degraded landscapes: a case study from the Hawkesbury–Nepean catchment, Australia", a:"Burgin, S., Carson, J., Maheshwari, B.", v:"Area", d:"10.1111/j.1475-4762.2005.00636.x", c:8},
-    {k:"journal", y:2005, t:"The sustainability challenge for irrigation", v:""},
-    {k:"journal", y:2004, t:"Temporal variations in water quality of farm dams: impacts of land use and water sources", a:"Brainwood, M., Burgin, S., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2004.03.006", c:70},
-    {k:"journal", y:2004, t:"Field Evaluation of Selected Soil Erosion Models for Catchment Management in Indonesia", a:"Moehansyah, H., Maheshwari, B., Armstrong, J.", v:"Biosystems Engineering", d:"10.1016/j.biosystemseng.2004.04.013", c:23},
-    {k:"journal", y:2003, t:"Effects of different landuses on runoff and erosion characteristics of the Riam Kanan Catchment, Indonesia", v:"International Agricultural Engineering Journal"},
-    {k:"conference", y:2003, t:"Farmers’ perceptions about irrigation scheduling in the Hawkesbury-Nepean catchment", v:"Australasia Pacific Extension Network Conference"},
-    {k:"journal", y:2002, t:"Options for alternative irrigation water supplies in the Murray–Darling Basin, Australia: a case study of the Shepparton Irrigation Region", a:"Smith, A., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(02)00002-1", c:7},
-    {k:"journal", y:2002, t:"Impact of land-use changes and sedimentation on the Muhammad Nur Reservoir, South Kalimantan, Indonesia", a:"Moehansyah, H., Maheshwari, B.L., Armstrong, J.", v:"Journal of Soils and Sediments", d:"10.1007/bf02991245", c:6},
-    {k:"journal", y:2001, t:"SW—Soil and Water", a:"Esfandiari, M., Maheshwari, B.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.2001.0717", c:11},
-    {k:"journal", y:2001, t:"SW—soil and water: field evaluation of furrow irrigation models", v:"Journal of agricultural engineering research"},
-    {k:"journal", y:2000, t:"Availability of nitrogen and phosphorus under recycled water irrigation", a:"Sakadevan, K., Maheshwari, B.L., Bavor, H.J.", v:"Australian Journal of Soil Research", d:"10.1071/sr99040", c:12},
-    {k:"journal", y:2000, t:"Sensitivity of a furrow irrigation model to input parameters", v:"International Agricultural Engineering Journal"},
-    {k:"journal", y:1998, t:"Suitability of Selected Flow Equations and Variation of Manning's n in Furrow Irrigation", a:"Esfandiari, M., Maheshwari, B.L.", v:"Journal of Irrigation and Drainage Engineering", d:"10.1061/(asce)0733-9437(1998)124:2(89)", c:6},
-    {k:"conference", y:1998, t:"Infiltration and roughness equations for surface irrigation: How form influences estimation", v:"2001 ASAE Annual Meeting"},
-    {k:"journal", y:1997, t:"Application of the optimization method for estimating infiltration characteristics in furrow irrigation and its comparison with other methods", a:"Esfandiari, M., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(97)00007-3", c:19},
-    {k:"journal", y:1997, t:"Field values of the shape factor for estimating surface storage in furrows on a clay soil", a:"Esfandiari, M., Maheshwari, B.L.", v:"Irrigation Science", d:"10.1007/s002710050034", c:11},
-    {k:"journal", y:1997, t:"Estimating recession times in furrows with small longitudinal slope on a clay soil", a:"Esfandiari, M., Maheshwari, B., Cornish, P.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(97)00013-9", c:2},
-    {k:"journal", y:1997, t:"Evaluation of Time-Rated Infiltration Families for Noncracking Soils", a:"Maheshwari, B.L., Kelly, D.", v:"Journal of Irrigation and Drainage Engineering", d:"10.1061/(asce)0733-9437(1997)123:4(238)", c:2},
-    {k:"journal", y:1997, t:"Interrelations Among Physical and Hydraulic Parameters of Non-Cracking Soils", a:"Maheshwari, B.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1997.0207", c:2},
-    {k:"journal", y:1997, t:"Fuzzy-genetic study of hydraulic resistance families in surface irrigation", v:"Complexity International"},
-    {k:"journal", y:1996, t:"Development of an automated double-ring infiltrometer", a:"Maheshwari, B.", v:"Australian Journal of Soil Research", d:"10.1071/sr9960709", c:14},
-    {k:"journal", y:1995, t:"Effects of regulation on the flow regime of the river Murray, Australia", a:"Maheshwari, B.L., Walker, K.F., McMahon, T.A.", v:"Regulated Rivers: Research & Management", d:"10.1002/rrr.3450100103", c:240},
-    {k:"journal", y:1994, t:"Values for the exponent of the storage-discharge equation in runoff-routing models", a:"Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/0022-1694(94)90024-8", c:2},
-    {k:"journal", y:1994, t:"Development of a regression-based model of border irrigation on cracking soils", a:"Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/0378-3774(94)90043-4"},
-    {k:"journal", y:1993, t:"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 1, Advance and Recession Characteristics", a:"Maheshwari, B., McMahon, T.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1993.1005", c:7},
-    {k:"journal", y:1993, t:"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 2, Overall Suitability for Field Applications", a:"Maheshwari, B., McMahon, T.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1993.1008", c:5},
-    {k:"other", y:1993, t:"The impact of flow regulation on the hydrology of the River Murray and its ecological implications", v:""},
-    {k:"journal", y:1992, t:"Suitability of different flow equations and hydraulic resistance parameters for flows in surface irrigation: A review", a:"Maheshwari, B.L.", v:"Water Resources Research", d:"10.1029/92wr00424", c:14},
-    {k:"journal", y:1992, t:"Modeling Shallow Overland Flow in Surface Irrigation", a:"Maheshwari, B.L., McMahon, T.A.", v:"Journal of Irrigation and Drainage Engineering", d:"10.1061/(asce)0733-9437(1992)118:2(201)", c:12},
-    {k:"journal", y:1992, t:"Infiltration characteristics of some clayey soils measured during border irrigation", a:"Maheshwari, B., Jayawardane, N.", v:"Agricultural Water Management", d:"10.1016/0378-3774(92)90050-7", c:10},
-    {k:"journal", y:1992, t:"Effects of recession criteria on prediction of recession times in border irrigation models", a:"Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/0378-3774(92)90091-a", c:2},
-    {k:"conference", y:1991, t:"Border irrigation design and management using a simulation software", v:"National Conference Publication - Institution of Engineers, Australia"},
-    {k:"journal", y:1990, t:"Sensitivity analysis of parameters of border irrigation models", a:"Maheshwari, B., McMahon, T., Turner, A.", v:"Agricultural Water Management", d:"10.1016/0378-3774(90)90011-m", c:7},
-    {k:"journal", y:1988, t:"An optimization technique for estimating infiltration characteristics in border irrigation", a:"Maheshwari, B., Turner, A., McMahon, T., Campbell, B.", v:"Agricultural Water Management", d:"10.1016/0378-3774(88)90129-1", c:22},
-    {k:"journal", y:1987, t:"MODELS OF BORDER IRRIGATION FOR FLAT CLAYEY SOILS.", v:""},
-    {k:"journal", y:1986, t:"Some low-cost methods for seepage control in storage tanks in alfisols and vertisols", a:"Maheshwari, B., Turner, A.", v:"Agricultural Water Management", d:"10.1016/0378-3774(86)90005-3", c:2},
+    {"k":"journal","y":2026,"t":"Assessing Water Sustainability for the Sustainable Development Goals: A Systematic Review and Bibliometric Analysis Highlighting Gaps in Current Assessment Frameworks","a":"Dhanasekaran, N.C., Maheshwari, B., Donovan-Mak, M., Huda, S.","v":"Sustainability","d":"10.3390/su18052514","c":2},
+    {"k":"journal","y":2026,"t":"Evaluating the Effectiveness of Village Groundwater Cooperatives for Groundwater Commons in Gujarat and Rajasthan Using Ostrom’s Design Principles","a":"Gajurel, S., Maheshwari, B., Hagare, D., Ward, J., Singh, P.K.","v":"Sustainability","d":"10.3390/su18031561","c":1},
+    {"k":"journal","y":2026,"t":"Understanding Drought Dynamics in Semiarid Regions: A Multidecadal, Multi‐Index Case Study From Western Rajasthan, India","a":"Upadhyay, E., Biswas, J., Mishra, A., Kumar, P., Maheshwari, B.","v":"World Water Policy","d":"10.1002/wwp2.70081"},
+    {"k":"journal","y":2026,"t":"Comparison of Uptake of Cadmium at Low Concentrations Under Hydroponic and Soil‐Based Agriculture Systems for Lettuce, Indian Spinach and Methi","a":"Kotresh, D.J., Jayadeva, H.M., Hagare, D., Kadalli, G.G., Maheshwari, B., Saraswathy, B.P. et al.","v":"Journal of Sustainable Agriculture and Environment","d":"10.1002/sae2.70138"},
+    {"k":"journal","y":2026,"t":"From Crisis to Resilience: Rethinking Urban Flooding and Groundwater Recharge in Bengaluru City, India","a":"Biswas, S., Patel, S.V.B., Maheshwari, B.","v":"World Water Policy","d":"10.1002/wwp2.70098"},
+    {"k":"journal","y":2026,"t":"Farm‐Scale Recharge Pits for Improving Local Groundwater Availability: Insights From a Hardrock Watershed in Rajasthan, India","a":"Soni, P., Maheshwari, B., Dashora, Y., Dillon, P., Singh, P.K.","v":"World Water Policy","d":"10.1002/wwp2.70094"},
+    {"k":"journal","y":2026,"t":"Revitalizing Traditional Tank Systems: Case Study Insights From Sri Lanka's Village Tank Cascade Systems for Climate Resilience and Water Governance","a":"Nanthakumaran, A., Maheshwari, B.","v":"World Water Policy","d":"10.1002/wwp2.70097"},
+    {"k":"journal","y":2025,"t":"From Dialogue to Policy Learning: Water Policy Labs for Transformative Water Governance","a":"Ojha, H., Maheshwari, B., Camkin, J., Bhattarai, B., Banjade, P., Gurung, P. et al.","v":"World Water Policy","d":"10.1002/wwp2.70041"},
+    {"k":"journal","y":2025,"t":"Assessing Urban Lake Performance for Stormwater Harvesting: Insights from Two Lake Systems in Western Sydney, Australia","a":"Natarajan, S.K., Hagare, D., Maheshwari, B.","v":"Water","d":"10.3390/w17172504"},
+    {"k":"journal","y":2025,"t":"Closed Loop Phosphorus Recovery and Recycling for Sustainable Hydroponic Farming","a":"Malkawi, S., Hagare, D., Maheshwari, B.","v":"Journal of Sustainable Agriculture and Environment","d":"10.1002/sae2.70094"},
+    {"k":"journal","y":2024,"t":"Rejuvenation of the Springs in the Hindu Kush Himalayas Through Transdisciplinary Approaches—A Review","a":"Pant, N., Hagare, D., Maheshwari, B., Rai, S.P., Sharma, M., Dollin, J. et al.","v":"Water","d":"10.3390/w16243675","c":19},
+    {"k":"journal","y":2024,"t":"Assessing groundwater quality, health risks, and policy implications: A case study of West Medinipur District, West Bengal, India","a":"Alam, M.A., Mailapalli, D.R., Maheshwari, B.","v":"World Water Policy","d":"10.1002/wwp2.12160","c":2},
+    {"k":"journal","y":2023,"t":"Managing floods in Chennai City as part of situation understanding and improvement project","a":"Shivakumar, S., Shanmuganathan, M., Goonetilleke, A., Day, D., Sarkar, A., Hagare, D. et al.","v":"World Water Policy","d":"10.1002/wwp2.12119","c":4},
+    {"k":"journal","y":2023,"t":"Training young water professionals in leadership and transdisciplinary competencies for sustainable water management in India","a":"Maheshwari, B., Hagare, D., Spencer, R., Dollin, J., Reynolds, J., Atkins, D. et al.","v":"World Water Policy","d":"10.1002/wwp2.12114","c":4},
+    {"k":"journal","y":2023,"t":"A reflective evaluation of young water professionals' transdisciplinary learning","a":"Dollin, J., Hagare, D., Maheshwari, B., Packham, R., Reynolds, J., Garg, A. et al.","v":"World Water Policy","d":"10.1002/wwp2.12121","c":3},
+    {"k":"journal","y":2023,"t":"Training and capacity building of young water professionals—role of an innovative and transformative program for sustainable water futures","a":"Maheshwari, B.","v":"World Water Policy","d":"10.1002/wwp2.12103","c":3},
+    {"k":"journal","y":2023,"t":"The impact of irrigation with treated wastewaters on soil and kikuyu grass nutrient compositions","a":"Shahrivar, A.A., Hagare, D., Maheshwari, B., Rahman, M.M.","v":"Water Environment Research","d":"10.1002/wer.10873","c":3},
+    {"k":"journal","y":2023,"t":"Mentoring in the young water professionals' training program: Lessons for effective capacity development","a":"Maheshwari, B., Atkins, D., Hagare, D., Spencer, R., Dillon, P., Jain, S. et al.","v":"World Water Policy","d":"10.1002/wwp2.12129","c":2},
+    {"k":"journal","y":2023,"t":"Building capacity of young water professionals through action research and transdisciplinary approaches","a":"Maheshwari, B.","v":"World Water Policy","d":"10.1002/wwp2.12127","c":1},
+    {"k":"journal","y":2023,"t":"Transdisciplinary approach for planning the expansion of irrigation infrastructure at a regional scale","a":"Issac, A.M., Mullassery, H.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Dollin, J. et al.","v":"World Water Policy","d":"10.1002/wwp2.12120","c":1},
+    {"k":"journal","y":2023,"t":"Geospatial data and web based tools for managing irrigation infrastructure expansion projects","a":"Issac, A.M., Harshitha, M.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Reynolds, J.K. et al.","v":"World Water Policy","d":"10.1002/wwp2.12130"},
+    {"k":"journal","y":2022,"t":"Impact of Recycled Water Irrigation on Soil Salinity and Its Remediation","a":"Rahman, M.M., Shahrivar, A.A., Hagare, D., Maheshwari, B.","v":"Soil Systems","d":"10.3390/soilsystems6010013","c":22},
+    {"k":"journal","y":2022,"t":"Hydrologic and Cost–Benefit Analysis of Multiple Check Dams in Catchments of Ephemeral Streams, Rajasthan, India","a":"Dashora, Y., Cresswell, D., Dillon, P., Maheshwari, B., Clark, R., Soni, P. et al.","v":"Water","d":"10.3390/w14152378","c":9},
+    {"k":"journal","y":2022,"t":"Understanding the role of groundwater in the lives of rural women in India","a":"Swaraj, A., Maheshwari, B.","v":"World Water Policy","d":"10.1002/wwp2.12085","c":7},
+    {"k":"journal","y":2022,"t":"Assessment of Urban Land Use and Cover on Groundwater Recharge and Quality","a":"Hagare, D., Ezemba, S.N., Pant, N., Rahman, M.M., Maheshwari, B., Siddiqui, Z.","v":"CivilEng","d":"10.3390/civileng3020029","c":5},
+    {"k":"journal","y":2021,"t":"Adaptation of EVIAVE methodology to landfill environmental impact assessment in Uganda – A case study of Kiteezi landfill","a":"Aryampa, S., Maheshwari, B., Zamorano, M., Sabiiti, E.N., Olobo, C., Bateganya, N.L.","v":"Journal of African Earth Sciences","d":"10.1016/j.jafrearsci.2021.104310","c":13},
+    {"k":"journal","y":2020,"t":"Is urbanisation also the culprit of climate change? – Evidence from Australian cities","a":"Maheshwari, B., Pinto, U., Akbar, S., Fahey, P.","v":"Urban Climate","d":"10.1016/j.uclim.2020.100581","c":48},
+    {"k":"journal","y":2019,"t":"Status of Waste Management in the East African Cities: Understanding the Drivers of Waste Generation, Collection and Disposal and Their Impacts on Kampala City’s Sustainability","a":"Aryampa, S., Maheshwari, B., Sabiiti, E., Bateganya, N.L., Bukenya, B.","v":"Sustainability","d":"10.3390/su11195523","c":49},
+    {"k":"journal","y":2019,"t":"Qualitative and quantitative analysis of perceived liveability in the context of socio-ecohydrology: evidence from the urban and peri-urban Cirebon-Indonesia","a":"Titisari Danielaini, T., Maheshwari, B., Hagare, D.","v":"Journal of Environmental Planning and Management","d":"10.1080/09640568.2018.1524576","c":5},
+    {"k":"journal","y":2018,"t":"Estimation of specific yield using water table fluctuations and cropped area in a hardrock aquifer system of Rajasthan, India","a":"Chinnasamy, P., Maheshwari, B., Dillon, P., Purohit, R., Dashora, Y., Soni, P. et al.","v":"Agricultural Water Management","d":"10.1016/j.agwat.2018.02.016","c":28},
+    {"k":"journal","y":2018,"t":"Defining rural–urban interfaces for understanding ecohydrological processes in West Java, Indonesia: Part I. Development of methodology to delineate peri-urban areas","a":"Danielaini, T.T., Maheshwari, B., Hagare, D.","v":"Ecohydrology & Hydrobiology","d":"10.1016/j.ecohyd.2017.11.006","c":25},
+    {"k":"journal","y":2018,"t":"Adaptation of Standardised Precipitation Index for understanding watertable fluctuations and groundwater resilience in hard-rock areas of India","a":"Chinnasamy, P., Maheshwari, B., Prathapar, S.A.","v":"Environmental Earth Sciences","d":"10.1007/s12665-018-7734-6","c":23},
+    {"k":"journal","y":2018,"t":"Combining imaging techniques with nonparametric modelling to predict seepage hotspots in irrigation channels","a":"Akbar, S., Kathuria, A., Maheshwari, B.","v":"Irrigation Science","d":"10.1007/s00271-018-0596-6","c":7},
+    {"k":"journal","y":2018,"t":"A framework for evaluating ecohydrological-based liveability in a rapidly urbanising region of Indonesia","a":"Danielaini, T.T., Maheshwari, B., Hagare, D.","v":"International Journal of Urban Sustainable Development","d":"10.1080/19463138.2018.1531874","c":6},
+    {"k":"journal","y":2017,"t":"Perspectives on impacts of water quality on agriculture and community well-being—a key informant study from Sri Lanka","a":"Thoradeniya, B., Pinto, U., Maheshwari, B.","v":"Environmental Science and Pollution Research","d":"10.1007/s11356-017-0493-1","c":12},
+    {"k":"journal","y":2016,"t":"Assisting community management of groundwater: Irrigator attitudes in two watersheds in Rajasthan and Gujarat, India","a":"Varua, M., Ward, J., Maheshwari, B., Oza, S., Purohit, R., Hakimuddin et al.","v":"Journal of Hydrology","d":"10.1016/j.jhydrol.2016.02.003","c":21},
+    {"k":"journal","y":2015,"t":"Framework to assess sources controlling soil salinity resulting from irrigation using recycled water: an application of Bayesian Belief Network","a":"Rahman, M.M., Hagare, D., Maheshwari, B.","v":"Journal of Cleaner Production","d":"10.1016/j.jclepro.2014.04.068","c":29},
+    {"k":"journal","y":2015,"t":"Evaluating the effectiveness of water infrastructures for increasing groundwater recharge and agricultural production – A case study of Gujarat, India","a":"Chinnasamy, P., Misra, G., Shah, T., Maheshwari, B., Prathapar, S.","v":"Agricultural Water Management","d":"10.1016/j.agwat.2015.05.009","c":28},
+    {"k":"journal","y":2014,"t":"The Role of Transdisciplinary Approach and Community Participation in Village Scale Groundwater Management: Insights from Gujarat and Rajasthan, India","a":"Maheshwari, B., Varua, M., Ward, J., Packham, R., Chinnasamy, P., Dashora, Y. et al.","v":"Water","d":"10.3390/w6113386","c":70},
+    {"k":"journal","y":2013,"t":"TREATED EFFLUENT AND SALINE WATER IRRIGATION INFLUENCES SOIL PROPERTIES, YIELD, WATER PRODUCTIVITY AND SODIUM CONTENT OF SNOW PEAS AND CELERY","a":"Grewal, H.S., Maheshwari, B.L.","v":"Journal of Plant Nutrition","d":"10.1080/01904167.2013.776080","c":9},
+    {"k":"journal","y":2013,"t":"The hydrological and economic impacts of changing water allocation in political regions within the peri-urban South Creek catchment in Western Sydney I: Model development","a":"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.","v":"Journal of Hydrology","d":"10.1016/j.jhydrol.2013.06.052","c":7},
+    {"k":"journal","y":2013,"t":"The hydrological and economic impacts of changing water allocations in political regions within the peri-urban South Creek catchment in Western Sydney II: Scenarios","a":"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.","v":"Journal of Hydrology","d":"10.1016/j.jhydrol.2013.06.030","c":7},
+    {"k":"journal","y":2012,"t":"Analysis of long-term water quality for effective river health monitoring in peri-urban landscapes—a case study of the Hawkesbury–Nepean river system in NSW, Australia","a":"Pinto, U., Maheshwari, B.L., Ollerton, R.L.","v":"Environmental Monitoring and Assessment","d":"10.1007/s10661-012-2888-2","c":35},
+    {"k":"journal","y":2012,"t":"Modelling eutrophication and microbial risks in peri-urban river systems using discriminant function analysis","a":"Pinto, U., Maheshwari, B., Shrestha, S., Morris, C.","v":"Water Research","d":"10.1016/j.watres.2012.09.025","c":27},
+    {"k":"journal","y":2012,"t":"Understanding the meaning of river health for a community: perspectives from the peri-urban region of the Hawkesbury–Nepean catchment, Australia","a":"Pinto, U., Maheshwari, B.L., Shrestha, S., Morris, C.","v":"Water Policy","d":"10.2166/wp.2012.074","c":9},
+    {"k":"journal","y":2012,"t":"Role and Complexity of Integrated Water-Resources Management for Periurban Landscapes in Australia","a":"Maheshwari, B.L., Simmons, B.L., Singh, V.P.","v":"Journal of Hydrologic Engineering","d":"10.1061/(asce)he.1943-5584.0000471","c":8},
+    {"k":"journal","y":2012,"t":"Impacts of Water Quality on the Harvest of School Prawn (Metapenaeus macleayi) in a Peri-Urban River System","a":"Pinto, U., Maheshwari, B.L.","v":"Journal of Shellfish Research","d":"10.2983/035.031.0332","c":4},
+    {"k":"journal","y":2012,"t":"WATER CONSERVATION AROUND HOMES—THE ROLE OF AUDIT IN IMPROVING IRRIGATION SYSTEM PERFORMANCE","a":"Maheshwari, B.","v":"Irrigation and Drainage","d":"10.1002/ird.1668","c":2},
+    {"k":"journal","y":2012,"t":"Water-yield relations of maize (Zea mays L) in temperate climatic conditions","v":"Maydica"},
+    {"k":"journal","y":2011,"t":"Water and nutrient use efficiency of a low-cost hydroponic greenhouse for a cucumber crop: An Australian case study","a":"Grewal, H.S., Maheshwari, B., Parks, S.E.","v":"Agricultural Water Management","d":"10.1016/j.agwat.2010.12.010","c":144},
+    {"k":"journal","y":2011,"t":"River health assessment in peri-urban landscapes: An application of multivariate analysis to identify the key variables","a":"Pinto, U., Maheshwari, B.","v":"Water Research","d":"10.1016/j.watres.2011.04.044","c":72},
+    {"k":"journal","y":2011,"t":"Developing a multimedia package for university teaching and learning - lessons learnt","v":"Asia-Pacific Forum on Science Learning and Teaching"},
+    {"k":"journal","y":2010,"t":"Effects of greywater irrigation on plant growth, water use and soil properties","a":"Pinto, U., Maheshwari, B., Grewal, H.","v":"Resources, Conservation and Recycling","d":"10.1016/j.resconrec.2009.09.007","c":90},
+    {"k":"journal","y":2010,"t":"Magnetic treatment of irrigation water and snow pea and chickpea seeds enhances early growth and nutrient contents of seedlings","a":"Grewal, H.S., Maheshwari, B.L.","v":"Bioelectromagnetics","d":"10.1002/bem.20615","c":74},
+    {"k":"journal","y":2010,"t":"Reuse of greywater for irrigation around homes in Australia: Understanding community views, issues and practices","a":"Pinto, U., Maheshwari, B.L.","v":"Urban Water Journal","d":"10.1080/15730620903447639","c":43},
+    {"k":"journal","y":2010,"t":"Natural spaces – how do they influence stewardship attitudes and actions of university students?","a":"Burgin, S., Williamson, D., Maheshwari, B.","v":"International Journal of Environmental Studies","d":"10.1080/00207230902738925","c":2},
+    {"k":"journal","y":2009,"t":"Magnetic treatment of irrigation water: Its effects on vegetable crop yield and water productivity","a":"Maheshwari, B.L., Grewal, H.S.","v":"Agricultural Water Management","d":"10.1016/j.agwat.2009.03.016","c":150},
+    {"k":"journal","y":2009,"t":"Community awareness of the use of alternative water sources for irrigation of golf courses: a case study of a selected site within the Sydney metropolitan area","a":"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.","v":"International Journal of Management and Decision Making","d":"10.1504/ijmdm.2009.024991"},
+    {"k":"conference","y":2009,"t":"Developing a conceptual model for water accounting in peri-urban catchments","v":"18th World IMACS Congress and MODSIM09 International Congress on Modelling and Simulation. Modelling and Simulation Society of Australia and New Zealand and International Association for Mathematics and Computers in Simulation, Cairns, Australia"},
+    {"k":"conference","y":2009,"t":"System harmonisation framework for water resources planning in peri-urban catchments","v":"18th World IMACS Congress and MODSIM09 International Congress on Modelling and Simulation: Interfacing Modelling and Simulation with Mathematical and Computational Sciences, Proceedings"},
+    {"k":"journal","y":2008,"t":"Action Research for Sustainable Water Futures in Western Sydney: Reaching Beyond Traditional Stakeholder Engagement to Understand Community Stakeholder Language and Its Implications for Action","a":"Webb, T., Burgin, S., Maheshwari, B.","v":"Systemic Practice and Action Research","d":"10.1007/s11213-008-9102-z","c":10},
+    {"k":"conference","y":2008,"t":"Integrating alternative water sources in urbanised environments","a":"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.","v":"WIT Transactions on Ecology and the Environment","d":"10.2495/si080341","c":3},
+    {"k":"conference","y":2008,"t":"Evaluating water saving using smart irrigation and harvesting systems","v":"Irrigation Australia Conference"},
+    {"k":"journal","y":2007,"t":"Sustainable use of stormwater for irrigation case study: Manly Golf Course","a":"Schwecke, M., Simmons, B., Maheshwari, B.","v":"The Environmentalist","d":"10.1007/s10669-007-9013-z","c":9},
+    {"k":"journal","y":2007,"t":"Sustaining public open spaces through water recycling for irrigation: developing decision support tools and framework","a":"Mulley, P., Simmons, B., Maheshwari, B.","v":"International Journal of Water","d":"10.1504/ijw.2007.016322","c":4},
+    {"k":"journal","y":2006,"t":"Urban irrigation - Looking at water use in our own backyard","v":"Water"},
+    {"k":"journal","y":2005,"t":"Local provenance in rehabilitation of degraded landscapes: a case study from the Hawkesbury–Nepean catchment, Australia","a":"Burgin, S., Carson, J., Maheshwari, B.","v":"Area","d":"10.1111/j.1475-4762.2005.00636.x","c":8},
+    {"k":"journal","y":2005,"t":"The sustainability challenge for irrigation","v":""},
+    {"k":"journal","y":2004,"t":"Temporal variations in water quality of farm dams: impacts of land use and water sources","a":"Brainwood, M., Burgin, S., Maheshwari, B.","v":"Agricultural Water Management","d":"10.1016/j.agwat.2004.03.006","c":70},
+    {"k":"journal","y":2004,"t":"Field Evaluation of Selected Soil Erosion Models for Catchment Management in Indonesia","a":"Moehansyah, H., Maheshwari, B., Armstrong, J.","v":"Biosystems Engineering","d":"10.1016/j.biosystemseng.2004.04.013","c":23},
+    {"k":"journal","y":2003,"t":"Effects of different landuses on runoff and erosion characteristics of the Riam Kanan Catchment, Indonesia","v":"International Agricultural Engineering Journal"},
+    {"k":"conference","y":2003,"t":"Farmers’ perceptions about irrigation scheduling in the Hawkesbury-Nepean catchment","v":"Australasia Pacific Extension Network Conference"},
+    {"k":"journal","y":2002,"t":"Options for alternative irrigation water supplies in the Murray–Darling Basin, Australia: a case study of the Shepparton Irrigation Region","a":"Smith, A., Maheshwari, B.","v":"Agricultural Water Management","d":"10.1016/s0378-3774(02)00002-1","c":7},
+    {"k":"journal","y":2002,"t":"Impact of land-use changes and sedimentation on the Muhammad Nur Reservoir, South Kalimantan, Indonesia","a":"Moehansyah, H., Maheshwari, B.L., Armstrong, J.","v":"Journal of Soils and Sediments","d":"10.1007/bf02991245","c":6},
+    {"k":"journal","y":2001,"t":"SW—Soil and Water","a":"Esfandiari, M., Maheshwari, B.","v":"Journal of Agricultural Engineering Research","d":"10.1006/jaer.2001.0717","c":11},
+    {"k":"journal","y":2001,"t":"SW—soil and water: field evaluation of furrow irrigation models","v":"Journal of agricultural engineering research"},
+    {"k":"journal","y":2000,"t":"Availability of nitrogen and phosphorus under recycled water irrigation","a":"Sakadevan, K., Maheshwari, B.L., Bavor, H.J.","v":"Australian Journal of Soil Research","d":"10.1071/sr99040","c":12},
+    {"k":"journal","y":2000,"t":"Sensitivity of a furrow irrigation model to input parameters","v":"International Agricultural Engineering Journal"},
+    {"k":"journal","y":1998,"t":"Suitability of Selected Flow Equations and Variation of Manning's n in Furrow Irrigation","a":"Esfandiari, M., Maheshwari, B.L.","v":"Journal of Irrigation and Drainage Engineering","d":"10.1061/(asce)0733-9437(1998)124:2(89)","c":6},
+    {"k":"conference","y":1998,"t":"Infiltration and roughness equations for surface irrigation: How form influences estimation","v":"2001 ASAE Annual Meeting"},
+    {"k":"journal","y":1997,"t":"Application of the optimization method for estimating infiltration characteristics in furrow irrigation and its comparison with other methods","a":"Esfandiari, M., Maheshwari, B.","v":"Agricultural Water Management","d":"10.1016/s0378-3774(97)00007-3","c":19},
+    {"k":"journal","y":1997,"t":"Field values of the shape factor for estimating surface storage in furrows on a clay soil","a":"Esfandiari, M., Maheshwari, B.L.","v":"Irrigation Science","d":"10.1007/s002710050034","c":11},
+    {"k":"journal","y":1997,"t":"Estimating recession times in furrows with small longitudinal slope on a clay soil","a":"Esfandiari, M., Maheshwari, B., Cornish, P.","v":"Agricultural Water Management","d":"10.1016/s0378-3774(97)00013-9","c":2},
+    {"k":"journal","y":1997,"t":"Evaluation of Time-Rated Infiltration Families for Noncracking Soils","a":"Maheshwari, B.L., Kelly, D.","v":"Journal of Irrigation and Drainage Engineering","d":"10.1061/(asce)0733-9437(1997)123:4(238)","c":2},
+    {"k":"journal","y":1997,"t":"Interrelations Among Physical and Hydraulic Parameters of Non-Cracking Soils","a":"Maheshwari, B.","v":"Journal of Agricultural Engineering Research","d":"10.1006/jaer.1997.0207","c":2},
+    {"k":"journal","y":1997,"t":"Fuzzy-genetic study of hydraulic resistance families in surface irrigation","v":"Complexity International"},
+    {"k":"journal","y":1996,"t":"Development of an automated double-ring infiltrometer","a":"Maheshwari, B.","v":"Australian Journal of Soil Research","d":"10.1071/sr9960709","c":14},
+    {"k":"journal","y":1995,"t":"Effects of regulation on the flow regime of the river Murray, Australia","a":"Maheshwari, B.L., Walker, K.F., McMahon, T.A.","v":"Regulated Rivers: Research & Management","d":"10.1002/rrr.3450100103","c":240},
+    {"k":"journal","y":1994,"t":"Values for the exponent of the storage-discharge equation in runoff-routing models","a":"Maheshwari, B.","v":"Journal of Hydrology","d":"10.1016/0022-1694(94)90024-8","c":2},
+    {"k":"journal","y":1994,"t":"Development of a regression-based model of border irrigation on cracking soils","a":"Maheshwari, B.","v":"Agricultural Water Management","d":"10.1016/0378-3774(94)90043-4"},
+    {"k":"journal","y":1993,"t":"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 1, Advance and Recession Characteristics","a":"Maheshwari, B., McMahon, T.","v":"Journal of Agricultural Engineering Research","d":"10.1006/jaer.1993.1005","c":7},
+    {"k":"journal","y":1993,"t":"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 2, Overall Suitability for Field Applications","a":"Maheshwari, B., McMahon, T.","v":"Journal of Agricultural Engineering Research","d":"10.1006/jaer.1993.1008","c":5},
+    {"k":"other","y":1993,"t":"The impact of flow regulation on the hydrology of the River Murray and its ecological implications","v":""},
+    {"k":"journal","y":1992,"t":"Suitability of different flow equations and hydraulic resistance parameters for flows in surface irrigation: A review","a":"Maheshwari, B.L.","v":"Water Resources Research","d":"10.1029/92wr00424","c":14},
+    {"k":"journal","y":1992,"t":"Modeling Shallow Overland Flow in Surface Irrigation","a":"Maheshwari, B.L., McMahon, T.A.","v":"Journal of Irrigation and Drainage Engineering","d":"10.1061/(asce)0733-9437(1992)118:2(201)","c":12},
+    {"k":"journal","y":1992,"t":"Infiltration characteristics of some clayey soils measured during border irrigation","a":"Maheshwari, B., Jayawardane, N.","v":"Agricultural Water Management","d":"10.1016/0378-3774(92)90050-7","c":10},
+    {"k":"journal","y":1992,"t":"Effects of recession criteria on prediction of recession times in border irrigation models","a":"Maheshwari, B.","v":"Agricultural Water Management","d":"10.1016/0378-3774(92)90091-a","c":2},
+    {"k":"conference","y":1991,"t":"Border irrigation design and management using a simulation software","v":"National Conference Publication - Institution of Engineers, Australia"},
+    {"k":"journal","y":1990,"t":"Sensitivity analysis of parameters of border irrigation models","a":"Maheshwari, B., McMahon, T., Turner, A.","v":"Agricultural Water Management","d":"10.1016/0378-3774(90)90011-m","c":7},
+    {"k":"journal","y":1988,"t":"An optimization technique for estimating infiltration characteristics in border irrigation","a":"Maheshwari, B., Turner, A., McMahon, T., Campbell, B.","v":"Agricultural Water Management","d":"10.1016/0378-3774(88)90129-1","c":22},
+    {"k":"journal","y":1987,"t":"MODELS OF BORDER IRRIGATION FOR FLAT CLAYEY SOILS.","v":""},
+    {"k":"journal","y":1986,"t":"Some low-cost methods for seepage control in storage tanks in alfisols and vertisols","a":"Maheshwari, B., Turner, A.","v":"Agricultural Water Management","d":"10.1016/0378-3774(86)90005-3","c":2},
   ];
 
   /* ═══════════════════════════════════════════════════════════════════

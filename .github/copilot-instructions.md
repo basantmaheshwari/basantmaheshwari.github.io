@@ -16,10 +16,15 @@ of the array you edited. `MAINTAINING.md` describes that flow from their side.
 
 Important rules:
 
-- The whole site is one self-contained `index.html`. No build step, no
-  dependencies in the page, no CDN, no web fonts, no external images.
-- All content lives in the data arrays at the top of the `<script>` block.
-  Generate markup from data; never hand-write content into the HTML body.
+- The published site is one self-contained `index.html`. No dependencies in
+  the page, no CDN, no web fonts, no external images. `admin/` is the editor
+  and is exempt; it is not part of the published site.
+- **Content lives in `content/*.json`, not in the HTML.** The arrays inside
+  `index.html` are a generated copy — run `node scripts/build.mjs` after
+  changing the JSON. Editing the arrays directly is silently reverted by the
+  next build.
+- A new or renamed content file must also be added to `admin/config.yml`, or
+  it stops being editable through the CMS.
 - **Do not invent facts, publications, co-authors, students, awards, dates,
   partners or metrics.** An honest gap is always better than a plausible
   fabrication. This is an academic record.
@@ -28,4 +33,4 @@ Important rules:
 - Treat Australia and India as equal partners; no cultural stereotype.
 - The cross-section figure is a solved Dupuit–Forchheimer water table, not
   decoration. Keep it computed and keep the parameters physical.
-- Finish every change with `node checks/verify.mjs`.
+- Finish every change with `node scripts/build.mjs && node checks/verify.mjs`.

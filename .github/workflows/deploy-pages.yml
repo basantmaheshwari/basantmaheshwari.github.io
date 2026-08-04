@@ -1,7 +1,8 @@
 name: Publish website
 
-# The site publishes itself. Merging a change into `main` is the whole
-# release process — there is nothing to run by hand.
+# The site publishes itself. A change reaching `main` — whether pushed by a
+# person or saved from the editor at /admin/ — is built, checked and deployed
+# with nothing to run by hand.
 #
 # GitHub Pages for this repository is configured with build_type "workflow",
 # which means Pages serves whatever this workflow uploads and nothing else.
@@ -14,7 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write      # needed to commit the rebuilt index.html back
   pages: write
   id-token: write
 
@@ -34,19 +35,46 @@ jobs:
         with:
           node-version: 22
 
-      # The gate. There is no build step to catch a mistake, so this is the
-      # only thing standing between a bad edit and the public site. If it
-      # exits non-zero, nothing is published.
+      # The editor saves JSON into content/. This copies it into the arrays
+      # inside index.html, which is what the site actually reads — the page
+      # stays one self-contained file rather than fetching its own content.
+      - name: Build index.html from content/
+        run: node scripts/build.mjs
+
+      # Keep the repository honest: if the build changed index.html, commit
+      # it so the file on GitHub always matches the content beside it.
+      # "[skip ci]" stops this push from starting another run.
+      # Never let this stop a deploy. If the repository's Actions token is
+      # read-only, the push fails — but the built page is already correct
+      # and publishing it matters more than tidying the repository. The
+      # checker warns about the resulting drift on the next run.
+      - name: Commit the rebuilt page
+        continue-on-error: true
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "index.html was already in step with content/"
+          else
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Rebuild index.html from content/ [skip ci]"
+            git push
+            echo "index.html rebuilt and committed"
+          fi
+
+      # The gate. There is no compiler here, so this is the only thing
+      # between an edit and the public site. A failure stops the deploy.
       - name: Verify the website
         run: node checks/verify.mjs
 
-      # The site is one self-contained file. Everything else in the
-      # repository — the checker, the guides, the issue templates — is
-      # tooling for editors and is deliberately not published.
+      # index.html is the site. admin/ is the editor, published alongside it
+      # so Basant can reach it at /admin/. Everything else in the repository
+      # is tooling and is deliberately not published.
       - name: Assemble the site
         run: |
           mkdir -p _site
           cp index.html _site/index.html
+          cp -R admin _site/admin
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

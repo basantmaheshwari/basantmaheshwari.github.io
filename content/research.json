@@ -1,0 +1,63 @@
+{
+  "items": [
+    {
+      "name": "Village-scale managed aquifer recharge",
+      "year": "Ongoing",
+      "status": "current",
+      "blurb": "Whether check dams, recharge ponds and farm pits actually raise the water table, by how much, and for how long — measured rather than assumed. The work covers specific yield from watertable fluctuations, hydrologic and cost–benefit analysis of check dam cascades, and the recharge structures that decide whether a hardrock aquifer carries a village through the dry season.",
+      "tags": [
+        "Groundwater recharge",
+        "Hardrock aquifers",
+        "Rajasthan",
+        "Gujarat"
+      ]
+    },
+    {
+      "name": "Groundwater as a commons",
+      "year": "Ongoing",
+      "status": "current",
+      "blurb": "An aquifer is a common-pool resource: every well draws on the same account, and no individual pump reveals the balance. This strand studies village groundwater cooperatives against Ostrom's design principles, irrigator attitudes to shared management, and the role groundwater plays in the lives of rural women.",
+      "tags": [
+        "Common-pool resources",
+        "Ostrom",
+        "Groundwater governance",
+        "Citizen science"
+      ]
+    },
+    {
+      "name": "Transdisciplinary water research and training",
+      "year": "Ongoing",
+      "status": "current",
+      "blurb": "Water problems fail at the seams between disciplines, so the method has to cross them. Published work here covers the transdisciplinary approach to village-scale groundwater management, mentoring and leadership in the Young Water Professionals programme, and water policy labs that turn dialogue into policy learning.",
+      "tags": [
+        "Transdisciplinary method",
+        "Capacity building",
+        "Water policy"
+      ]
+    },
+    {
+      "name": "Urban and peri-urban water",
+      "year": "Ongoing",
+      "status": "active",
+      "blurb": "River health monitoring in peri-urban landscapes, stormwater harvesting from urban lakes in Western Sydney, urban flooding and recharge in Bengaluru, and the ecohydrological question of what makes a rapidly urbanising region liveable.",
+      "tags": [
+        "River health",
+        "Stormwater",
+        "Peri-urban",
+        "Liveability"
+      ]
+    },
+    {
+      "name": "Irrigation, water quality and reuse",
+      "year": "Ongoing",
+      "status": "active",
+      "blurb": "Irrigation water quality and its consequences for soil and crop: recycled water and soil salinity, greywater irrigation, treated wastewater on pasture, emerging contaminants in rivers receiving untreated wastewater, and closed-loop nutrient recovery in hydroponic systems.",
+      "tags": [
+        "Irrigation",
+        "Water reuse",
+        "Soil salinity",
+        "Water quality"
+      ]
+    }
+  ]
+}

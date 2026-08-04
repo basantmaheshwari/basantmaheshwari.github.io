@@ -2,9 +2,62 @@
 
 Everything you need to change <https://basantmaheshwari.github.io/basantmaheshwari/>.
 
-## Revise the website with a chat
+## Edit the website in a browser
 
-You do not need to program to change this website.
+The editor is at **<https://basantmaheshwari.github.io/basantmaheshwari/admin/>**.
+
+Sign in with GitHub and you get a form for every part of the site —
+publications, team, news, the research and programme lists, the contact
+details, and the page structure. Saving commits the change and the site
+republishes itself within a minute or so. No files, no code.
+
+> **Before it will save, someone has to set up sign-in once.** See *Setting up
+> the editor* below. Until that is done the editor loads and shows the content,
+> but saving fails at the sign-in step.
+
+### How it fits together
+
+Content lives in `content/*.json` — that is what the editor writes. The site
+itself is still a single self-contained `index.html` with the content copied
+inside it, so it keeps working offline and loads nothing at runtime.
+`scripts/build.mjs` copies the JSON into the HTML, and the publish workflow
+runs it automatically:
+
+```
+content/*.json  →  scripts/build.mjs  →  index.html  →  checks/verify.mjs  →  published
+   the editor          the copy           the site         the gate
+```
+
+If you edit `content/` by hand, run `node scripts/build.mjs` afterwards. The
+check refuses to publish a branch where the two disagree.
+
+### Setting up the editor
+
+One-time, and it needs Basant's GitHub account. A static page cannot keep an
+OAuth secret, so the sign-in step runs on a small free service.
+
+1. **Create a GitHub OAuth app** — GitHub → *Settings* → *Developer settings* →
+   *OAuth Apps* → *New OAuth App*.
+   - Homepage URL: `https://basantmaheshwari.github.io/basantmaheshwari/`
+   - Authorization callback URL: the worker address from step 2, ending
+     `/callback`
+   - Note the **Client ID** and generate a **Client secret**.
+2. **Deploy the authentication worker** — [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth)
+   runs free on Cloudflare Workers. Set `GITHUB_CLIENT_ID`,
+   `GITHUB_CLIENT_SECRET` and `ALLOWED_DOMAINS` (`basantmaheshwari.github.io`)
+   as its secrets. It gives you an address like
+   `https://sveltia-cms-auth.<name>.workers.dev`.
+3. **Point the editor at it** — in `admin/config.yml`, replace
+   `https://REPLACE-ME.workers.dev` with that address. The publish check warns
+   until you do.
+4. Open `/admin/`, sign in, and save something small to confirm the round trip.
+
+Anyone who should be able to edit needs write access to the repository.
+
+## Or revise it with a chat
+
+The editor covers content. For anything structural — a new kind of page, a
+change to how something looks — describe it to a coding assistant instead.
 
 1. Open this repository in Claude Code, Codex or GitHub Copilot.
 2. Describe the result you want in ordinary language. Include the page, the
@@ -33,24 +86,25 @@ Example requests:
 guessed. This is an academic record, and an honest gap is far better than a
 plausible invention. If a date, a co-author or a number matters, include it.
 
-## There is no CMS
+## What the CMS actually is
 
-No admin panel, no login, no database, no WYSIWYG editor. GitHub and a
-repository-aware chat assistant provide the editing and approval workflow,
-and the site itself is a single static file with no server behind it.
-
-What takes the place of a CMS is four things working together:
+[Sveltia CMS](https://github.com/sveltia/sveltia-cms) — a Git-based editor. It
+is a static page at `/admin/` that talks to the GitHub API in the browser:
+there is no server, no database, and nothing to keep running. Every change is
+an ordinary commit, so the history, review and rollback are git's.
 
 | Piece | What it does |
 | ----- | ------------ |
-| The forms in `.github/ISSUE_TEMPLATE/` | Collect a change request in plain language |
-| [AGENTS.md](AGENTS.md) | Tells the assistant the rules — house style, where content lives, and never to invent a fact |
+| `admin/` | The editor — a form for each part of the site |
+| `content/*.json` | What it reads and writes |
+| `scripts/build.mjs` | Copies that content into `index.html` |
 | `checks/verify.mjs` | Refuses to publish a broken or unsafe change |
-| `.github/workflows/deploy-pages.yml` | Publishes automatically once a change reaches `main` |
+| `.github/workflows/deploy-pages.yml` | Builds, checks and publishes on every change to `main` |
+| `.github/ISSUE_TEMPLATE/` | For colleagues who would rather file a request than edit |
 
-Nothing runs automatically when an issue is filed; a person opens the
-repository in an assistant and works from it. That is deliberate — an
-academic record should have someone read the change before it is public.
+The editor is the only part of the repository that loads anything from another
+host — it fetches Sveltia from a CDN. `index.html` remains entirely
+self-contained; the editor is a tool, not part of the published site.
 
 ## The site itself
 

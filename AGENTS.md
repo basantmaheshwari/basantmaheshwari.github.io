@@ -14,56 +14,78 @@ language — a new paper, a corrected title, an event to add. Turn that request
 into a complete, verified website update. Do not expect the requester to name
 files, frameworks or commands, and do not ask them to.
 
-There is no CMS behind this site: GitHub and this guide are the editing
-workflow. `MAINTAINING.md` describes that flow from the editor's side.
+Content is edited through **Sveltia CMS at `/admin/`**, which reads and
+writes `content/*.json`. `MAINTAINING.md` describes that from the editor's
+side. You will still be asked for anything the CMS cannot express — new
+pages, layout, behaviour.
 
 **If you read nothing else, read this.** The rest of the document is detail on
-these four:
+these five:
 
-1. The whole site is one self-contained `index.html`. No build step, no
-   dependency, no CDN, no web font, no external image.
-2. Content lives in data arrays at the top of the `<script>`. Change the data,
-   never hand-write content into the markup.
+1. The published site is one self-contained `index.html`. No dependency, no
+   CDN, no web font, no external image, and it must open from a file:// URL
+   with the network off.
+2. **Content is edited in `content/*.json`, not in the HTML.** The arrays
+   inside `index.html` are a generated copy. Change the JSON, then run
+   `node scripts/build.mjs` to copy it across. Editing the arrays directly
+   makes the two disagree and your change is lost the next time anyone builds.
 3. **Never invent a fact.** No publication, co-author, student, award, date or
    number that a source did not give you. An honest gap is always correct.
-4. Finish with `node checks/verify.mjs`. It is the only thing between an edit
-   and the public site.
+4. If you add or rename a content file, add it to `admin/config.yml` too, or
+   it stops being editable through the CMS.
+5. Finish with `node scripts/build.mjs && node checks/verify.mjs`. Those two
+   are the only thing between an edit and the public site.
 
 ## The one architectural rule
 
-**The entire website is a single self-contained `index.html`.** Inline
-`<style>` in the head, inline `<script>` at the end. No framework, no npm
-packages in the page, no bundler, no CDN, no web fonts, no external images. It
-must open correctly from a file:// URL with the network switched off.
+**The published website is a single self-contained `index.html`.** Inline
+`<style>` in the head, inline `<script>` at the end. No framework, no bundler,
+no CDN, no web fonts, no external images. It must open correctly from a
+file:// URL with the network switched off, and it is the only file deployed.
 
-Do not add a build step. Do not add a dependency. Do not link a font, an icon
-set, an analytics tag or a stylesheet from another host. If you believe a
-change genuinely requires one, stop and say so in the issue rather than adding
-it — `checks/verify.mjs` will refuse the deploy anyway.
+Do not add a dependency. Do not link a font, an icon set, an analytics tag or
+a stylesheet from another host. If you believe a change genuinely requires
+one, stop and say so rather than adding it — `checks/verify.mjs` will refuse
+the deploy anyway. The portrait is embedded as a base64 `data:` URI for this
+reason; any new image must be embedded the same way, and kept small.
 
-The portrait is embedded as a base64 `data:` URI for this reason. Any new
-image must be embedded the same way, and kept small.
+Two things sit outside that rule, deliberately:
+
+- **`scripts/build.mjs`** copies `content/*.json` into the HTML. It is a copy
+  step, not a bundler: no dependencies, nothing to install, and its output is
+  still one self-contained file. Do not let it grow into a build system.
+- **`admin/`** loads Sveltia CMS from a CDN. That is the editor, not the site,
+  and it is never part of what gets published to a visitor. The no-external-
+  resource check applies to `index.html` alone.
+
+Everything else in the repository — the checker, the guides, the issue forms —
+is tooling and is not deployed.
 
 ## Where content lives
 
-**Never write content into the HTML.** Every word the site displays comes from
-a plain data array at the top of the `<script>` block, and the markup is
-generated from those arrays. Editing the HTML body by hand is almost always
-the wrong change.
+**Content lives in `content/*.json`.** Each file holds `{"items": [...]}` and
+maps to one array inside `index.html`; `scripts/build.mjs` copies the JSON
+into the HTML, and Sveltia CMS at `/admin/` is the form-based way to edit the
+same files. The arrays inside `index.html` are therefore a **generated copy** —
+correct to read, wrong to edit. Change the JSON and rebuild.
 
-| Array          | Drives                                                        |
-| -------------- | ------------------------------------------------------------- |
-| `SECTIONS`     | The rail, the mobile menu, the panel engine — and whole pages, via `page` |
-| `METRICS`      | The four figures on the profile page                           |
-| `RESEARCH`     | Research themes                                                |
-| `PROGRAMS`     | MARVI, AIWC, Young Water Professionals, dam safety training    |
-| `TEACHING`     | Teaching and capacity building                                 |
-| `NEWS`         | News items, newest first                                       |
-| `CONTACT`      | Contact channels and profile links                             |
-| `TEAM_ROLES`   | The Team page sections, their order and their empty states       |
-| `TEAM`         | The people — see the format below                              |
-| `PUB_KINDS`    | The Publications sections, their order and their empty states  |
-| `PUBLICATIONS` | The publication list — see the format below                    |
+The site still carries its content inside the one file rather than fetching
+it, because it has to work offline from a file:// URL. The JSON is the editing
+surface; the HTML is the artefact.
+
+| File in `content/` | Array | Drives |
+| ------------------ | ----- | ------ |
+| `sections.json`     | `SECTIONS`     | The rail, the mobile menu, the panel engine — and whole pages, via `page` |
+| `metrics.json`      | `METRICS`      | The four figures on the profile page |
+| `research.json`     | `RESEARCH`     | Research themes |
+| `programs.json`     | `PROGRAMS`     | MARVI, AIWC, Young Water Professionals, dam safety training |
+| `teaching.json`     | `TEACHING`     | Teaching and capacity building |
+| `news.json`         | `NEWS`         | News items, newest first |
+| `contact.json`      | `CONTACT`      | Contact channels and profile links |
+| `team-roles.json`   | `TEAM_ROLES`   | The Team page sections, their order and their empty states |
+| `team.json`         | `TEAM`         | The people — see the format below |
+| `pub-kinds.json`    | `PUB_KINDS`    | The Publications sections, their order and their empty states |
+| `publications.json` | `PUBLICATIONS` | The publication list — see the format below |
 
 A research, programme or news entry looks like this:
 
@@ -388,11 +410,15 @@ the caption is that it is computed, and that claim has to stay true.
 
 1. Read the relevant array and the surrounding code before changing anything.
 2. Make the smallest coherent change that fully satisfies the request.
-3. Run the checker — this is not optional:
+3. Rebuild and check — neither is optional:
 
    ```sh
-   node checks/verify.mjs
+   node scripts/build.mjs && node checks/verify.mjs
    ```
+
+   The first copies `content/*.json` into `index.html`; the second refuses
+   anything broken. Skipping the build leaves the page disagreeing with the
+   content beside it, and the next person's build silently reverts you.
 
 4. If the change affects layout or the figure, open `index.html` in a browser
    and look at it, at desktop width and at 375px.

@@ -19,5 +19,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      # On a pull request the page is not rebuilt, only checked: a branch
+      # whose index.html disagrees with its content/ would publish something
+      # nobody reviewed.
+      - name: Check index.html matches content/
+        run: node scripts/build.mjs --check
+
       - name: Verify the website
         run: node checks/verify.mjs

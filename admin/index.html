@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Edit the website — Basant Maheshwari</title>
+  <style>
+    /* Shown only while the editor loads, or if it cannot. */
+    body{margin:0;background:#f6f4ef;color:#15222b;
+      font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+      line-height:1.6}
+    #boot{max-width:44rem;margin:14vh auto;padding:0 24px}
+    h1{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-weight:400;
+      font-size:2rem;letter-spacing:-.02em;margin:0 0 12px}
+    p{color:#5b6b74;margin:0 0 14px}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+      background:rgba(18,97,127,.10);padding:1px 5px}
+    a{color:#12617f}
+    .note{border-left:2px solid #a9691a;background:rgba(169,105,26,.05);
+      padding:14px 18px;margin-top:22px;font-size:.94rem}
+  </style>
+</head>
+<body>
+  <!-- Replaced by the editor once it starts. If you are still reading this
+       after a few seconds, the editor did not load — the message explains
+       the usual reason. -->
+  <div id="boot">
+    <h1>Edit the website</h1>
+    <p>Loading the editor…</p>
+    <div class="note">
+      <p><strong>Still loading?</strong> This page needs to reach the internet
+      to fetch the editor, and it needs sign-in with GitHub to save changes.</p>
+      <p>If sign-in fails, the authentication service has probably not been
+      set up yet — see <code>MAINTAINING.md</code>, “Setting up the editor”.
+      Until then you can still request changes by
+      <a href="../../../issues/new/choose">filing a form</a> or by asking a
+      coding assistant.</p>
+    </div>
+  </div>
+
+  <!-- Sveltia CMS. Pinned to a major version so the editor cannot change
+       under Basant without someone choosing it. This is the only place in
+       the repository that loads anything from another host, and it is
+       deliberate: the editor is a tool, not part of the published site.
+       index.html itself stays entirely self-contained. -->
+  <script src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js" type="module"></script>
+</body>
+</html>

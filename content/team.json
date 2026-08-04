@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "r": "collaborator",
+      "n": "Adjunct Professor Roger Packham",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
+    {
+      "r": "collaborator",
+      "n": "Adjunct Associate Professor Bruce Simmons",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
+    {
+      "r": "other",
+      "n": "Dr Harsharn Singh Grewal",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
+    {
+      "r": "other",
+      "n": "Dr Maria Varua",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    },
+    {
+      "r": "other",
+      "n": "Ms Joycelyn Applebee",
+      "p": "MARVI project team",
+      "w": "Western Sydney University"
+    }
+  ]
+}

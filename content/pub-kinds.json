@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "id": "journal",
+      "label": "Journal articles",
+      "empty": "No journal articles listed yet."
+    },
+    {
+      "id": "conference",
+      "label": "Conference papers",
+      "empty": "No conference papers listed yet."
+    },
+    {
+      "id": "thesis",
+      "label": "Theses",
+      "empty": "No theses listed here yet — neither supervised higher degree theses nor his own doctoral thesis. Add one through the “Add a publication” issue form and this section fills itself."
+    },
+    {
+      "id": "other",
+      "label": "Other outputs",
+      "empty": "No other outputs listed yet."
+    }
+  ]
+}
