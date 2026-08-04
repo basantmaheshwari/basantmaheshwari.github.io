@@ -193,6 +193,28 @@ current or more specific than its source.
 The **Add or update a team member** issue form has a consent checkbox, because
 this section names living people rather than citing published work.
 
+## Adding a page
+
+Pages are data. Add a `page` object to a `SECTIONS` entry and the panel builds
+itself — rail entry, mobile menu, `#hash` route, watermark numeral and all:
+
+```js
+{id:"awards", label:"Awards", tc:"08", page:{
+  title:"Awards.",
+  lede:"One sentence under the heading.",
+  blocks:[
+    {tag:"Recent", heading:"A block heading.", paragraphs:["A paragraph."]},
+    {tag:"Selected", entries:[{name:"…", year:"2025", status:"awarded", blurb:"…"}]},
+  ]}},
+```
+
+Blocks are either `paragraphs` or `entries`. Profile, Publications and Team
+are hand-written panels instead, because they carry a solved figure and
+filtered groups that this shape cannot express; everything else can be data.
+
+Ask for a new page in plain language through the **Request a website change**
+form — "A new page" is one of the options.
+
 ## The figure on the profile page
 
 The cross-section is a hydrogeological section whose water table is **solved,

@@ -38,7 +38,7 @@ the wrong change.
 
 | Array          | Drives                                                        |
 | -------------- | ------------------------------------------------------------- |
-| `SECTIONS`     | The rail, the mobile menu and the panel engine                 |
+| `SECTIONS`     | The rail, the mobile menu, the panel engine — and whole pages, via `page` |
 | `METRICS`      | The four figures on the profile page                           |
 | `RESEARCH`     | Research themes                                                |
 | `PROGRAMS`     | MARVI, AIWC, Young Water Professionals, dam safety training    |
@@ -118,10 +118,38 @@ position you want it displayed, and tag entries `k:"chapter"`. The filter
 chips, the section headings and the counts all build themselves from that
 array, and `verify.mjs` will then accept the new id.
 
-Adding a whole new section means adding one object to `SECTIONS` **and** a
-matching `<section class="panel" data-panel="…">` in the HTML. The rail, the
-menu and the panel engine all build themselves from `SECTIONS`, so they cannot
-drift apart — and `verify.mjs` fails the build if a section has no panel.
+### Adding a page
+
+A page is data too. Give the `SECTIONS` entry a `page` object and the whole
+panel is generated — it appears in the rail, in the mobile menu, and answers
+to its own `#hash`, with no markup written anywhere:
+
+```js
+{id:"awards", label:"Awards", tc:"08", page:{
+  title:"Awards.",
+  lede:"One sentence under the heading.",
+  blocks:[
+    {tag:"Recent", heading:"A block heading.",
+     paragraphs:["A paragraph.", "Another."]},
+    {tag:"Selected", entries:[
+      {name:"…", year:"2025", status:"awarded", blurb:"…", tags:["…"]}]},
+  ]}},
+```
+
+A block is either `paragraphs` (prose) or `entries` — the same object shape
+the Research and Programmes lists use. `tc` is the two-digit index shown in
+the rail and as the watermark numeral; keep them in order.
+
+The alternative is still available: write a `<section class="panel"
+data-panel="…">` into the HTML by hand and leave `page` off. Do that only when
+the page needs something the block shapes cannot express — Profile,
+Publications and Team are hand-written because they carry a solved figure and
+filtered groups. For an ordinary page, prefer the data form.
+
+`verify.mjs` fails the build if a section has **neither** a panel in the markup
+nor a `page` definition, because a nav entry with neither leads to a blank
+screen: the rail still highlights it, the hash still changes, and nothing
+throws.
 
 ## Which files are public
 
@@ -277,6 +305,35 @@ Sources already used, and the right place to check first:
   put the retrieval date in the comment above `METRICS`.
 - Programmes and events — [aiwc.org.au](https://aiwc.org.au/) and
   [westernsydney.edu.au/marvi](https://www.westernsydney.edu.au/marvi).
+
+## The water drawings, and the one number pair not to touch
+
+Two drawings share one model, `AQUIFER` and `SEASON`, declared just above the
+cross-section in the script:
+
+- **The cross-section** on the profile page.
+- **The rail**, which is a monitoring well sunk at `x = L/2` — the centre of
+  the watershed, where the recharge mound is highest. The left boundary would
+  be the obvious place and is exactly wrong: it is a fixed-head boundary, so
+  its level never moves.
+
+Both read phase from absolute time rather than from a first-frame origin, so
+they stay on the same season without either knowing the other exists. If you
+change `SEASON`, both change together — that is the point, and it is why the
+level in the sidebar can never contradict the mound in the figure.
+
+**The rail's wash alpha and the rail's text colours are a coupled pair.** The
+navigation sits at 4.65:1 against bare paper, which is barely over the 4.5:1
+minimum, so a tint of any strength laid under it fails. The rail therefore
+scopes its own `--muted: #526169` and `--faint: #6b7981`, a shade darker than
+the page defaults, which buys the wash its contrast back — measured 4.67:1
+over the deepest part. **Raising the alphas without darkening those colours
+puts the navigation under the minimum.** Both carry a comment saying so.
+
+`TOP_M` in the rail is a framing choice, not physics: it sets which elevation
+is drawn at the top of the rail, and therefore how far down the water table
+sits. It was raised to 44 m so the table falls below the navigation rather
+than crossing it.
 
 ## The cross-section on the profile page
 

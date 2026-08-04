@@ -112,11 +112,30 @@ for (const name of ARRAYS) {
    navigates to a blank page. */
 for (const s of data.SECTIONS || []) {
   if (!s.id || !s.label) { fail(`SECTIONS entry missing id or label: ${JSON.stringify(s)}`); continue; }
-  if (!html.includes(`data-panel="${s.id}"`)) {
-    fail(`section "${s.id}" has no matching <section data-panel="${s.id}">`);
+  /* A section needs somewhere to land: either a panel written into the
+     markup, or a `page` object that generatePages() builds one from.
+     With neither, the rail shows an entry that navigates to a blank
+     screen — the nav still highlights, the hash still changes, and
+     nothing anywhere throws. */
+  const hasPanel = html.includes(`data-panel="${s.id}"`);
+  if (!hasPanel && !s.page) {
+    fail(`section "${s.id}" has neither a <section data-panel="${s.id}"> nor a page:{…} ` +
+         `definition — its nav entry would lead to a blank screen`);
+  }
+  if (s.page) {
+    if (!Array.isArray(s.page.blocks)) warn(`section "${s.id}" has a page with no blocks array`);
+    for (const b of s.page.blocks || []) {
+      if (!b.paragraphs && !b.entries) {
+        fail(`section "${s.id}" has a page block with neither paragraphs nor entries — it would render empty`);
+      }
+    }
   }
 }
-const panelIds = [...html.matchAll(/data-panel="([^"]+)"/g)].map(m => m[1]);
+/* Only ids written literally into the markup count. The script also
+   contains `data-panel="${s.id}"` inside a querySelector template, and
+   reading that as a real panel is how this check reported a phantom. */
+const panelIds = [...html.matchAll(/data-panel="([^"]+)"/g)]
+  .map(m => m[1]).filter(id => !id.includes("${"));
 for (const id of panelIds) {
   if (!(data.SECTIONS || []).some(s => s.id === id)) {
     warn(`panel "${id}" exists but is not listed in SECTIONS, so nothing links to it`);

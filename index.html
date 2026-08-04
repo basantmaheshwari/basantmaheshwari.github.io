@@ -1187,6 +1187,66 @@
     if(el) el.innerHTML = entries.map(entryHTML).join("");
   };
 
+  /* ═══════════════════════════════════════════════════════════════════
+     PAGES FROM DATA
+
+     A SECTIONS entry carrying a `page` object gets its whole panel built
+     here, so a new page needs no markup at all — one object in SECTIONS
+     and it exists, appears in the rail and the mobile menu, and answers
+     to its own #hash.
+
+     The panels already written into the HTML are left untouched. Profile,
+     Publications and Team do things this shape cannot express — a solved
+     figure, filtered groups — and hand-written markup remains the right
+     answer for them. This covers the ordinary case: a page that is a
+     lede and some blocks.
+
+         {id:"awards", label:"Awards", tc:"08", page:{
+            title:"Awards.",
+            lede:"One sentence under the heading.",
+            blocks:[
+              {tag:"Recent", heading:"A block heading.",
+               paragraphs:["A paragraph.","Another."]},
+              {tag:"Selected", entries:[
+                 {name:"…", year:"2025", status:"awarded", blurb:"…", tags:["…"]}]},
+            ]}}
+
+     A block is either `paragraphs` (prose) or `entries` (the same object
+     shape the Research and Programmes lists use). `verify.mjs` requires
+     every section to have one or the other — a panel in the HTML or a
+     page here — because a nav entry with neither leads to a blank screen.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  (function generatePages(){
+    const main = document.getElementById("content");
+    for(const s of SECTIONS){
+      if(!s.page || document.querySelector(`[data-panel="${s.id}"]`)) continue;
+      const p = s.page;
+      const blocks = (p.blocks || []).map(b => {
+        const head = `<div><p class="tag">${esc(b.tag || "")}</p>${
+          b.heading ? `<h2 class="display">${esc(b.heading)}</h2>` : ""}</div>`;
+        const side = b.entries
+          ? `<div><ul class="list">${b.entries.map(entryHTML).join("")}</ul></div>`
+          : `<div class="prose">${(b.paragraphs || []).map(t => `<p>${esc(t)}</p>`).join("")}</div>`;
+        return `<div class="split">${head}${side}</div>`;
+      }).join("");
+
+      const el = document.createElement("section");
+      el.className = "panel";
+      el.id = "panel-" + s.id;
+      el.dataset.panel = s.id;
+      el.hidden = true;
+      el.innerHTML =
+        `<div class="head" data-numeral="${esc(s.tc)}"><div class="shell">
+           <p class="tc">${esc(s.tc)} — ${esc(s.label)}</p>
+           <h1 class="display">${esc(p.title || s.label)}</h1>
+           ${p.lede ? `<p class="lede">${esc(p.lede)}</p>` : ""}
+         </div></div>
+         <div class="body"><div class="shell">${blocks}</div></div>`;
+      main.appendChild(el);
+    }
+  })();
+
   renderList("research-list", RESEARCH);
   renderList("programs-list", PROGRAMS);
   renderList("news-list", NEWS);
@@ -1478,12 +1538,21 @@
        draw and no reason to spend a frame on it. */
     const wide = matchMedia("(min-width:961px)");
 
-    const {L, SURFACE} = AQUIFER;
+    const {L} = AQUIFER;
     let W = 0, H = 0, drops = [], raf = 0, running = false;
 
-    /* Metres above the impermeable base → y in css pixels. The base sits
-       at the bottom of the rail, the land surface at the top. */
-    const yOf = metres => H - (metres / SURFACE) * H;
+    /* The elevation drawn at the top of the rail. Deliberately well above
+       the 22 m land surface: mapping the aquifer alone onto the full
+       height put the water table around 39% from the top — straight
+       through the navigation, where a line that moves is a distraction
+       rather than a background. At 44 m the table sits between 68% and
+       76% down, below the nav and in the quiet part of the rail, and the
+       seasonal swing is still about 8% of the rail's height. The physics
+       is untouched; this is only where the drawing is framed. */
+    const TOP_M = 44;
+
+    /* Metres above the impermeable base → y in css pixels. */
+    const yOf = metres => H - (metres / TOP_M) * H;
 
     /* The water crosses the whole rail. That is only legible because the
        alphas below are capped low and the rail's text colours are scoped
@@ -1546,7 +1615,7 @@
       /* Percolation through the unsaturated zone. Streaks fall faster and
          show more strongly when recharge is high; they stop at the water
          table because that is where the unsaturated zone ends. */
-      ctx.strokeStyle = `rgba(18,97,127,${(0.05 + wet * 0.13).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(18,97,127,${(0.04 + wet * 0.10).toFixed(3)})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       for(const d of drops){
