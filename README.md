@@ -25,7 +25,9 @@ Research, publications, programmes and contact details.
 
 ---
 
-<sub>This repository holds the source of the website above. To request a change
-to it, [open an issue](../../issues/new/choose) and describe what you want in
-plain language — no code needed. Maintainers: see
-[MAINTAINING.md](MAINTAINING.md) and [AGENTS.md](AGENTS.md).</sub>
+<sub>This repository holds the source of the website above, and you do not need
+to program to change it: open the repository in a coding assistant and describe
+what you want in ordinary language, or
+[file a request](../../issues/new/choose) using one of the forms. See
+[MAINTAINING.md](MAINTAINING.md) for the steps and [AGENTS.md](AGENTS.md) for
+the assistant's brief.</sub>

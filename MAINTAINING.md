@@ -1,8 +1,58 @@
 # Maintaining this website
 
 Everything you need to change <https://basantmaheshwari.github.io/basantmaheshwari/>.
-If you only want to request a change, you do not need this file — see
-[README.md](README.md) or just open an issue.
+
+## Revise the website with a chat
+
+You do not need to program to change this website.
+
+1. Open this repository in Claude Code, Codex or GitHub Copilot.
+2. Describe the result you want in ordinary language. Include the page, the
+   approved wording, and any dates, names or links that matter.
+3. Ask the assistant to implement the change and run the website check.
+4. Review the pull request, then merge it into `main`. Publishing is automatic.
+
+The repository carries an assistant guide — [AGENTS.md](AGENTS.md) — covering
+the project, the editorial direction, where every piece of content is stored,
+and the checks that must pass. A set of structured forms is also available
+under the **Issues** tab for colleagues who would rather submit a brief than
+hold a conversation.
+
+Example requests:
+
+- “Add this paper to the publications list: 10.1002/wwp2.70094.”
+- “Add Priya Sharma as a PhD candidate working on managed aquifer recharge in
+  Rajasthan, started 2024.”
+- “Put the AIWC@5 symposium on the News page using this approved wording.”
+- “The Teaching page should mention the dual degree programme with IIT
+  Roorkee.”
+- “Show me where the publication list is maintained and how a new kind of
+  publication would be added.”
+
+**One thing to know:** anything you do not supply is left out rather than
+guessed. This is an academic record, and an honest gap is far better than a
+plausible invention. If a date, a co-author or a number matters, include it.
+
+## There is no CMS
+
+No admin panel, no login, no database, no WYSIWYG editor. GitHub and a
+repository-aware chat assistant provide the editing and approval workflow,
+and the site itself is a single static file with no server behind it.
+
+What takes the place of a CMS is four things working together:
+
+| Piece | What it does |
+| ----- | ------------ |
+| The forms in `.github/ISSUE_TEMPLATE/` | Collect a change request in plain language |
+| [AGENTS.md](AGENTS.md) | Tells the assistant the rules — house style, where content lives, and never to invent a fact |
+| `checks/verify.mjs` | Refuses to publish a broken or unsafe change |
+| `.github/workflows/deploy-pages.yml` | Publishes automatically once a change reaches `main` |
+
+Nothing runs automatically when an issue is filed; a person opens the
+repository in an assistant and works from it. That is deliberate — an
+academic record should have someone read the change before it is public.
+
+## The site itself
 
 One self-contained `index.html`. No build step, no framework, no CDN, no web
 fonts, no external resources of any kind — the page opens correctly from a
@@ -98,15 +148,30 @@ deploy if the page would be broken or would stop being self-contained:
 It was tested by breaking the file nine different ways; all nine were caught.
 Errors block publication, warnings do not.
 
-## Publishing
+## Automatic GitHub Pages publishing
 
-Merging to `main` runs `.github/workflows/deploy-pages.yml`, which runs the
-checker, copies `index.html` into `_site/`, and deploys to GitHub Pages. Pages
-for this repository is configured with build type **workflow**, so this file is
-mandatory — pushing `index.html` on its own would publish nothing.
+Every change merged into `main` is checked and published by
+`.github/workflows/deploy-pages.yml`. In the repository's **Settings → Pages**,
+**Source** is set to **GitHub Actions**; that is a one-time setting and it is
+already done. After that, editors only need to merge an approved change —
+publishing is automatic and takes about a minute.
 
-Everything except `index.html` is editor tooling and is deliberately not
-published.
+Because Pages is set to build from a workflow rather than to serve a branch,
+that workflow file is **mandatory**: pushing `index.html` on its own would
+publish nothing at all.
+
+Only `index.html` is published. Everything else in the repository — the
+checker, the guides, the issue forms — is editor tooling and is deliberately
+left out of the deployed site.
+
+The assistant runs the same check the workflow does with:
+
+```sh
+node checks/verify.mjs
+```
+
+There is nothing to install first. The site has no dependencies, so the check
+has none either.
 
 ## The publication list
 

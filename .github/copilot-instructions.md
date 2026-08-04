@@ -8,6 +8,12 @@ requiring the requester to know anything about code.
 Follow `AGENTS.md` as the authoritative project, editorial and verification
 guide. It is the contract; this file is only the summary.
 
+Editors are expected to work by opening this repository in an assistant and
+describing the result they want, so treat an ordinary-language request as the
+normal case: find the relevant data array yourself, make the change, run the
+check, and explain what changed in the requester's terms rather than in terms
+of the array you edited. `MAINTAINING.md` describes that flow from their side.
+
 Important rules:
 
 - The whole site is one self-contained `index.html`. No build step, no

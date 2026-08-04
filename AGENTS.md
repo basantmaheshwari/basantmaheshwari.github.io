@@ -14,6 +14,21 @@ language — a new paper, a corrected title, an event to add. Turn that request
 into a complete, verified website update. Do not expect the requester to name
 files, frameworks or commands, and do not ask them to.
 
+There is no CMS behind this site: GitHub and this guide are the editing
+workflow. `MAINTAINING.md` describes that flow from the editor's side.
+
+**If you read nothing else, read this.** The rest of the document is detail on
+these four:
+
+1. The whole site is one self-contained `index.html`. No build step, no
+   dependency, no CDN, no web font, no external image.
+2. Content lives in data arrays at the top of the `<script>`. Change the data,
+   never hand-write content into the markup.
+3. **Never invent a fact.** No publication, co-author, student, award, date or
+   number that a source did not give you. An honest gap is always correct.
+4. Finish with `node checks/verify.mjs`. It is the only thing between an edit
+   and the public site.
+
 ## The one architectural rule
 
 **The entire website is a single self-contained `index.html`.** Inline
