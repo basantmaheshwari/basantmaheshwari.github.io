@@ -67,10 +67,29 @@
   .tag{font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
   .tc{font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--water)}
 
-  /* ─── Rail ─────────────────────────────────────────────────────── */
+  /* ─── Rail ─────────────────────────────────────────────────────────
+     The rail is drawn as a monitoring well sunk at the centre of the same
+     watershed the profile figure shows in section. Its water level is
+     h(L/2) from the same Dupuit–Forchheimer solution on the same seasonal
+     clock, so the level in the sidebar and the mound in the figure rise
+     and fall together — one aquifer, seen two ways. Recharge percolates
+     down through the unsaturated zone above the water table and quickens
+     with the monsoon.
+
+     Contrast is kept deliberately low. This is a reading in the
+     background, not a graphic competing with the navigation, and the
+     text sits above it on its own layer. */
   .rail{position:fixed;z-index:20;inset:0 auto 0 0;width:var(--rail);
     display:flex;flex-direction:column;gap:28px;padding:36px 24px 28px;
     background:var(--paper-2);border-right:1px solid var(--line-soft)}
+  /* width/height are not redundant with inset:0. A <canvas> is a replaced
+     element with an intrinsic 300x150 size, and for replaced elements a
+     `width:auto` resolves to that intrinsic width even when both left and
+     right offsets are set — so inset:0 alone leaves it 300x150 in the
+     corner of the rail. */
+  #rail-flow{position:absolute;inset:0;width:100%;height:100%;
+    z-index:0;display:block;pointer-events:none}
+  .rail > :not(canvas){position:relative;z-index:1}
   .mark-a{text-decoration:none;display:block}
   .mark-a b{display:block;font-family:var(--serif);font-size:1.32rem;font-weight:400;letter-spacing:-.015em;line-height:1.15}
   .mark-a span{display:block;margin-top:8px;font-family:var(--mono);font-size:.56rem;letter-spacing:.17em;
@@ -129,7 +148,7 @@
      text column it sits above on a phone. */
   .portrait{width:168px;margin:0}
   .portrait img{width:168px;height:168px;object-fit:cover;border-radius:2px;
-    filter:grayscale(1) contrast(1.03);border:1px solid var(--line)}
+    border:1px solid var(--line)}
   .portrait figcaption{margin-top:10px;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
     text-transform:uppercase;color:var(--faint);line-height:1.7}
   .hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:36px}
@@ -419,6 +438,7 @@
   <a class="skip" href="#content">Skip to content</a>
 
   <aside class="rail" aria-label="Sections">
+    <canvas id="rail-flow" aria-hidden="true"></canvas>
     <a class="mark-a" href="#home" data-go="home">
       <b>Basant<br>Maheshwari</b>
       <span>Distinguished Professor<br>Western Sydney University</span>
@@ -1319,17 +1339,228 @@
      which is why the fall is slow and the rise is not.
      ═══════════════════════════════════════════════════════════════════ */
 
+  /* ─── The aquifer, shared ──────────────────────────────────────────
+     One physical model, drawn in two places: the section on the profile
+     page and the monitoring well in the rail. They read the same clock
+     and the same solution, so they can never tell different stories. */
+  const AQUIFER = {
+    L: 900,           /* width between the fixed heads, m */
+    H1: 9.2,          /* head at the left boundary, m */
+    H2: 11.4,         /* head at the right boundary, m */
+    K: 1000,          /* hydraulic conductivity, m/yr */
+    SURFACE: 22,      /* land surface above the impermeable base, m */
+
+    /* Dupuit–Forchheimer for unconfined flow with areal recharge.
+       max(0,…) because h² can go negative for absurd parameters, and a
+       NaN in a path `d` blanks the whole drawing rather than failing
+       visibly. */
+    headAt(x, NK){
+      const {L, H1, H2} = this;
+      return Math.sqrt(Math.max(0, H1 * H1 + (H2 * H2 - H1 * H1) * (x / L) + NK * x * (L - x)));
+    },
+  };
+
+  const SEASON = {
+    PERIOD: 26000,    /* one year every 26 seconds */
+    NK_PEAK: 4.6e-4,
+    NK_MIN: 0.18e-4,
+    STILL: 0.18,      /* the frame reduced-motion visitors keep: the
+                         post-monsoon peak, the most informative one */
+
+    /* Absolute-time phase, so every drawing that reads this clock is in
+       step without any shared state between them. */
+    phaseAt(ts){ return (ts % this.PERIOD) / this.PERIOD; },
+
+    /* Monsoon is short and steep; recession is long and exponential.
+       That asymmetry is the shape of a real hydrograph, and it is why a
+       village feels the dry season for so much longer than the rain. */
+    nkAt(phase){
+      const {NK_MIN, NK_PEAK} = this;
+      if(phase < 0.10) return NK_MIN + (NK_PEAK - NK_MIN) * (phase / 0.10);
+      return NK_MIN + (NK_PEAK - NK_MIN) * Math.exp(-3.1 * (phase - 0.10) / 0.90);
+    },
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════
+     THE RAIL AS A MONITORING WELL
+
+     A borehole sunk at x = L/2, the centre of the watershed — the place
+     where the recharge mound is highest and where a village volunteer's
+     reading actually varies. The left boundary would have been the
+     obvious choice and is exactly the wrong one: it is a fixed-head
+     boundary, so by definition its level never moves.
+
+     Water level is h(L/2) on the shared season, which swings roughly
+     10.5 m to 14.2 m against a 22 m column — about a sixth of the rail's
+     height. Above it, recharge percolates down and quickens with the
+     monsoon; below it the ground is saturated. Everything is drawn at
+     very low contrast, under the navigation's own layer.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  (function railWell(){
+    const cv = document.getElementById("rail-flow");
+    if(!cv) return;
+    const ctx = cv.getContext("2d");
+    const still = matchMedia("(prefers-reduced-motion:reduce)");
+    /* The rail is display:none below this width, so there is nothing to
+       draw and no reason to spend a frame on it. */
+    const wide = matchMedia("(min-width:961px)");
+
+    const {L, SURFACE} = AQUIFER;
+    let W = 0, H = 0, drops = [], raf = 0, running = false;
+
+    /* Metres above the impermeable base → y in css pixels. The base sits
+       at the bottom of the rail, the land surface at the top. */
+    const yOf = metres => H - (metres / SURFACE) * H;
+
+    /* The water is confined to a narrow column down the left margin — a
+       piezometer standing beside the navigation rather than behind it.
+       That is not only more literal (a monitoring well IS a narrow bore)
+       but the only accessible option: the rail's text already sits at
+       only 4.6:1 against its own background, so any tint laid under it
+       drops the contrast below the 4.5:1 minimum. Nothing is drawn right
+       of COL, and the nav keeps the contrast it was designed with. */
+    const COL = 20;
+
+    function seed(){
+      drops = Array.from({length: Math.max(9, Math.round(H / 74))}, () => ({
+        x: 3 + Math.random() * (COL - 6),
+        y: Math.random() * H,
+        len: 8 + Math.random() * 20,
+        v: 0.25 + Math.random() * 0.55,
+      }));
+    }
+
+    function fit(){
+      const r = cv.getBoundingClientRect();
+      const w = Math.round(r.width), h = Math.round(r.height);
+      if(w < 2 || h < 2) return false;
+      if(w === W && h === H) return false;
+      W = w; H = h;
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      cv.width = W * dpr; cv.height = H * dpr;
+      cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      seed();
+      return true;
+    }
+
+    function draw(phase){
+      if(!W || !H) return;
+      const NK = SEASON.nkAt(phase);
+      const level = AQUIFER.headAt(L / 2, NK);       /* metres */
+      const wy = yOf(level);
+      const wet = (NK - SEASON.NK_MIN) / (SEASON.NK_PEAK - SEASON.NK_MIN);
+
+      ctx.clearRect(0, 0, W, H);
+
+      /* The bore itself: a hairline pair marking the casing. */
+      ctx.strokeStyle = "rgba(21,34,43,.10)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(COL + .5, 0); ctx.lineTo(COL + .5, H);
+      ctx.stroke();
+
+      /* Saturated zone: a wash that deepens towards the base, the way a
+         section drawing shades below the water table. */
+      const g = ctx.createLinearGradient(0, wy, 0, H);
+      g.addColorStop(0, "rgba(18,97,127,.16)");
+      g.addColorStop(1, "rgba(18,97,127,.34)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, wy, COL, H - wy);
+
+      /* The water table itself, with a slow standing ripple so it reads
+         as a surface rather than a border, and a tick into the margin to
+         mark the level the way a gauge plate does. */
+      ctx.beginPath();
+      for(let x = 0; x <= COL; x += 2){
+        const y = wy + Math.sin(x / 7 + phase * Math.PI * 6) * 1.2;
+        x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.strokeStyle = "rgba(18,97,127,.75)";
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+
+      /* The tick stops short of the rail's 24px text inset — a mark that
+         reached under the navigation would be the same legibility problem
+         the whole column was moved to avoid. */
+      ctx.beginPath();
+      ctx.moveTo(COL + 1, wy); ctx.lineTo(COL + 3, wy);
+      ctx.strokeStyle = "rgba(18,97,127,.40)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      /* Percolation through the unsaturated zone. Streaks fall faster and
+         show more strongly when recharge is high; they stop at the water
+         table because that is where the unsaturated zone ends. */
+      ctx.strokeStyle = `rgba(18,97,127,${(0.16 + wet * 0.34).toFixed(3)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for(const d of drops){
+        const tail = Math.min(d.y, wy);
+        if(d.y < wy){
+          ctx.moveTo(d.x, Math.max(0, tail - d.len));
+          ctx.lineTo(d.x, tail);
+        }
+      }
+      ctx.stroke();
+    }
+
+    function step(phase){
+      const NK = SEASON.nkAt(phase);
+      const wet = (NK - SEASON.NK_MIN) / (SEASON.NK_PEAK - SEASON.NK_MIN);
+      const wy = yOf(AQUIFER.headAt(L / 2, NK));
+      for(const d of drops){
+        d.y += d.v * (0.45 + wet * 1.9);
+        if(d.y > wy + d.len){
+          d.y = -d.len - Math.random() * 40;
+          d.x = 3 + Math.random() * (COL - 6);
+        }
+      }
+    }
+
+    function frame(ts){
+      const phase = SEASON.phaseAt(ts);
+      step(phase);
+      draw(phase);
+      raf = requestAnimationFrame(frame);
+    }
+    function start(){
+      if(running || still.matches || !wide.matches) return;
+      running = true; raf = requestAnimationFrame(frame);
+    }
+    function stop(){ running = false; cancelAnimationFrame(raf); }
+
+    function render(){
+      if(!wide.matches){ stop(); return; }
+      fit();
+      /* Reduced motion keeps one static frame rather than nothing: the
+         level, the water table and the ground still read. */
+      if(still.matches){ draw(SEASON.STILL); return; }
+      draw(SEASON.phaseAt(performance.now()));
+      start();
+    }
+
+    addEventListener("resize", () => { fit(); if(!running) render(); }, {passive:true});
+    if("ResizeObserver" in window) new ResizeObserver(() => { if(fit() && !running) render(); }).observe(cv);
+    wide.addEventListener?.("change", render);
+    document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+
+    render();
+  })();
+
   (function crossSection(){
     const host = document.getElementById("xs");
     if(!host) return;
 
     const W = 900, H = 268;
-    const L = 900;              /* aquifer width, m — one metre per unit x */
     const BASE_Y = 236;         /* impermeable base, in svg units */
     const M = 7.6;              /* vertical scale: svg units per metre */
-    const H1 = 9.2, H2 = 11.4;  /* fixed heads at the boundaries, m */
-    const K = 1000;             /* hydraulic conductivity, m/yr */
-    const SURFACE = 22;         /* land surface above the base, m */
+    const {L, H1, H2, K, SURFACE} = AQUIFER;
+    /* Bound, not destructured: AQUIFER.headAt reads its geometry off
+       `this`, so a bare reference would lose it and throw. */
+    const headAt = (x, NK) => AQUIFER.headAt(x, NK);
+    const NK_PEAK = SEASON.NK_PEAK, NK_MIN = SEASON.NK_MIN;
 
     /* Six monitored wells. `depth` is how far the bore reaches below the
        land surface, in metres — a shallow dug well goes dry first, which
@@ -1344,15 +1575,6 @@
        rather than as a chart axis. Deterministic, not random. */
     const surfaceAt = xr =>
       SURFACE + 0.85 * Math.sin(xr * 5.1 + 0.7) + 0.5 * Math.sin(xr * 11.3 + 2.1);
-
-    /* h(x) from the Dupuit–Forchheimer solution above. Guarded with
-       max(0,…) because h² can go negative for absurd parameters, and a
-       NaN in a path `d` blanks the whole drawing rather than failing
-       visibly. */
-    function headAt(x, NK){
-      const h2 = H1 * H1 + (H2 * H2 - H1 * H1) * (x / L) + NK * x * (L - x);
-      return Math.sqrt(Math.max(0, h2));
-    }
 
     const yOf = h => BASE_Y - h * M;
     const xOf = xr => xr * W;
@@ -1412,13 +1634,6 @@
 
     /* Peak-season water table, drawn once as a dashed ghost so the fall
        is legible even when you arrive mid-recession. */
-    /* N/K at the monsoon peak and at the driest point. NK_PEAK = 4.6e-4
-       means N = 0.46 m/yr against K = 1000 m/yr — a plausible monsoon
-       in a watershed with recharge structures working. It puts the crest
-       of the mound about 3.6 m above the no-recharge profile and still
-       leaves roughly 8 m of unsaturated zone below the land surface, so
-       the water table never breaches the ground. */
-    const NK_PEAK = 4.6e-4, NK_MIN = 0.18e-4;
     const pathFor = NK => {
       let d = "";
       for(let i = 0; i <= 90; i++){
@@ -1437,16 +1652,7 @@
     ];
 
     function draw(phase){
-      /* Monsoon is short and steep; recession is long and exponential.
-         That asymmetry is the shape of a real hydrograph, and it is why
-         a village feels the dry season for so much longer than the rain. */
-      let NK;
-      if(phase < 0.10){
-        NK = NK_MIN + (NK_PEAK - NK_MIN) * (phase / 0.10);        /* rise */
-      } else {
-        const t = (phase - 0.10) / 0.90;
-        NK = NK_MIN + (NK_PEAK - NK_MIN) * Math.exp(-3.1 * t);    /* Maillet recession */
-      }
+      const NK = SEASON.nkAt(phase);
 
       const d = pathFor(NK);
       wtEl.setAttribute("d", d);
@@ -1487,26 +1693,25 @@
       clockEl.textContent = "Month " + String(Math.floor(phase * 12) + 1).padStart(2, "0") + " of 12";
     }
 
-    /* One full year every 26 seconds. Slow enough to read as weather
-       rather than as an animation asking for attention. */
-    const PERIOD = 26000;
     const still = matchMedia("(prefers-reduced-motion:reduce)");
 
     if(still.matches){
-      draw(0.18);   /* the post-monsoon peak: the single most informative frame */
+      draw(SEASON.STILL);   /* post-monsoon peak: the most informative frame */
       return;
     }
 
-    let raf = 0, t0 = 0, running = false;
+    /* Phase comes from absolute time rather than from a first-frame
+       origin, which is what keeps this drawing and the rail's monitoring
+       well on the same season without either knowing about the other. */
+    let raf = 0, running = false;
     function tick(ts){
-      if(!t0) t0 = ts;
-      draw(((ts - t0) % PERIOD) / PERIOD);
+      draw(SEASON.phaseAt(ts));
       raf = requestAnimationFrame(tick);
     }
     function start(){ if(!running){ running = true; raf = requestAnimationFrame(tick); } }
-    function stop(){ running = false; cancelAnimationFrame(raf); t0 = 0; }
+    function stop(){ running = false; cancelAnimationFrame(raf); }
 
-    draw(0.18);
+    draw(SEASON.phaseAt(performance.now()));
     start();
 
     /* requestAnimationFrame does not run in a hidden tab anyway; stopping
