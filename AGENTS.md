@@ -135,7 +135,7 @@ here in `AGENTS.md`. Do not move either of those into `README.md`.
 Only `index.html` is published to the website itself — the deploy workflow
 copies that one file into `_site/`. Everything else is tooling.
 
-## My team, and naming real people
+## The Team page, and naming real people
 
 A person entry:
 
@@ -145,9 +145,29 @@ A person entry:
  w:"Western Sydney University", l:[{label:"Profile", href:"https://…"}]},
 ```
 
-`r` role — one of the `TEAM_ROLES` ids (`postdoc`, `phd`, `other`) ·
-`n` name · `p` position · `f` what they work on · `w` institution · `l` links.
-Everything except `r` and `n` is optional and simply omitted when absent.
+`r` role — one of the `TEAM_ROLES` ids (`postdoc`, `phd`, `collaborator`,
+`other`) · `n` name · `p` position · `f` what they work on · `w` institution ·
+`l` links. Everything except `r` and `n` is optional and omitted when absent.
+
+**Collaborators are peers, not members of the group.** Anyone whose published
+title is Professor — including Adjunct and Associate — belongs under
+`collaborator` unless the issue says otherwise. Listing a chair as an "other
+team member" of someone else's group misrepresents them.
+
+**The sections are not fixed.** `TEAM_ROLES` is a data array like every other,
+and requests to add one (Masters students, Visiting researchers, Alumni,
+Research staff) are normal and expected — the issue form offers "a new
+section" for exactly this. Adding one is two steps:
+
+```js
+{id:"alumni", label:"Alumni", empty:"No alumni listed yet."},
+```
+
+put in `TEAM_ROLES` at the position it should appear, then tag people
+`r:"alumni"`. The filter chips, the section headings, the counts and the empty
+states all build themselves from that array, and `verify.mjs` will accept the
+new id automatically. The same is true of `PUB_KINDS` on the Publications
+page. Renaming a section is just editing its `label`; the `id` can stay.
 
 **This section names living people, so it has a stricter rule than the rest of
 the site.** Add a person only when the issue explicitly supplies them, or when

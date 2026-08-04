@@ -552,9 +552,9 @@
     <!-- ── TEAM ────────────────────────────────────────────────────── -->
     <section class="panel" id="panel-team" data-panel="team" hidden>
       <div class="head" data-numeral="04"><div class="shell">
-        <p class="tc">04 — My team</p>
-        <h1 class="display">My team.</h1>
-        <p class="lede">The people doing the work — postdoctoral researchers, doctoral candidates, and the wider group across the MARVI programme and the Australia India Water Centre.</p>
+        <p class="tc">04 — Team</p>
+        <h1 class="display">The team.</h1>
+        <p class="lede">The people doing the work — postdoctoral researchers and doctoral candidates in the group, and the academic collaborators the MARVI programme and the Australia India Water Centre are built on.</p>
       </div></div>
       <div class="body"><div class="shell">
         <div class="chip-filter" role="group" aria-label="Filter people by role" id="team-filter"></div>
@@ -629,7 +629,7 @@
     {id:"research",     label:"Research",     tc:"01"},
     {id:"publications", label:"Publications", tc:"02"},
     {id:"programs",     label:"Programmes",   tc:"03"},
-    {id:"team",         label:"My team",      tc:"04"},
+    {id:"team",         label:"Team",         tc:"04"},
     {id:"teaching",     label:"Teaching",     tc:"05"},
     {id:"news",         label:"News",         tc:"06"},
     {id:"contact",      label:"Contact",      tc:"07"},
@@ -729,7 +729,7 @@
     {label:"MARVI programme", detail:"westernsydney.edu.au/marvi", href:"https://www.westernsydney.edu.au/marvi"},
   ];
 
-  /* ─── My team ──────────────────────────────────────────────────────
+  /* ─── Team ─────────────────────────────────────────────────────────
      Role groups, in display order. Same data-driven pattern as
      PUB_KINDS: adding {id:"alumni", label:"Alumni", empty:"…"} here and
      tagging people r:"alumni" is the whole change. */
@@ -738,6 +738,8 @@
      empty:"No postdoctoral researchers listed yet. Add one through the “Add a team member” issue form and this section fills itself."},
     {id:"phd",     label:"PhD candidates",
      empty:"No doctoral candidates listed yet. Add one through the “Add a team member” issue form — a name, a topic and a start year is enough."},
+    {id:"collaborator", label:"Collaborators",
+     empty:"No collaborators listed yet."},
     {id:"other",   label:"Other team members",
      empty:"No other members listed yet."},
   ];
@@ -752,11 +754,18 @@
      list. Current postdoctoral researchers and doctoral candidates are
      not published anywhere that could be verified, so those two groups
      stand empty rather than being filled by guessing which co-authors
-     are students. */
+     are students.
+
+     Collaborators vs other members: anyone whose published title is
+     Professor — including Adjunct and Associate — sits under
+     `collaborator`, because a senior academic listed beside a research
+     group is a peer, not a member of it. That is a stated rule rather
+     than an inference about any individual, and any assignment can be
+     changed through the issue form. */
   const TEAM = [
-    {r:"other", n:"Adjunct Professor Roger Packham", p:"MARVI project team",
+    {r:"collaborator", n:"Adjunct Professor Roger Packham", p:"MARVI project team",
      w:"Western Sydney University"},
-    {r:"other", n:"Adjunct Associate Professor Bruce Simmons", p:"MARVI project team",
+    {r:"collaborator", n:"Adjunct Associate Professor Bruce Simmons", p:"MARVI project team",
      w:"Western Sydney University"},
     {r:"other", n:"Dr Harsharn Singh Grewal", p:"MARVI project team",
      w:"Western Sydney University"},
@@ -1220,7 +1229,7 @@
   resolveHash();
 
   /* ═══════════════════════════════════════════════════════════════════
-     MY TEAM
+     TEAM
      Same group markup as Publications, without the year banding.
      ═══════════════════════════════════════════════════════════════════ */
 
@@ -1251,10 +1260,11 @@
     document.getElementById("team-note").innerHTML =
       `The people listed here are those named on the
        <a href="https://www.westernsydney.edu.au/marvi/our-people" target="_blank" rel="noreferrer">MARVI
-       participants page</a> at Western Sydney University, with the titles that page gives them. Current
+       participants page</a> at Western Sydney University, with the titles that page gives them. Those
+       holding a chair are placed under Collaborators rather than as members of the group. Current
        postdoctoral researchers and doctoral candidates are not published anywhere that could be checked,
        so those sections are empty rather than guessed at — co-authorship is not evidence of supervision.
-       Both fill themselves as soon as the names are supplied.`;
+       They fill themselves as soon as the names are supplied.`;
   })();
 
   wireFilteredGroups({

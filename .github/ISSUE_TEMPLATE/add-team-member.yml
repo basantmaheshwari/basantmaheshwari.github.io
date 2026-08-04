@@ -19,14 +19,29 @@ body:
     id: role
     attributes:
       label: Role
-      description: This decides which section they appear in.
+      description: >
+        This decides which section they appear in. Collaborators is for peers —
+        professors and senior academics you work with rather than people in your
+        group. If none of these fit, choose the last option and say what you want.
       options:
         - Postdoctoral researcher
         - PhD candidate
+        - Collaborator
         - Other team member
+        - A new section — described below
         - Remove this person from the site
     validations:
       required: true
+
+  - type: input
+    id: newsection
+    attributes:
+      label: New section name
+      description: >
+        Only if you chose “A new section” above. The sections on the Team page are
+        not fixed — say what you want it called (Masters students, Visiting
+        researchers, Alumni, Research staff…) and where it should sit in the order.
+      placeholder: "Alumni — after PhD candidates"
 
   - type: input
     id: name

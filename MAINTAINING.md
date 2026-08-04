@@ -132,23 +132,31 @@ guessed at: *Infiltration and roughness equations for surface irrigation* is
 dated 1998 but its venue is given as the *2001 ASAE Annual Meeting*. One of
 the two is wrong. It is one issue away from being fixed.
 
-## My team
+## The Team page
 
-Three sections — postdoctoral researchers, PhD candidates, other members —
-driven by `TEAM_ROLES` exactly the way the publication sections are driven by
-`PUB_KINDS`, and filtered by the same `wireFilteredGroups` code.
+Four sections — postdoctoral researchers, PhD candidates, collaborators, other
+members — driven by `TEAM_ROLES` exactly the way the publication sections are
+driven by `PUB_KINDS`, and filtered by the same `wireFilteredGroups` code.
 
-The first two are **empty on purpose**. No public page lists his current
-postdocs or doctoral candidates, and the available signal — who co-authors
-with him most often — is not evidence of supervision. Filling those sections
-by inference would have put wrong roles against real people's names, so they
-show an empty state and an invitation instead.
+**The sections are not fixed.** Adding *Alumni*, *Masters students* or
+*Visiting researchers* means adding one object to `TEAM_ROLES` and tagging
+people with its id; the chips, headings, counts and empty states all follow.
+The "Add or update a team member" issue form offers *a new section* as an
+option, so this can be asked for in plain language.
 
-The five people currently listed under *Other team members* are those named on
-the [MARVI participants page](https://www.westernsydney.edu.au/marvi/our-people)
-at Western Sydney University, carrying the titles that page gives them. The
-note under the list says so, so nothing is presented as more current or more
-specific than its source.
+The postdoc and PhD sections are **empty on purpose**. No public page lists his
+current postdocs or doctoral candidates, and the available signal — who
+co-authors with him most often — is not evidence of supervision. Filling those
+sections by inference would have put wrong roles against real people's names,
+so they show an empty state and an invitation instead.
+
+The five people currently listed are those named on the
+[MARVI participants page](https://www.westernsydney.edu.au/marvi/our-people) at
+Western Sydney University, carrying the titles that page gives them. Those
+holding a chair sit under *Collaborators* rather than as members of the group —
+a senior academic listed beside a research group is a peer, not a member of it.
+The note under the list states all of this, so nothing is presented as more
+current or more specific than its source.
 
 The **Add or update a team member** issue form has a consent checkbox, because
 this section names living people rather than citing published work.
