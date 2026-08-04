@@ -18,11 +18,15 @@ backend:
   name: github
   repo: basantmaheshwari/basantmaheshwari
   branch: main
-  # The same authentication worker the other sites in this family already
-  # use, so nothing new has to be deployed. If "Sign in with GitHub" refuses
-  # this origin, add https://basantmaheshwari.github.io to the worker's
-  # ALLOWED_ORIGINS — or use Sveltia's personal access token button, which
-  # needs no worker at all.
+  # Sign-in goes through a small authentication service, because a static
+  # page cannot hold an OAuth secret. This one is an existing shared worker
+  # and is NOT owned by this account — if it is ever withdrawn, sign-in here
+  # stops with it. Two ways out, neither urgent:
+  #   * Sveltia's personal access token button needs no worker at all.
+  #   * Or deploy sveltia-cms-auth on Basant's own Cloudflare account and
+  #     point base_url at that instead.
+  # If "Sign in with GitHub" refuses this origin, add
+  # https://basantmaheshwari.github.io to the worker's ALLOWED_ORIGINS.
   base_url: https://sveltia-cms-auth.marvi-groundwater.workers.dev
   commit_messages:
     create: 'Edit {{collection}} in the website editor'

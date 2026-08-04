@@ -58,8 +58,9 @@ check refuses to publish a branch where the two disagree.
 
 ### Signing in
 
-The editor signs in with GitHub through the same authentication worker the
-other sites in this family already use, so **nothing new has to be deployed**:
+The editor signs in with GitHub through a small authentication service — a
+static page cannot hold an OAuth secret. It currently uses an existing shared
+worker, so **nothing new has to be deployed**:
 
 ```
 https://sveltia-cms-auth.marvi-groundwater.workers.dev
@@ -67,8 +68,14 @@ https://sveltia-cms-auth.marvi-groundwater.workers.dev
 
 If *Sign in with GitHub* refuses this origin, add
 `https://basantmaheshwari.github.io` to that worker's `ALLOWED_ORIGINS` in
-Cloudflare. Sveltia also offers a personal access token button, which needs no
-worker at all.
+Cloudflare.
+
+**Worth knowing:** that worker is not owned by this account, so if it is ever
+withdrawn, sign-in here stops with it. Nothing else breaks — the website, the
+content and the publishing pipeline are all in this repository and carry on
+regardless. Two ways out when it matters: Sveltia's personal access token
+button needs no worker at all, or the same open-source worker can be deployed
+on Basant's own Cloudflare account and `base_url` pointed at it.
 
 Anyone who should be able to edit needs write access to the repository.
 
