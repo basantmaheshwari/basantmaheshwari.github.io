@@ -81,7 +81,14 @@
      text sits above it on its own layer. */
   .rail{position:fixed;z-index:20;inset:0 auto 0 0;width:var(--rail);
     display:flex;flex-direction:column;gap:28px;padding:36px 24px 28px;
-    background:var(--paper-2);border-right:1px solid var(--line-soft)}
+    background:var(--paper-2);border-right:1px solid var(--line-soft);
+    /* Scoped a shade darker than the page defaults. The water now crosses
+       the whole rail, and any tint under text costs contrast: the nav sat
+       at 4.65:1 on bare paper, which a 0.10 wash takes to 4.03 — under the
+       4.5 minimum. #526169 puts it back to 4.68 over the deepest part of
+       the wash, at a darkening you cannot see side by side. */
+    --muted:#526169;
+    --faint:#6b7981}
   /* width/height are not redundant with inset:0. A <canvas> is a replaced
      element with an intrinsic 300x150 size, and for replaced elements a
      `width:auto` resolves to that intrinsic width even when both left and
@@ -1478,20 +1485,16 @@
        at the bottom of the rail, the land surface at the top. */
     const yOf = metres => H - (metres / SURFACE) * H;
 
-    /* The water is confined to a narrow column down the left margin — a
-       piezometer standing beside the navigation rather than behind it.
-       That is not only more literal (a monitoring well IS a narrow bore)
-       but the only accessible option: the rail's text already sits at
-       only 4.6:1 against its own background, so any tint laid under it
-       drops the contrast below the 4.5:1 minimum. Nothing is drawn right
-       of COL, and the nav keeps the contrast it was designed with. */
-    const COL = 20;
-
+    /* The water crosses the whole rail. That is only legible because the
+       alphas below are capped low and the rail's text colours are scoped
+       a shade darker to pay for it — see the note on `.rail` in the CSS.
+       Raising these values without re-checking the nav contrast would put
+       the navigation under the 4.5:1 minimum. */
     function seed(){
-      drops = Array.from({length: Math.max(9, Math.round(H / 74))}, () => ({
-        x: 3 + Math.random() * (COL - 6),
+      drops = Array.from({length: Math.max(12, Math.round(H / 52))}, () => ({
+        x: 4 + Math.random() * (W - 8),
         y: Math.random() * H,
-        len: 8 + Math.random() * 20,
+        len: 8 + Math.random() * 22,
         v: 0.25 + Math.random() * 0.55,
       }));
     }
@@ -1519,46 +1522,31 @@
 
       ctx.clearRect(0, 0, W, H);
 
-      /* The bore itself: a hairline pair marking the casing. */
-      ctx.strokeStyle = "rgba(21,34,43,.10)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(COL + .5, 0); ctx.lineTo(COL + .5, H);
-      ctx.stroke();
-
       /* Saturated zone: a wash that deepens towards the base, the way a
-         section drawing shades below the water table. */
+         section drawing shades below the water table. Capped at .10 at
+         its darkest — that is the contrast budget, not a taste choice. */
       const g = ctx.createLinearGradient(0, wy, 0, H);
-      g.addColorStop(0, "rgba(18,97,127,.16)");
-      g.addColorStop(1, "rgba(18,97,127,.34)");
+      g.addColorStop(0, "rgba(18,97,127,.045)");
+      g.addColorStop(1, "rgba(18,97,127,.10)");
       ctx.fillStyle = g;
-      ctx.fillRect(0, wy, COL, H - wy);
+      ctx.fillRect(0, wy, W, H - wy);
 
       /* The water table itself, with a slow standing ripple so it reads
-         as a surface rather than a border, and a tick into the margin to
-         mark the level the way a gauge plate does. */
+         as a surface rather than a border. A hairline is legible at low
+         opacity where a fill is not, so this carries the level. */
       ctx.beginPath();
-      for(let x = 0; x <= COL; x += 2){
-        const y = wy + Math.sin(x / 7 + phase * Math.PI * 6) * 1.2;
+      for(let x = 0; x <= W; x += 3){
+        const y = wy + Math.sin(x / 26 + phase * Math.PI * 6) * 1.5;
         x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
       }
-      ctx.strokeStyle = "rgba(18,97,127,.75)";
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
-
-      /* The tick stops short of the rail's 24px text inset — a mark that
-         reached under the navigation would be the same legibility problem
-         the whole column was moved to avoid. */
-      ctx.beginPath();
-      ctx.moveTo(COL + 1, wy); ctx.lineTo(COL + 3, wy);
-      ctx.strokeStyle = "rgba(18,97,127,.40)";
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(18,97,127,.34)";
+      ctx.lineWidth = 1.2;
       ctx.stroke();
 
       /* Percolation through the unsaturated zone. Streaks fall faster and
          show more strongly when recharge is high; they stop at the water
          table because that is where the unsaturated zone ends. */
-      ctx.strokeStyle = `rgba(18,97,127,${(0.16 + wet * 0.34).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(18,97,127,${(0.05 + wet * 0.13).toFixed(3)})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       for(const d of drops){
@@ -1579,7 +1567,7 @@
         d.y += d.v * (0.45 + wet * 1.9);
         if(d.y > wy + d.len){
           d.y = -d.len - Math.random() * 40;
-          d.x = 3 + Math.random() * (COL - 6);
+          d.x = 4 + Math.random() * (W - 8);
         }
       }
     }
