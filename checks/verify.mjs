@@ -390,6 +390,19 @@ try {
       fail("the ?preview mode does not watch the repository, so it would never update");
     }
 
+    /* The panel that docks the live site beside the editor. Without it the
+       editor shows only its own field list, and the whole point of the
+       ?preview mode is lost. */
+    const adminIdx = (() => {
+      try { return readFileSync(join(ROOT, "admin/index.html"), "utf8"); } catch { return ""; }
+    })();
+    if (!/livepreview\.js/.test(adminIdx)) {
+      warn("admin/index.html does not load livepreview.js — the editor would lose " +
+           "the live view of the site beside the form");
+    }
+    try { readFileSync(join(ROOT, "admin/livepreview.js"), "utf8"); }
+    catch { warn("admin/livepreview.js is missing"); }
+
     /* Vendored on purpose: no CDN, and the editor cannot change underfoot. */
     const adminHtml = (() => {
       try { return readFileSync(join(ROOT, "admin/index.html"), "utf8"); } catch { return ""; }

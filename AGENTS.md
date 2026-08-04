@@ -208,14 +208,22 @@ plain text search finds the word after the option itself has gone.
 fetched from a CDN. It signs in through the authentication worker the other
 sites in this family already use — nothing new is deployed for it.
 
-**The preview is the site itself.** Sveltia does not render custom preview
-templates (measured: it accepts the registration and never calls the
-component), so there is no in-pane preview to build. Instead the editor's
-*Live Site* button opens `?preview`, and in that mode the page polls the raw
-`content/*.json` in the repository every four seconds and calls `renderAll()`
-whenever anything differs. The result is the finished page — portrait,
-typography, the rail's water, the solved cross-section — updating seconds
-after a save, well before the Pages build lands.
+**The preview is the site itself, docked beside the form.**
+`admin/livepreview.js` adds a resizable panel holding an iframe of
+`../?preview`, and in that mode the page polls the raw `content/*.json` in the
+repository every four seconds and calls `renderAll()` whenever anything
+differs. So the editor shows the finished page — portrait, typography, the
+rail's water, the solved cross-section — refreshing after each save, well
+before the Pages build lands.
+
+That panel deliberately uses **none** of the CMS preview API. Sveltia accepts
+a custom preview template and never calls the component (measured), and
+registering one replaces its working pane with an empty rectangle. The panel
+is plain DOM on the admin page, so it cannot be broken by that.
+
+One detail worth keeping: Sveltia's shell is `position:fixed` across the whole
+viewport, so making room for the panel means pulling that shell's right edge
+in — padding on `<html>` does nothing and the panel just covers the form.
 
 Do not add `CMS.registerPreviewTemplate`. It silently replaces Sveltia's
 working preview pane with an empty one.

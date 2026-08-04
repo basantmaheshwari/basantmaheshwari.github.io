@@ -24,14 +24,20 @@ in the same order as its menu:
 Opening *Publications* edits the Publications page and nothing else, so it is
 always clear what a change will affect.
 
-**The preview is the real website.** Press **Live Site** in the editor and the
-page opens in `?preview` mode, where it watches the repository and redraws
-within seconds of every save — the portrait, the typography, the water in the
-sidebar, the solved cross-section, every effect, because it *is* the site, not
-a drawing of it. Keep that tab beside the editor while you work.
+**The real website sits beside the form.** The editor has a *Live preview*
+panel docked on the right showing the actual page — the portrait, the
+typography, the water in the sidebar, the solved cross-section, every effect,
+because it is the site rather than a drawing of it. Drag its left edge to
+resize, *Hide* to collapse it, *Open in a tab* for a full-width look.
 
-It updates long before the published page does: it reads the content straight
-from the repository rather than waiting for the site to rebuild.
+It refreshes a moment after each save, and updates long before the published
+page does: it reads content straight from the repository rather than waiting
+for the site to rebuild.
+
+*Why a panel of our own rather than the editor's preview pane:* Sveltia
+accepts a custom preview template and never renders it — registering one
+leaves the pane blank. So the panel is built independently of that API and
+does not depend on it.
 
 Saving commits the change and the site republishes itself within a minute or
 so. No files, no code.

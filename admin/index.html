@@ -17,5 +17,10 @@
        ?preview mode, where it watches the repository and redraws seconds
        after every save. `display_url` in config.yml points at it. -->
   <script src="sveltia-cms.js"></script>
+
+  <!-- The real website, docked beside the editor. This does not use the
+       CMS preview API at all — Sveltia will not render a custom preview
+       template — it just adds a panel of its own holding the live site. -->
+  <script src="livepreview.js" defer></script>
 </body>
 </html>
