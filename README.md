@@ -22,12 +22,3 @@ Research, publications, programmes and contact details.
 [ORCID](https://orcid.org/0000-0002-5496-4345) ·
 [ResearchGate](https://www.researchgate.net/profile/Basant-Maheshwari) ·
 [b.maheshwari@westernsydney.edu.au](mailto:b.maheshwari@westernsydney.edu.au)
-
----
-
-<sub>This repository holds the source of the website above, and you do not need
-to program to change it: open the repository in a coding assistant and describe
-what you want in ordinary language, or
-[file a request](../../issues/new/choose) using one of the forms. See
-[MAINTAINING.md](MAINTAINING.md) for the steps and [AGENTS.md](AGENTS.md) for
-the assistant's brief.</sub>

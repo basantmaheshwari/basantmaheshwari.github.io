@@ -227,8 +227,15 @@ This repository is named the same as the account, which makes it GitHub's
 **profile repository**: `README.md` is rendered on <https://github.com/basantmaheshwari>
 for anyone who visits his profile. Keep it short, public-facing and about him.
 
+**`README.md` is his profile card and nothing else** — who he is, what he
+works on, the site, and where to find him. It carries no instructions for
+editing the site, no links to these guides, and no mention of the repository,
+because the people reading it are colleagues and students looking him up, not
+maintainers. Do not add a "how to contribute" footer to it; that has been
+removed once already.
+
 Maintenance notes belong in `MAINTAINING.md`, and instructions for you belong
-here in `AGENTS.md`. Do not move either of those into `README.md`.
+here in `AGENTS.md`.
 
 Only `index.html` is published to the website itself — the deploy workflow
 copies that one file into `_site/`. Everything else is tooling.
