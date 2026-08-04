@@ -31,10 +31,8 @@ these five:
    makes the two disagree and your change is lost the next time anyone builds.
 3. **Never invent a fact.** No publication, co-author, student, award, date or
    number that a source did not give you. An honest gap is always correct.
-4. If you add or rename a content file, add it to `admin/config.yml` **and**
-   give it a renderer in `admin/preview.js` under the same collection-file
-   name. Miss the first and it stops being editable; miss the second and it
-   loses its preview. The checker warns about both, in either direction.
+4. If you add or rename a content file, add it to `admin/config.yml` too, or
+   it stops being editable through the CMS. The checker warns either way.
 5. Finish with `node scripts/build.mjs && node checks/verify.mjs`. Those two
    are the only thing between an edit and the public site.
 
@@ -207,19 +205,21 @@ plain text search finds the word after the option itself has gone.
 ## The editor and its preview
 
 `admin/` is Sveltia CMS. Its collections mirror the site's pages one for one —
-opening *Publications* edits the Publications page and nothing else — and each
-collection *file* has a matching renderer in `admin/preview.js`, keyed by the
-same name.
+opening *Publications* edits the Publications page and nothing else.
 
-The previews emit **the site's own class names**, and `admin/preview.css` is a
-generated copy of the `<style>` block in `index.html`. So a preview is the
-page's markup under the page's CSS rather than a second implementation of the
-design, and it follows the site automatically. Never hand-edit `preview.css`;
-`scripts/build.mjs` rewrites it.
+The preview beside each form is **Sveltia's own**: it lists the entry's fields
+and updates as you type. `admin/preview.js` does one thing — hands it
+`admin/preview.css`, a generated copy of the `<style>` block in `index.html`,
+so values appear in the site's typography rather than the editor's. Never
+hand-edit `preview.css`; `scripts/build.mjs` rewrites it.
 
-The renderers are pure — data in, HTML string out — and exposed on
-`window.__previewRenderers`, so they can be exercised without running the CMS
-or signing in.
+**Do not add custom preview templates.** It has been tried and it breaks the
+editor: `CMS.registerPreviewTemplate` accepts the registration, never invokes
+the component, and replaces the working preview with an empty pane for every
+collection. Probes under five name variants recorded zero calls, with both a
+function component and a class; `window.React` is undefined, and the API
+expects a React component. The full measurement is at the top of
+`admin/preview.js`, and `verify.mjs` warns if a registration reappears.
 
 ## Which files are public
 

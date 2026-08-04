@@ -44,7 +44,9 @@
        the repository that loads anything from another host, and it is
        deliberate: the editor is a tool, not part of the published site.
        index.html itself stays entirely self-contained. -->
-  <script src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js" type="module"></script>
+  <!-- No type="module": Sveltia warns that it breaks the JavaScript API,
+       which is what preview.js uses to register previews. -->
+  <script src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js"></script>
 
   <!-- The preview beside each form: the site's own markup under the site's
        own stylesheet, both generated from index.html so they cannot drift.

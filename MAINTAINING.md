@@ -24,10 +24,17 @@ in the same order as its menu:
 Opening *Publications* edits the Publications page and nothing else, so it is
 always clear what a change will affect.
 
-**Every form has a live preview beside it.** It is not an approximation: the
-preview is the site's own markup under the site's own stylesheet, generated
-from `index.html` on each build, so it looks like the page and follows the
-design automatically when that changes.
+**Every form has a live preview beside it**, updating as you type. It shows
+the entry's fields and their values, set in the website's own typography and
+colours — `admin/preview.css` is a copy of the site's stylesheet, regenerated
+on every build.
+
+It is a preview of the *content*, not a rendering of the finished page. A
+version that reproduced the page's exact layout was built and had to be
+withdrawn: Sveltia accepts a custom preview template but never runs it, and
+registering one replaces the working preview with an empty pane. The note at
+the top of `admin/preview.js` records what was measured. To see the real page,
+use the site link in the editor after publishing.
 
 Saving commits the change and the site republishes itself within a minute or
 so. No files, no code.
@@ -117,8 +124,8 @@ an ordinary commit, so the history, review and rollback are git's.
 | Piece | What it does |
 | ----- | ------------ |
 | `admin/` | The editor — one form per page of the site |
-| `admin/preview.js` | The live preview beside each form |
-| `admin/preview.css` | Generated from `index.html`, so previews match the site |
+| `admin/preview.js` | Styles the preview pane with the site's stylesheet |
+| `admin/preview.css` | Generated from `index.html` on every build |
 | `content/*.json` | What it reads and writes |
 | `scripts/build.mjs` | Copies that content into `index.html` |
 | `checks/verify.mjs` | Refuses to publish a broken or unsafe change |

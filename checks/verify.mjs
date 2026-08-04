@@ -373,23 +373,20 @@ try {
       }
     }
 
-    /* Every editable file should have a preview, or its form is the only
-       thing the editor shows and you are back to guessing what a change
-       will look like. The names must match: a renderer keyed to a name no
-       collection uses is dead code that nothing reports. */
+    /* preview.js only styles the preview pane — see the note at the top
+       of that file for why custom preview templates were removed. It is
+       still required: without it the preview is styled by the editor
+       rather than by the site. */
     let js = null;
     try { js = readFileSync(join(ROOT, "admin/preview.js"), "utf8"); } catch { /* below */ }
-    if (js === null) warn("admin/preview.js is missing — the editor falls back to a generic preview");
-    else {
-      const fileNames = [...cfg.matchAll(/^\s*-\s*name:\s*([\w-]+)\s*$/gm)].map(m => m[1])
-        .filter(n => cfg.includes(`name: ${n}`) && /_/.test(n));
-      const rendered = [...js.matchAll(/^\s{2}([A-Za-z0-9_]+)\s*:/gm)].map(m => m[1]);
-      for (const n of fileNames) {
-        if (!rendered.includes(n)) warn(`admin/config.yml has "${n}" but admin/preview.js has no preview for it`);
-      }
-      for (const n of rendered) {
-        if (!fileNames.includes(n)) warn(`admin/preview.js renders "${n}", which no collection file is called`);
-      }
+    if (js === null) {
+      warn("admin/preview.js is missing — the preview pane loses the site's styling");
+    } else if (/\bCMS\.registerPreviewTemplate\s*\(/.test(js)) {
+      /* Matches a call, not a mention: the file explains at length why
+         these were removed, and that prose names the method. */
+      warn("admin/preview.js registers a preview template. Sveltia accepts the " +
+           "registration but never invokes it, and doing so replaces the working " +
+           "preview with an empty pane — see the note at the top of that file.");
     }
 
     /* The preview stylesheet is generated from index.html. If it is stale
