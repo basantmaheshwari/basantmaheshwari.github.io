@@ -45,7 +45,7 @@ the wrong change.
 | `TEACHING`     | Teaching and capacity building                                 |
 | `NEWS`         | News items, newest first                                       |
 | `CONTACT`      | Contact channels and profile links                             |
-| `TEAM_ROLES`   | The My team sections, their order and their empty states       |
+| `TEAM_ROLES`   | The Team page sections, their order and their empty states       |
 | `TEAM`         | The people — see the format below                              |
 | `PUB_KINDS`    | The Publications sections, their order and their empty states  |
 | `PUBLICATIONS` | The publication list — see the format below                    |
@@ -150,6 +150,20 @@ filtered groups. For an ordinary page, prefer the data form.
 nor a `page` definition, because a nav entry with neither leads to a blank
 screen: the rail still highlights it, the hash still changes, and nothing
 throws.
+
+## The forms are part of the model
+
+`.github/ISSUE_TEMPLATE/` is the editing interface, so it has to keep step
+with the data. Every `SECTIONS` label needs an option in the change form,
+every `PUB_KINDS` label one in the publication form, and every `TEAM_ROLES`
+label one in the team form. Add a section, kind or role and the matching
+dropdown gets the same addition in the same change.
+
+Miss it and nothing looks wrong: the site is fine, but that part of it becomes
+unreportable — there is no way to file a request against it. `verify.mjs`
+warns on the mismatch in either direction, reading the options list rather
+than the file, because these forms also explain their options in prose and a
+plain text search finds the word after the option itself has gone.
 
 ## Which files are public
 

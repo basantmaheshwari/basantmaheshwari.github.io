@@ -268,6 +268,66 @@ for (const c of usedClasses) {
   if (!definedClasses.has(c)) warn(`class "${c}" is used in the markup but has no rule in the stylesheet`);
 }
 
+/* ── 6b. The intake forms must match the data model ────────────────────
+   The issue forms are the editing interface: if a section, kind or role
+   exists on the site but is not offered in the form that files changes
+   against it, that part of the site becomes unreportable. Nobody notices,
+   because the site itself is fine — the gap is in the way in.
+
+   This is a warning rather than a failure: the published page is not
+   broken by it, and the rule here is to block only what you could point
+   at on the live site and call a defect. */
+function formText(name) {
+  try { return readFileSync(join(ROOT, ".github/ISSUE_TEMPLATE", name), "utf8"); }
+  catch { return null; }
+}
+/** The choices of one dropdown, by field id. Reading the whole file
+    instead is not good enough: these forms explain their options in prose
+    too ("Collaborators is for peers…"), so a plain substring search finds
+    the word after the option itself has been deleted. Only the list under
+    that field's `options:` counts. */
+function formOptions(text, id) {
+  const block = text.match(
+    new RegExp(`id:\\s*${id}\\b[\\s\\S]*?\\n\\s*options:\\s*\\n([\\s\\S]*?)(?=\\n\\s*validations:|\\n\\s*-\\s*type:|$)`));
+  if (!block) return null;
+  return block[1].split("\n").map(l => l.trim())
+    .filter(l => l.startsWith("- ")).map(l => l.slice(2).trim());
+}
+
+const FORM_SYNC = [
+  ["website-change.yml",   "SECTIONS",   (data.SECTIONS   || []).map(s => s.label), "page"],
+  ["add-publication.yml",  "PUB_KINDS",  (data.PUB_KINDS  || []).map(k => k.label), "kind"],
+  ["add-team-member.yml",  "TEAM_ROLES", (data.TEAM_ROLES || []).map(r => r.label), "role"],
+];
+for (const [file, array, labels, what] of FORM_SYNC) {
+  const text = formText(file);
+  if (text === null) { warn(`issue form ${file} is missing`); continue; }
+  const options = formOptions(text, what);
+  if (!options) { warn(`issue form ${file} has no "${what}" dropdown to keep in step with ${array}`); continue; }
+  /* Forms word options in the singular — "Journal article" for the
+     "Journal articles" section — and English is not tidy about it:
+     "Theses" becomes "Thesis", not "These". So compare a small set of
+     plausible forms rather than one naive de-pluralisation, and allow an
+     option to carry a trailing gloss ("Other output (book chapter, …)").
+     The match is against whole options, never against the file. */
+  const forms_ = s => {
+    const l = s.toLowerCase();
+    return [...new Set([l, l.replace(/s$/, ""), l.replace(/es$/, ""), l.replace(/es$/, "is")])];
+  };
+  for (const label of labels) {
+    if (!label) continue;
+    const wanted = forms_(label);
+    const found = options.some(o => {
+      const ol = o.toLowerCase();
+      return wanted.some(w => ol === w || ol.startsWith(w + " ") || ol.startsWith(w + ","));
+    });
+    if (!found) {
+      warn(`${array} has "${label}" but ${file} offers no matching ${what} option — ` +
+           `changes to it cannot be requested through the form`);
+    }
+  }
+}
+
 /* ── 7. Things a reader would notice ───────────────────────────────── */
 if (!/<title>[^<]+<\/title>/.test(html)) fail("no <title>");
 if (!/<meta name="description" content="[^"]{40,}"/.test(html)) warn("meta description missing or very short");

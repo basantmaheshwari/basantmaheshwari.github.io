@@ -45,7 +45,7 @@ markup is generated from them, so you never edit HTML to add an entry.
 | `TEACHING`     | Teaching and capacity building                               |
 | `NEWS`         | News items, newest first                                     |
 | `CONTACT`      | Contact channels and profile links                           |
-| `TEAM_ROLES`   | The My team sections, their order and empty states           |
+| `TEAM_ROLES`   | The Team page sections, their order and empty states           |
 | `TEAM`         | The people in the group                                      |
 | `PUB_KINDS`    | The Publications sections, their order and empty states      |
 | `PUBLICATIONS` | The publication list                                         |
