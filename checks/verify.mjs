@@ -93,7 +93,8 @@ function extractArray(name) {
   return null;
 }
 
-const ARRAYS = ["SECTIONS", "METRICS", "RESEARCH", "PROGRAMS", "TEACHING", "NEWS", "CONTACT", "PUBLICATIONS"];
+const ARRAYS = ["SECTIONS", "METRICS", "RESEARCH", "PROGRAMS", "TEACHING", "NEWS", "CONTACT",
+  "TEAM_ROLES", "TEAM", "PUB_KINDS", "PUBLICATIONS"];
 const data = {};
 for (const name of ARRAYS) {
   const src = extractArray(name);
@@ -123,22 +124,108 @@ for (const id of panelIds) {
 }
 
 /* ── 5. Publications ───────────────────────────────────────────────────
-   Every entry becomes a doi.org link, so a malformed DOI is a 404 with
-   this site's name on it. */
-const seenDoi = new Set();
-for (const p of data.PUBLICATIONS || []) {
-  const where = `"${String(p.t || "untitled").slice(0, 60)}"`;
-  if (!p.t) fail(`publication with no title: ${JSON.stringify(p).slice(0, 90)}`);
-  if (!p.d) { fail(`publication ${where} has no DOI`); continue; }
-  if (!/^10\.\d{4,9}\/\S+$/.test(p.d)) fail(`publication ${where} has a malformed DOI: ${p.d}`);
-  if (seenDoi.has(p.d)) fail(`publication ${where} duplicates DOI ${p.d}`);
-  seenDoi.add(p.d);
-  if (!p.a) warn(`publication ${where} has no author list`);
-  if (!p.y) warn(`publication ${where} has no year`);
-  else if (p.y < 1970 || p.y > new Date().getFullYear() + 2) warn(`publication ${where} has an implausible year: ${p.y}`);
+   A DOI is optional — some older records genuinely do not have one, and
+   those are listed without a link on purpose. But a DOI that is present
+   and wrong becomes a 404 with this site's name on it, so the *format*
+   is enforced whenever there is one.
+
+   The kind is enforced strictly: an entry whose `k` is not a declared
+   PUB_KINDS id renders into no section at all and silently disappears
+   from the page, which is exactly the sort of failure nobody notices. */
+const KIND_IDS = new Set((data.PUB_KINDS || []).map(k => k.id));
+if (!KIND_IDS.size) fail("PUB_KINDS is empty — publications would have nowhere to render");
+for (const k of data.PUB_KINDS || []) {
+  if (!k.id || !k.label) fail(`PUB_KINDS entry missing id or label: ${JSON.stringify(k)}`);
+  if (!k.empty) warn(`PUB_KINDS "${k.id}" has no empty-state message`);
 }
 
-/* ── 6. Things a reader would notice ───────────────────────────────── */
+const seenDoi = new Set();
+const kindCount = Object.fromEntries([...KIND_IDS].map(id => [id, 0]));
+for (const p of data.PUBLICATIONS || []) {
+  const where = `"${String(p.t || "untitled").slice(0, 60)}"`;
+  if (!p.t) { fail(`publication with no title: ${JSON.stringify(p).slice(0, 90)}`); continue; }
+  if (!p.v) warn(`publication ${where} has no venue`);
+
+  if (!p.k) fail(`publication ${where} has no kind (k)`);
+  else if (!KIND_IDS.has(p.k)) {
+    fail(`publication ${where} has unknown kind "${p.k}" — it would not render at all. ` +
+         `Known kinds: ${[...KIND_IDS].join(", ")}`);
+  } else kindCount[p.k]++;
+
+  if (p.d) {
+    if (!/^10\.\d{4,9}\/\S+$/.test(p.d)) fail(`publication ${where} has a malformed DOI: ${p.d}`);
+    if (seenDoi.has(p.d)) fail(`publication ${where} duplicates DOI ${p.d}`);
+    seenDoi.add(p.d);
+  }
+  if (!p.a) warn(`publication ${where} has no author list, so none is shown`);
+  if (!p.y) warn(`publication ${where} has no year`);
+  else if (p.y < 1960 || p.y > new Date().getFullYear() + 2) warn(`publication ${where} has an implausible year: ${p.y}`);
+}
+
+/* ── 5b. The team ──────────────────────────────────────────────────────
+   Same strictness on the role as on a publication kind, and for the same
+   reason: an unknown role renders into no section and the person simply
+   vanishes from the page. That matters more here, because the entries
+   are real people who were told they would be listed. */
+const ROLE_IDS = new Set((data.TEAM_ROLES || []).map(r => r.id));
+if (!ROLE_IDS.size) fail("TEAM_ROLES is empty — team members would have nowhere to render");
+for (const r of data.TEAM_ROLES || []) {
+  if (!r.id || !r.label) fail(`TEAM_ROLES entry missing id or label: ${JSON.stringify(r)}`);
+  if (!r.empty) warn(`TEAM_ROLES "${r.id}" has no empty-state message`);
+}
+for (const p of data.TEAM || []) {
+  const who = `"${String(p.n || "unnamed").slice(0, 50)}"`;
+  if (!p.n) { fail(`team member with no name: ${JSON.stringify(p).slice(0, 90)}`); continue; }
+  if (!p.r) fail(`team member ${who} has no role (r)`);
+  else if (!ROLE_IDS.has(p.r)) {
+    fail(`team member ${who} has unknown role "${p.r}" — they would not appear at all. ` +
+         `Known roles: ${[...ROLE_IDS].join(", ")}`);
+  }
+  if (!p.p && !p.f) warn(`team member ${who} has neither a position nor a description`);
+}
+
+/* ── 6. The filtered-groups markup contract ────────────────────────────
+   `wireFilteredGroups` is pointed at elements by id and styles them by
+   class. Renaming a class in the CSS without updating the markup leaves
+   a container that still works — the script finds it by id, the filter
+   still filters — but never becomes a flex row, so the chips silently
+   stack down the page instead of scrolling across it. Nothing throws and
+   nothing looks broken in the DOM. This has already happened once.
+
+   So: every element handed to the wiring as `filterEl` must carry the
+   class the stylesheet actually targets. */
+const CONTRACT = [["filterEl", "chip-filter"]];
+for (const [role, cls] of CONTRACT) {
+  const re = new RegExp(`${role}:\\s*document\\.getElementById\\("([^"]+)"\\)`, "g");
+  const wired = [...html.matchAll(re)].map(m => m[1]);
+  if (!wired.length) warn(`no element is wired as ${role} — has wireFilteredGroups been removed?`);
+  for (const id of wired) {
+    const el = html.match(new RegExp(`<[a-z-]+[^>]*\\sid="${id}"[^>]*>`, "i"));
+    if (!el) { fail(`${role} points at id "${id}", which is not in the markup`); continue; }
+    const classAttr = el[0].match(/\sclass="([^"]*)"/);
+    const classes = classAttr ? classAttr[1].split(/\s+/) : [];
+    if (!classes.includes(cls)) {
+      fail(`#${id} is wired as ${role} but is missing class "${cls}" — ` +
+           `its controls would render unstyled and stack instead of scrolling ` +
+           `(has: ${classes.join(" ") || "no classes"})`);
+    }
+  }
+}
+
+/* Any class named in the markup but never defined in the stylesheet is
+   usually a rename that was only half applied. A few are legitimate
+   scripting hooks, so this warns rather than blocks. */
+const styleBlock = (html.match(/<style>([\s\S]*?)<\/style>/) || ["", ""])[1];
+const definedClasses = new Set([...styleBlock.matchAll(/\.([a-zA-Z][\w-]*)/g)].map(m => m[1]));
+const usedClasses = new Set();
+for (const m of html.matchAll(/class="([^"$]*)"/g)) {
+  for (const c of m[1].split(/\s+/)) if (c && !c.includes("{")) usedClasses.add(c);
+}
+for (const c of usedClasses) {
+  if (!definedClasses.has(c)) warn(`class "${c}" is used in the markup but has no rule in the stylesheet`);
+}
+
+/* ── 7. Things a reader would notice ───────────────────────────────── */
 if (!/<title>[^<]+<\/title>/.test(html)) fail("no <title>");
 if (!/<meta name="description" content="[^"]{40,}"/.test(html)) warn("meta description missing or very short");
 if (!/<html lang="[a-z]{2}/.test(html)) fail("<html> has no lang attribute");
@@ -150,7 +237,9 @@ if (/\bTODO\b/.test(html)) warn("the file still contains a TODO");
 
 /* ── Report ───────────────────────────────────────────────────────── */
 const kb = (html.length / 1024).toFixed(0);
-console.log(`index.html — ${kb} kB, ${ids.size} ids, ${(data.PUBLICATIONS || []).length} publications, ${(data.SECTIONS || []).length} sections`);
+const breakdown = Object.entries(kindCount).map(([k, n]) => `${n} ${k}`).join(", ");
+console.log(`index.html — ${kb} kB, ${ids.size} ids, ${(data.SECTIONS || []).length} sections`);
+console.log(`${(data.PUBLICATIONS || []).length} publications (${breakdown}) · ${seenDoi.size} with a DOI`);
 
 for (const w of warnings) console.log("WARN   " + w);
 for (const e of errors) console.error("ERROR  " + e);

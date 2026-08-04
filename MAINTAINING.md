@@ -45,14 +45,23 @@ markup is generated from them, so you never edit HTML to add an entry.
 | `TEACHING`     | Teaching and capacity building                               |
 | `NEWS`         | News items, newest first                                     |
 | `CONTACT`      | Contact channels and profile links                           |
+| `TEAM_ROLES`   | The My team sections, their order and empty states           |
+| `TEAM`         | The people in the group                                      |
+| `PUB_KINDS`    | The Publications sections, their order and empty states      |
 | `PUBLICATIONS` | The publication list                                         |
 
 A publication entry is terse because there are many of them:
 
 ```js
-{y:2026, t:"Title as published", a:"Family, I., Family, I.", v:"Journal name",
- d:"10.1002/wwp2.70094", c:2},
+{k:"journal", y:2026, t:"Title as published", a:"Family, I., Family, I.",
+ v:"Journal name", d:"10.1002/wwp2.70094", c:2},
 ```
+
+`k` is the section it files into and must be one of the `PUB_KINDS` ids —
+`journal`, `conference`, `thesis`, `other`. `a`, `d` and `c` are optional: an
+entry with no DOI is listed without a link (correct for theses and older
+conference papers), and one with no author list omits that line rather than
+inventing one.
 
 Write his own name exactly `Maheshwari, B.` — the renderer matches that string
 to set it in bold.
@@ -74,7 +83,12 @@ deploy if the page would be broken or would stop being self-contained:
   returns the wrong element, and this has already caused one real bug)
 - a content array that no longer parses
 - a nav entry with no matching panel, so the link goes to a blank page
-- a malformed or duplicated DOI
+- a publication whose `k` — or a person whose `r` — is not a declared kind or
+  role, which would render into no section at all and silently disappear
+- a filter container that has lost its `chip-filter` class, which leaves the
+  chips stacking down the page instead of scrolling across it, with nothing
+  thrown and nothing obviously wrong in the DOM
+- a malformed or duplicated DOI (a missing one is fine — it just isn't linked)
 - an `<img>` with no alt text, a missing `lang`, an unreplaced placeholder
 
 It was tested by breaking the file nine different ways; all nine were caught.
@@ -92,15 +106,52 @@ published.
 
 ## The publication list
 
-The 68 entries in `PUBLICATIONS` are generated from
+102 entries, 1986–2026, generated from
 [ORCID 0000-0002-5496-4345](https://orcid.org/0000-0002-5496-4345) and enriched
 from [Crossref](https://api.crossref.org/) for authors, venues and citation
-counts, so every entry resolves to a registered DOI.
+counts: 94 journal articles, 7 conference papers, 1 other output, 0 theses.
 
-It is therefore a subset. The full record of more than 230 publications —
-including book chapters, conference papers and reports without a DOI — is on
-[Google Scholar](https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&hl=en),
+86 carry a registered DOI and link to doi.org. The other 16 are in his ORCID
+profile without one; a Crossref title search recovered 21 of the 37 that were
+missing, at a 0.93 title-similarity threshold with a year check. The 16 that
+did not clear that bar are listed with title, venue and year only — **no
+authors were invented for them**, and a weak match was treated as no match,
+because a wrong attribution is worse than a thin entry.
+
+Kind comes from the Crossref or ORCID work type, except that a venue naming a
+conference, congress, proceedings or symposium wins — several proceedings
+papers are typed `journal-article` upstream, and the venue is the reliable
+signal.
+
+It remains a subset of a record of more than 230 outputs. The complete list is
+on [Google Scholar](https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&hl=en),
 which the page links to prominently rather than pretending to be complete.
+
+One known data problem, inherited from ORCID and left as-is rather than
+guessed at: *Infiltration and roughness equations for surface irrigation* is
+dated 1998 but its venue is given as the *2001 ASAE Annual Meeting*. One of
+the two is wrong. It is one issue away from being fixed.
+
+## My team
+
+Three sections — postdoctoral researchers, PhD candidates, other members —
+driven by `TEAM_ROLES` exactly the way the publication sections are driven by
+`PUB_KINDS`, and filtered by the same `wireFilteredGroups` code.
+
+The first two are **empty on purpose**. No public page lists his current
+postdocs or doctoral candidates, and the available signal — who co-authors
+with him most often — is not evidence of supervision. Filling those sections
+by inference would have put wrong roles against real people's names, so they
+show an empty state and an invitation instead.
+
+The five people currently listed under *Other team members* are those named on
+the [MARVI participants page](https://www.westernsydney.edu.au/marvi/our-people)
+at Western Sydney University, carrying the titles that page gives them. The
+note under the list says so, so nothing is presented as more current or more
+specific than its source.
+
+The **Add or update a team member** issue form has a consent checkbox, because
+this section names living people rather than citing published work.
 
 ## The figure on the profile page
 
@@ -132,7 +183,8 @@ produced byte-identical geometry.
 - **Unit codes and course convening.** `TEACHING` describes supervision and
   capacity building; specific teaching was not in any source consulted.
 - **Completed HDR candidates.** No list of graduated students was available,
-  and inventing one is not an option.
+  and inventing one is not an option. The Publications page now has a
+  **Theses** section standing ready and empty for exactly this.
 - **Awards and fellowships.** Almost certainly substantial, but nothing was
   verifiable at the time of writing, so there is no Awards section yet.
 - **A photograph with a clear licence.** The current portrait is his official

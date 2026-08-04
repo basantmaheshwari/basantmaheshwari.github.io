@@ -1,5 +1,5 @@
 name: Add a publication
-description: A new paper is out, or one is missing from the list.
+description: A new paper, conference paper or thesis — or one that is missing from the list.
 title: "Publication: "
 labels:
   - website
@@ -8,45 +8,75 @@ body:
   - type: markdown
     attributes:
       value: |
-        If the paper has a DOI, that is all that is really needed — everything
-        else can be looked up from it. Fill in the rest only if you have it to hand.
+        **If it has a DOI, the DOI is all that is really needed** — the title, authors,
+        journal, year and citation count are all looked up from it.
+
+        Theses and older conference papers usually have no DOI. In that case fill in
+        the title, authors and year instead. Anything left blank is left off the site
+        rather than guessed.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of publication is it?
+      description: This decides which section of the Publications page it appears in.
+      options:
+        - Journal article
+        - Conference paper
+        - Thesis
+        - Other output (book chapter, report, preprint)
+    validations:
+      required: true
 
   - type: input
     id: doi
     attributes:
       label: DOI
-      description: Just the DOI, or the full doi.org link. Authors, journal and year are taken from this.
+      description: The DOI or the full doi.org link. Leave blank if there isn't one.
       placeholder: "10.1002/wwp2.70094"
-    validations:
-      required: true
 
   - type: input
     id: title
     attributes:
       label: Title
-      description: Optional. Only needed if the DOI is very new and not yet registered.
+      description: Required only if there is no DOI.
 
-  - type: dropdown
-    id: featured
+  - type: input
+    id: authors
     attributes:
-      label: Should this be highlighted?
-      description: The list is otherwise ordered by year, newest first.
-      options:
-        - "No — file it in the list normally"
-        - "Yes — this is a significant paper"
-    validations:
-      required: true
+      label: Authors
+      description: >
+        Required only if there is no DOI. In publication order, as they appear on the
+        paper. For a thesis, the candidate's name.
+      placeholder: "Gajurel, S., Maheshwari, B., Hagare, D."
+
+  - type: input
+    id: venue
+    attributes:
+      label: Journal, conference or institution
+      description: >
+        Required only if there is no DOI. For a thesis, the awarding university and
+        the degree — for example "PhD, Western Sydney University".
+
+  - type: input
+    id: year
+    attributes:
+      label: Year
+      description: Required only if there is no DOI.
+      placeholder: "2026"
 
   - type: textarea
     id: notes
     attributes:
       label: Anything else
-      description: Corrections to an existing entry, a preferred author order, or a note about the work.
+      description: >
+        Corrections to an existing entry, a supervision role for a thesis, or a note
+        about the work.
 
   - type: checkboxes
     id: approval
     attributes:
       label: Confirmation
       options:
-        - label: This paper is published or accepted, and may appear on the public website.
+        - label: This work is published, accepted or awarded, and may appear on the public website.
           required: true

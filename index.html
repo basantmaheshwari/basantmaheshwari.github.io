@@ -124,7 +124,10 @@
   .hero h1 em{font-style:italic;color:var(--water)}
   .hero .role{margin:26px 0 0;font-family:var(--serif);font-size:1.28rem;line-height:1.45;max-width:30ch;color:var(--ink)}
   .hero p.bio{max-width:58ch;margin:24px 0 0;font-size:1.04rem;color:var(--muted)}
-  .portrait{width:168px}
+  /* margin:0 because a bare <figure> carries a 40px inline margin from the
+     UA stylesheet, which indents the portrait out of alignment with the
+     text column it sits above on a phone. */
+  .portrait{width:168px;margin:0}
   .portrait img{width:168px;height:168px;object-fit:cover;border-radius:2px;
     filter:grayscale(1) contrast(1.03);border:1px solid var(--line)}
   .portrait figcaption{margin-top:10px;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
@@ -171,6 +174,9 @@
   .readout div{display:grid;gap:3px}
   .readout b{font-family:var(--serif);font-size:1.3rem;font-weight:400;font-variant-numeric:tabular-nums}
   .readout b.dry{color:var(--ochre)}
+  /* Only meaningful once the figure is wider than its container, which is
+     a phone-only condition — see the responsive block. */
+  .fig-hint{display:none}
   .fig-note{margin:16px 0 0;font-size:.87rem;color:var(--muted);max-width:74ch}
   .fig-note code{font-family:var(--mono);font-size:.85em;background:var(--water-soft);padding:1px 5px}
 
@@ -223,7 +229,49 @@
     color:var(--water);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .35s var(--ease)}
   .links a:hover{border-bottom-color:var(--water)}
 
-  /* ─── Publications ─────────────────────────────────────────────── */
+  /* ─── Filtered groups ────────────────────────────────────────────
+     One pattern, used by both Publications and My team: a row of chips
+     that filters by kind, and a text search. They intersect rather than
+     replace one another, so "conference" plus "irrigation" narrows to
+     conference papers about irrigation. The markup contract is in
+     AGENTS.md; `wireFilteredGroups` in the script drives both. */
+  .chip-filter{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 2px;padding:0 0 16px}
+  .chip-btn{display:inline-flex;align-items:baseline;gap:8px;padding:7px 15px;cursor:pointer;
+    border:1px solid var(--line);background:none;border-radius:999px;
+    font-family:var(--mono);font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);transition:color .3s var(--ease),border-color .3s var(--ease),background .3s var(--ease)}
+  .chip-btn b{font-weight:400;font-variant-numeric:tabular-nums;color:var(--faint);transition:color .3s var(--ease)}
+  .chip-btn:hover{border-color:var(--water);color:var(--ink)}
+  .chip-btn[aria-pressed=true]{background:var(--water);border-color:var(--water);color:var(--paper)}
+  .chip-btn[aria-pressed=true] b{color:rgba(246,244,239,.72)}
+  /* A kind with nothing in it stays visible and clickable — it advertises
+     that the section exists and can be filled — but reads as inactive. */
+  .chip-btn[data-count="0"]{color:var(--faint);border-style:dashed}
+
+  .group{padding:0 0 8px}
+  .group[hidden]{display:none}
+  .group-head{display:flex;align-items:baseline;justify-content:space-between;gap:18px;
+    margin:34px 0 0;padding:0 0 10px;border-bottom:1px solid var(--line)}
+  .group:first-of-type .group-head{margin-top:14px}
+  .group-head h2{margin:0;font-family:var(--serif);font-weight:400;font-size:1.5rem;letter-spacing:-.015em}
+  .group-head span{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .group-empty{padding:22px 0 4px;color:var(--faint);font-size:.9rem;max-width:64ch}
+  .group-empty[hidden]{display:none}
+
+  /* ─── Team ─────────────────────────────────────────────────────── */
+  .person{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 24px;align-items:baseline;
+    padding:22px 0;border-top:1px solid var(--line-soft)}
+  .person:first-child{border-top:0}
+  .person[hidden]{display:none}
+  .person h3{margin:0;font-family:var(--serif);font-weight:400;font-size:1.24rem;letter-spacing:-.01em}
+  .person h3 a{text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s var(--ease)}
+  .person h3 a:hover{color:var(--water);border-bottom-color:var(--water)}
+  .person .pos{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--faint);white-space:nowrap}
+  .person .focus{grid-column:1/-1;margin:4px 0 0;color:var(--muted);font-size:.94rem;max-width:64ch}
+  .person .where{grid-column:1/-1;margin:5px 0 0;font-family:var(--mono);font-size:.66rem;color:var(--faint)}
+
   .search{display:flex;align-items:center;gap:14px;margin:0;padding:14px 0;border-bottom:1px solid var(--line)}
   .search input{flex:1;min-width:0;border:0;background:none;outline:none;
     font-family:var(--serif);font-size:1.08rem;color:var(--ink)}
@@ -267,19 +315,70 @@
     .page{margin-left:0}
     .shell{width:min(100% - 36px,var(--shell))}
     .split{grid-template-columns:1fr;gap:18px;padding:42px 0}
-    .hero{padding:7vh 0 4vh}
-    .hero-grid{grid-template-columns:1fr;gap:28px}
-    .portrait,.portrait img{width:120px}
-    .portrait img{height:120px}
+    .hero{padding:5vh 0 4vh}
+    /* The portrait is source-ordered second so that on desktop it sits in
+       the right-hand column beside the heading. On a phone the columns
+       collapse, which would push his face below the biography and the
+       buttons — you would scroll past everything before seeing who this
+       is. `order:-1` lifts it back to the top without moving it in the
+       DOM, so the reading order for a screen reader is unchanged. */
+    .hero-grid{grid-template-columns:1fr;gap:22px}
+    .portrait{order:-1;display:flex;align-items:center;gap:16px}
+    .portrait,.portrait img{width:auto}
+    .portrait img{width:96px;height:96px;flex:0 0 auto}
+    .portrait figcaption{margin-top:0}
     .head{padding:8vh 0 5vh}
     .item{grid-template-columns:1fr}
     .item .meta{justify-content:flex-start}
     .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
     .pub-year{grid-template-columns:1fr;gap:12px}
+    .person{grid-template-columns:1fr}
+    .person .pos{white-space:normal}
     .section-fig{padding:18px 16px 16px;margin-inline:-4px}
     .fig-scroll{overflow-x:auto;scrollbar-width:none}
     .fig-scroll::-webkit-scrollbar{display:none}
     .section-fig svg{min-width:640px}
+    .fig-hint{display:block;margin:10px 0 0}
+    .readout{gap:14px 22px}
+    .readout div{flex:1 1 42%}
+
+    /* The chip row becomes a single scrolling strip rather than wrapping
+       to three stacked rows. Five chips with counts cannot fit across a
+       phone, and three rows of controls pushes the actual content off the
+       screen. Negative margins let it bleed to the screen edges, which is
+       what signals "this scrolls". */
+    /* No scroll-snap here on purpose: snapping aligns the first chip with
+       the scrollport's start edge, which scrolls the container's own
+       inline padding out of view and leaves the first chip bleeding off
+       the left edge, out of line with every other element on the page. */
+    .chip-filter{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+      margin-inline:-18px;padding-inline:18px}
+    .chip-filter::-webkit-scrollbar{display:none}
+    .chip-btn{flex:0 0 auto}
+
+    /* Touch targets. A 33px chip and a 31px input are comfortably under
+       the 44px minimum, and this page is read on phones. */
+    .chip-btn{min-height:44px;padding-block:0;align-items:center}
+    .search{padding:6px 0}
+    .search input{min-height:44px}
+    .bar summary{min-height:40px;display:flex;align-items:center}
+    .bar nav button{min-height:44px}
+    .btn{min-height:44px}
+  }
+
+  /* ─── Phone ────────────────────────────────────────────────────── */
+  @media (max-width:560px){
+    /* clamp() picks its 2.5rem floor below ~625px, so the display size
+       stops responding exactly where the screen is narrowest. */
+    .hero h1{font-size:clamp(2rem,8.4vw,2.6rem)}
+    .head h1{font-size:clamp(1.9rem,7.8vw,2.5rem)}
+    .hero .role{font-size:1.12rem}
+    .metrics div{padding:16px 14px}
+    .metrics b{font-size:1.6rem}
+    .group-head{margin-top:26px}
+    .group-head h2{font-size:1.28rem}
+    .pub .t{font-size:1.02rem}
+    .head::before{display:none}   /* the watermark numeral crowds the title */
   }
 
   /* ─── Reduced motion ───────────────────────────────────────────────
@@ -368,6 +467,7 @@
             <p class="tag" style="margin:0" id="xs-clock"></p>
           </div>
           <div class="fig-scroll"><div id="xs"></div></div>
+          <p class="fig-hint tag">Drag the section sideways to follow the water table &#8594;</p>
           <div class="readout">
             <div><b id="xs-head">—</b><span class="tag">Peak head in section</span></div>
             <div><b id="xs-wells">—</b><span class="tag">Monitored wells holding water</span></div>
@@ -422,9 +522,10 @@
       <div class="head" data-numeral="02"><div class="shell">
         <p class="tc">02 — Publications</p>
         <h1 class="display">Publications.</h1>
-        <p class="lede">Journal articles carrying a registered DOI, newest first, with authors and venues taken from Crossref. Search by topic, co-author, journal or year.</p>
+        <p class="lede">Grouped by kind and listed newest first. Filter by kind, or search by topic, co-author, journal or year — the two combine.</p>
       </div></div>
       <div class="body"><div class="shell">
+        <div class="chip-filter" role="group" aria-label="Filter publications by kind" id="pub-filter"></div>
         <label class="search">
           <span class="tag">Search</span>
           <input id="pub-search" type="search" placeholder="groundwater rajasthan, hagare, world water policy…" aria-label="Search publications">
@@ -448,10 +549,30 @@
       </div></div>
     </section>
 
+    <!-- ── TEAM ────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-team" data-panel="team" hidden>
+      <div class="head" data-numeral="04"><div class="shell">
+        <p class="tc">04 — My team</p>
+        <h1 class="display">My team.</h1>
+        <p class="lede">The people doing the work — postdoctoral researchers, doctoral candidates, and the wider group across the MARVI programme and the Australia India Water Centre.</p>
+      </div></div>
+      <div class="body"><div class="shell">
+        <div class="chip-filter" role="group" aria-label="Filter people by role" id="team-filter"></div>
+        <label class="search">
+          <span class="tag">Search</span>
+          <input id="team-search" type="search" placeholder="groundwater, Rajasthan, a name…" aria-label="Search team members">
+          <span class="count" id="team-count"></span>
+        </label>
+        <div id="team-list"></div>
+        <p class="empty" hidden id="team-empty">Nobody matches that</p>
+        <div class="note" id="team-note"></div>
+      </div></div>
+    </section>
+
     <!-- ── TEACHING ────────────────────────────────────────────────── -->
     <section class="panel" id="panel-teaching" data-panel="teaching" hidden>
-      <div class="head" data-numeral="04"><div class="shell">
-        <p class="tc">04 — Teaching</p>
+      <div class="head" data-numeral="05"><div class="shell">
+        <p class="tc">05 — Teaching</p>
         <h1 class="display">Teaching &amp; capacity building.</h1>
         <p class="lede">Training water professionals who can work across disciplines — and across the boundary between a research finding and a village decision.</p>
       </div></div>
@@ -460,8 +581,8 @@
 
     <!-- ── NEWS ────────────────────────────────────────────────────── -->
     <section class="panel" id="panel-news" data-panel="news" hidden>
-      <div class="head" data-numeral="05"><div class="shell">
-        <p class="tc">05 — News</p>
+      <div class="head" data-numeral="06"><div class="shell">
+        <p class="tc">06 — News</p>
         <h1 class="display">News.</h1>
         <p class="lede">Recent events, visits and milestones.</p>
       </div></div>
@@ -473,8 +594,8 @@
 
     <!-- ── CONTACT ─────────────────────────────────────────────────── -->
     <section class="panel" id="panel-contact" data-panel="contact" hidden>
-      <div class="head" data-numeral="06"><div class="shell">
-        <p class="tc">06 — Contact</p>
+      <div class="head" data-numeral="07"><div class="shell">
+        <p class="tc">07 — Contact</p>
         <h1 class="display">Contact.</h1>
         <p class="lede">For research collaborations, student enquiries, media, and the Australia India Water Centre.</p>
       </div></div>
@@ -508,9 +629,10 @@
     {id:"research",     label:"Research",     tc:"01"},
     {id:"publications", label:"Publications", tc:"02"},
     {id:"programs",     label:"Programmes",   tc:"03"},
-    {id:"teaching",     label:"Teaching",     tc:"04"},
-    {id:"news",         label:"News",         tc:"05"},
-    {id:"contact",      label:"Contact",      tc:"06"},
+    {id:"team",         label:"My team",      tc:"04"},
+    {id:"teaching",     label:"Teaching",     tc:"05"},
+    {id:"news",         label:"News",         tc:"06"},
+    {id:"contact",      label:"Contact",      tc:"07"},
   ];
 
   /* Google Scholar, retrieved 2026-08-04. Re-check when you update. */
@@ -607,77 +729,178 @@
     {label:"MARVI programme", detail:"westernsydney.edu.au/marvi", href:"https://www.westernsydney.edu.au/marvi"},
   ];
 
-  /* Publications: y year · t title · a authors · v venue · d DOI · c Crossref citation count.
-     Generated from ORCID 0000-0002-5496-4345 and enriched from Crossref. */
+  /* ─── My team ──────────────────────────────────────────────────────
+     Role groups, in display order. Same data-driven pattern as
+     PUB_KINDS: adding {id:"alumni", label:"Alumni", empty:"…"} here and
+     tagging people r:"alumni" is the whole change. */
+  const TEAM_ROLES = [
+    {id:"postdoc", label:"Postdoctoral researchers",
+     empty:"No postdoctoral researchers listed yet. Add one through the “Add a team member” issue form and this section fills itself."},
+    {id:"phd",     label:"PhD candidates",
+     empty:"No doctoral candidates listed yet. Add one through the “Add a team member” issue form — a name, a topic and a start year is enough."},
+    {id:"other",   label:"Other team members",
+     empty:"No other members listed yet."},
+  ];
+
+  /* People.
+       r  role — must be one of the TEAM_ROLES ids above
+       n  name · p  position · f  focus or topic · w  where · l  links
+
+     ONLY people named on a public page are listed here, with the title
+     that page gives them. No one has been promoted, demoted, or assigned
+     a role their source did not state — see the note rendered under the
+     list. Current postdoctoral researchers and doctoral candidates are
+     not published anywhere that could be verified, so those two groups
+     stand empty rather than being filled by guessing which co-authors
+     are students. */
+  const TEAM = [
+    {r:"other", n:"Adjunct Professor Roger Packham", p:"MARVI project team",
+     w:"Western Sydney University"},
+    {r:"other", n:"Adjunct Associate Professor Bruce Simmons", p:"MARVI project team",
+     w:"Western Sydney University"},
+    {r:"other", n:"Dr Harsharn Singh Grewal", p:"MARVI project team",
+     w:"Western Sydney University"},
+    {r:"other", n:"Dr Maria Varua", p:"MARVI project team",
+     w:"Western Sydney University"},
+    {r:"other", n:"Ms Joycelyn Applebee", p:"MARVI project team",
+     w:"Western Sydney University"},
+  ];
+
+  /* The four kinds the list is grouped into, in display order. This is a
+     data array like every other: adding "Book chapters" here and tagging
+     entries `k:"chapter"` is the whole change, and `verify.mjs` will then
+     accept that kind. A kind with no entries still renders, with an honest
+     empty state — it advertises the section rather than hiding it. */
+  const PUB_KINDS = [
+    {id:"journal",    label:"Journal articles",
+     empty:"No journal articles listed yet."},
+    {id:"conference", label:"Conference papers",
+     empty:"No conference papers listed yet."},
+    {id:"thesis",     label:"Theses",
+     empty:"No theses listed here yet — neither supervised higher degree theses nor his own doctoral thesis. Add one through the “Add a publication” issue form and this section fills itself."},
+    {id:"other",      label:"Other outputs",
+     empty:"No other outputs listed yet."},
+  ];
+
+  /* Publications.
+       k  kind — must be one of the PUB_KINDS ids above
+       y  year · t title · a authors · v venue · d DOI · c citation count
+
+     `a`, `d` and `c` are optional and omitted when not known: an entry with
+     no DOI renders without a link rather than with a broken one, and an
+     entry with no author list simply omits that line. Sixteen of the older
+     records are in that state — they are in his ORCID profile without a
+     registered DOI, and no author list could be confirmed for them, so
+     none was invented.
+
+     Generated from ORCID 0000-0002-5496-4345, enriched from Crossref for
+     authors, venues and citation counts. Kind comes from the Crossref or
+     ORCID work type, except that a venue naming a conference, congress,
+     proceedings or symposium wins — several proceedings papers are typed
+     "journal-article" upstream. */
   const PUBLICATIONS = [
-    {y:2026, t:"Assessing Water Sustainability for the Sustainable Development Goals: A Systematic Review and Bibliometric Analysis Highlighting Gaps in Current Assessment Frameworks", a:"Dhanasekaran, N.C., Maheshwari, B., Donovan-Mak, M., Huda, S.", v:"Sustainability", d:"10.3390/su18052514", c:2},
-    {y:2026, t:"Evaluating the Effectiveness of Village Groundwater Cooperatives for Groundwater Commons in Gujarat and Rajasthan Using Ostrom’s Design Principles", a:"Gajurel, S., Maheshwari, B., Hagare, D., Ward, J., Singh, P.K.", v:"Sustainability", d:"10.3390/su18031561", c:1},
-    {y:2026, t:"Understanding Drought Dynamics in Semiarid Regions: A Multidecadal, Multi‐Index Case Study From Western Rajasthan, India", a:"Upadhyay, E., Biswas, J., Mishra, A., Kumar, P., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70081", c:0},
-    {y:2026, t:"Comparison of Uptake of Cadmium at Low Concentrations Under Hydroponic and Soil‐Based Agriculture Systems for Lettuce, Indian Spinach and Methi", a:"Kotresh, D.J., Jayadeva, H.M., Hagare, D., Kadalli, G.G., Maheshwari, B., Saraswathy, B.P. et al.", v:"Journal of Sustainable Agriculture and Environment", d:"10.1002/sae2.70138", c:0},
-    {y:2026, t:"From Crisis to Resilience: Rethinking Urban Flooding and Groundwater Recharge in Bengaluru City, India", a:"Biswas, S., Patel, S.V.B., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70098", c:0},
-    {y:2026, t:"Farm‐Scale Recharge Pits for Improving Local Groundwater Availability: Insights From a Hardrock Watershed in Rajasthan, India", a:"Soni, P., Maheshwari, B., Dashora, Y., Dillon, P., Singh, P.K.", v:"World Water Policy", d:"10.1002/wwp2.70094", c:0},
-    {y:2026, t:"Revitalizing Traditional Tank Systems: Case Study Insights From Sri Lanka's Village Tank Cascade Systems for Climate Resilience and Water Governance", a:"Nanthakumaran, A., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70097", c:0},
-    {y:2025, t:"From Dialogue to Policy Learning: Water Policy Labs for Transformative Water Governance", a:"Ojha, H., Maheshwari, B., Camkin, J., Bhattarai, B., Banjade, P., Gurung, P. et al.", v:"World Water Policy", d:"10.1002/wwp2.70041", c:0},
-    {y:2025, t:"Assessing Urban Lake Performance for Stormwater Harvesting: Insights from Two Lake Systems in Western Sydney, Australia", a:"Natarajan, S.K., Hagare, D., Maheshwari, B.", v:"Water", d:"10.3390/w17172504", c:0},
-    {y:2025, t:"Closed Loop Phosphorus Recovery and Recycling for Sustainable Hydroponic Farming", a:"Malkawi, S., Hagare, D., Maheshwari, B.", v:"Journal of Sustainable Agriculture and Environment", d:"10.1002/sae2.70094", c:0},
-    {y:2024, t:"Rejuvenation of the Springs in the Hindu Kush Himalayas Through Transdisciplinary Approaches—A Review", a:"Pant, N., Hagare, D., Maheshwari, B., Rai, S.P., Sharma, M., Dollin, J. et al.", v:"Water", d:"10.3390/w16243675", c:19},
-    {y:2024, t:"Assessing groundwater quality, health risks, and policy implications: A case study of West Medinipur District, West Bengal, India", a:"Alam, M.A., Mailapalli, D.R., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12160", c:2},
-    {y:2023, t:"Managing floods in Chennai City as part of situation understanding and improvement project", a:"Shivakumar, S., Shanmuganathan, M., Goonetilleke, A., Day, D., Sarkar, A., Hagare, D. et al.", v:"World Water Policy", d:"10.1002/wwp2.12119", c:4},
-    {y:2023, t:"Training young water professionals in leadership and transdisciplinary competencies for sustainable water management in India", a:"Maheshwari, B., Hagare, D., Spencer, R., Dollin, J., Reynolds, J., Atkins, D. et al.", v:"World Water Policy", d:"10.1002/wwp2.12114", c:4},
-    {y:2023, t:"A reflective evaluation of young water professionals' transdisciplinary learning", a:"Dollin, J., Hagare, D., Maheshwari, B., Packham, R., Reynolds, J., Garg, A. et al.", v:"World Water Policy", d:"10.1002/wwp2.12121", c:3},
-    {y:2023, t:"Training and capacity building of young water professionals—role of an innovative and transformative program for sustainable water futures", a:"Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12103", c:3},
-    {y:2023, t:"The impact of irrigation with treated wastewaters on soil and kikuyu grass nutrient compositions", a:"Shahrivar, A.A., Hagare, D., Maheshwari, B., Rahman, M.M.", v:"Water Environment Research", d:"10.1002/wer.10873", c:3},
-    {y:2023, t:"Mentoring in the young water professionals' training program: Lessons for effective capacity development", a:"Maheshwari, B., Atkins, D., Hagare, D., Spencer, R., Dillon, P., Jain, S. et al.", v:"World Water Policy", d:"10.1002/wwp2.12129", c:2},
-    {y:2023, t:"Building capacity of young water professionals through action research and transdisciplinary approaches", a:"Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12127", c:1},
-    {y:2023, t:"Transdisciplinary approach for planning the expansion of irrigation infrastructure at a regional scale", a:"Issac, A.M., Mullassery, H.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Dollin, J. et al.", v:"World Water Policy", d:"10.1002/wwp2.12120", c:1},
-    {y:2023, t:"Geospatial data and web based tools for managing irrigation infrastructure expansion projects", a:"Issac, A.M., Harshitha, M.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Reynolds, J.K. et al.", v:"World Water Policy", d:"10.1002/wwp2.12130", c:0},
-    {y:2022, t:"Impact of Recycled Water Irrigation on Soil Salinity and Its Remediation", a:"Rahman, M.M., Shahrivar, A.A., Hagare, D., Maheshwari, B.", v:"Soil Systems", d:"10.3390/soilsystems6010013", c:22},
-    {y:2022, t:"Hydrologic and Cost–Benefit Analysis of Multiple Check Dams in Catchments of Ephemeral Streams, Rajasthan, India", a:"Dashora, Y., Cresswell, D., Dillon, P., Maheshwari, B., Clark, R., Soni, P. et al.", v:"Water", d:"10.3390/w14152378", c:9},
-    {y:2022, t:"Understanding the role of groundwater in the lives of rural women in India", a:"Swaraj, A., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12085", c:7},
-    {y:2022, t:"Assessment of Urban Land Use and Cover on Groundwater Recharge and Quality", a:"Hagare, D., Ezemba, S.N., Pant, N., Rahman, M.M., Maheshwari, B., Siddiqui, Z.", v:"CivilEng", d:"10.3390/civileng3020029", c:5},
-    {y:2021, t:"Adaptation of EVIAVE methodology to landfill environmental impact assessment in Uganda – A case study of Kiteezi landfill", a:"Aryampa, S., Maheshwari, B., Zamorano, M., Sabiiti, E.N., Olobo, C., Bateganya, N.L.", v:"Journal of African Earth Sciences", d:"10.1016/j.jafrearsci.2021.104310", c:13},
-    {y:2020, t:"Is urbanisation also the culprit of climate change? – Evidence from Australian cities", a:"Maheshwari, B., Pinto, U., Akbar, S., Fahey, P.", v:"Urban Climate", d:"10.1016/j.uclim.2020.100581", c:48},
-    {y:2019, t:"Status of Waste Management in the East African Cities: Understanding the Drivers of Waste Generation, Collection and Disposal and Their Impacts on Kampala City’s Sustainability", a:"Aryampa, S., Maheshwari, B., Sabiiti, E., Bateganya, N.L., Bukenya, B.", v:"Sustainability", d:"10.3390/su11195523", c:49},
-    {y:2019, t:"Qualitative and quantitative analysis of perceived liveability in the context of socio-ecohydrology: evidence from the urban and peri-urban Cirebon-Indonesia", a:"Titisari Danielaini, T., Maheshwari, B., Hagare, D.", v:"Journal of Environmental Planning and Management", d:"10.1080/09640568.2018.1524576", c:5},
-    {y:2018, t:"Estimation of specific yield using water table fluctuations and cropped area in a hardrock aquifer system of Rajasthan, India", a:"Chinnasamy, P., Maheshwari, B., Dillon, P., Purohit, R., Dashora, Y., Soni, P. et al.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2018.02.016", c:28},
-    {y:2018, t:"Defining rural–urban interfaces for understanding ecohydrological processes in West Java, Indonesia: Part I. Development of methodology to delineate peri-urban areas", a:"Danielaini, T.T., Maheshwari, B., Hagare, D.", v:"Ecohydrology & Hydrobiology", d:"10.1016/j.ecohyd.2017.11.006", c:25},
-    {y:2018, t:"Adaptation of Standardised Precipitation Index for understanding watertable fluctuations and groundwater resilience in hard-rock areas of India", a:"Chinnasamy, P., Maheshwari, B., Prathapar, S.A.", v:"Environmental Earth Sciences", d:"10.1007/s12665-018-7734-6", c:23},
-    {y:2018, t:"Combining imaging techniques with nonparametric modelling to predict seepage hotspots in irrigation channels", a:"Akbar, S., Kathuria, A., Maheshwari, B.", v:"Irrigation Science", d:"10.1007/s00271-018-0596-6", c:7},
-    {y:2018, t:"A framework for evaluating ecohydrological-based liveability in a rapidly urbanising region of Indonesia", a:"Danielaini, T.T., Maheshwari, B., Hagare, D.", v:"International Journal of Urban Sustainable Development", d:"10.1080/19463138.2018.1531874", c:6},
-    {y:2017, t:"Perspectives on impacts of water quality on agriculture and community well-being—a key informant study from Sri Lanka", a:"Thoradeniya, B., Pinto, U., Maheshwari, B.", v:"Environmental Science and Pollution Research", d:"10.1007/s11356-017-0493-1", c:12},
-    {y:2016, t:"Assisting community management of groundwater: Irrigator attitudes in two watersheds in Rajasthan and Gujarat, India", a:"Varua, M., Ward, J., Maheshwari, B., Oza, S., Purohit, R., Hakimuddin et al.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2016.02.003", c:21},
-    {y:2015, t:"Evaluating the effectiveness of water infrastructures for increasing groundwater recharge and agricultural production – A case study of Gujarat, India", a:"Chinnasamy, P., Misra, G., Shah, T., Maheshwari, B., Prathapar, S.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2015.05.009", c:28},
-    {y:2013, t:"TREATED EFFLUENT AND SALINE WATER IRRIGATION INFLUENCES SOIL PROPERTIES, YIELD, WATER PRODUCTIVITY AND SODIUM CONTENT OF SNOW PEAS AND CELERY", a:"Grewal, H.S., Maheshwari, B.L.", v:"Journal of Plant Nutrition", d:"10.1080/01904167.2013.776080", c:9},
-    {y:2013, t:"The hydrological and economic impacts of changing water allocation in political regions within the peri-urban South Creek catchment in Western Sydney I: Model development", a:"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2013.06.052", c:7},
-    {y:2013, t:"The hydrological and economic impacts of changing water allocations in political regions within the peri-urban South Creek catchment in Western Sydney II: Scenarios", a:"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2013.06.030", c:7},
-    {y:2012, t:"Analysis of long-term water quality for effective river health monitoring in peri-urban landscapes—a case study of the Hawkesbury–Nepean river system in NSW, Australia", a:"Pinto, U., Maheshwari, B.L., Ollerton, R.L.", v:"Environmental Monitoring and Assessment", d:"10.1007/s10661-012-2888-2", c:35},
-    {y:2012, t:"Modelling eutrophication and microbial risks in peri-urban river systems using discriminant function analysis", a:"Pinto, U., Maheshwari, B., Shrestha, S., Morris, C.", v:"Water Research", d:"10.1016/j.watres.2012.09.025", c:27},
-    {y:2012, t:"Understanding the meaning of river health for a community: perspectives from the peri-urban region of the Hawkesbury–Nepean catchment, Australia", a:"Pinto, U., Maheshwari, B.L., Shrestha, S., Morris, C.", v:"Water Policy", d:"10.2166/wp.2012.074", c:9},
-    {y:2012, t:"Role and Complexity of Integrated Water-Resources Management for Periurban Landscapes in Australia", a:"Maheshwari, B.L., Simmons, B.L., Singh, V.P.", v:"Journal of Hydrologic Engineering", d:"10.1061/(asce)he.1943-5584.0000471", c:8},
-    {y:2012, t:"Impacts of Water Quality on the Harvest of School Prawn (Metapenaeus macleayi) in a Peri-Urban River System", a:"Pinto, U., Maheshwari, B.L.", v:"Journal of Shellfish Research", d:"10.2983/035.031.0332", c:4},
-    {y:2012, t:"WATER CONSERVATION AROUND HOMES—THE ROLE OF AUDIT IN IMPROVING IRRIGATION SYSTEM PERFORMANCE", a:"Maheshwari, B.", v:"Irrigation and Drainage", d:"10.1002/ird.1668", c:2},
-    {y:2011, t:"Water and nutrient use efficiency of a low-cost hydroponic greenhouse for a cucumber crop: An Australian case study", a:"Grewal, H.S., Maheshwari, B., Parks, S.E.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2010.12.010", c:144},
-    {y:2011, t:"River health assessment in peri-urban landscapes: An application of multivariate analysis to identify the key variables", a:"Pinto, U., Maheshwari, B.", v:"Water Research", d:"10.1016/j.watres.2011.04.044", c:72},
-    {y:2010, t:"Effects of greywater irrigation on plant growth, water use and soil properties", a:"Pinto, U., Maheshwari, B., Grewal, H.", v:"Resources, Conservation and Recycling", d:"10.1016/j.resconrec.2009.09.007", c:90},
-    {y:2010, t:"Magnetic treatment of irrigation water and snow pea and chickpea seeds enhances early growth and nutrient contents of seedlings", a:"Grewal, H.S., Maheshwari, B.L.", v:"Bioelectromagnetics", d:"10.1002/bem.20615", c:74},
-    {y:2010, t:"Reuse of greywater for irrigation around homes in Australia: Understanding community views, issues and practices", a:"Pinto, U., Maheshwari, B.L.", v:"Urban Water Journal", d:"10.1080/15730620903447639", c:43},
-    {y:2010, t:"Natural spaces – how do they influence stewardship attitudes and actions of university students?", a:"Burgin, S., Williamson, D., Maheshwari, B.", v:"International Journal of Environmental Studies", d:"10.1080/00207230902738925", c:2},
-    {y:2009, t:"Magnetic treatment of irrigation water: Its effects on vegetable crop yield and water productivity", a:"Maheshwari, B.L., Grewal, H.S.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2009.03.016", c:150},
-    {y:2009, t:"Community awareness of the use of alternative water sources for irrigation of golf courses: a case study of a selected site within the Sydney metropolitan area", a:"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.", v:"International Journal of Management and Decision Making", d:"10.1504/ijmdm.2009.024991", c:0},
-    {y:2008, t:"Action Research for Sustainable Water Futures in Western Sydney: Reaching Beyond Traditional Stakeholder Engagement to Understand Community Stakeholder Language and Its Implications for Action", a:"Webb, T., Burgin, S., Maheshwari, B.", v:"Systemic Practice and Action Research", d:"10.1007/s11213-008-9102-z", c:10},
-    {y:2008, t:"Integrating alternative water sources in urbanised environments", a:"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.", v:"WIT Transactions on Ecology and the Environment", d:"10.2495/si080341", c:3},
-    {y:2007, t:"Sustainable use of stormwater for irrigation case study: Manly Golf Course", a:"Schwecke, M., Simmons, B., Maheshwari, B.", v:"The Environmentalist", d:"10.1007/s10669-007-9013-z", c:9},
-    {y:2005, t:"Local provenance in rehabilitation of degraded landscapes: a case study from the Hawkesbury–Nepean catchment, Australia", a:"Burgin, S., Carson, J., Maheshwari, B.", v:"Area", d:"10.1111/j.1475-4762.2005.00636.x", c:8},
-    {y:2004, t:"Temporal variations in water quality of farm dams: impacts of land use and water sources", a:"Brainwood, M., Burgin, S., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2004.03.006", c:70},
-    {y:2004, t:"Field Evaluation of Selected Soil Erosion Models for Catchment Management in Indonesia", a:"Moehansyah, H., Maheshwari, B., Armstrong, J.", v:"Biosystems Engineering", d:"10.1016/j.biosystemseng.2004.04.013", c:23},
-    {y:2002, t:"Options for alternative irrigation water supplies in the Murray–Darling Basin, Australia: a case study of the Shepparton Irrigation Region", a:"Smith, A., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(02)00002-1", c:7},
-    {y:2001, t:"SW—Soil and Water", a:"Esfandiari, M., Maheshwari, B.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.2001.0717", c:11},
-    {y:1997, t:"Application of the optimization method for estimating infiltration characteristics in furrow irrigation and its comparison with other methods", a:"Esfandiari, M., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(97)00007-3", c:19},
-    {y:1997, t:"Field values of the shape factor for estimating surface storage in furrows on a clay soil", a:"Esfandiari, M., Maheshwari, B.L.", v:"Irrigation Science", d:"10.1007/s002710050034", c:11},
-    {y:1997, t:"Estimating recession times in furrows with small longitudinal slope on a clay soil", a:"Esfandiari, M., Maheshwari, B., Cornish, P.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(97)00013-9", c:2},
-    {y:1993, t:"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 1, Advance and Recession Characteristics", a:"Maheshwari, B., McMahon, T.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1993.1005", c:7},
-    {y:1993, t:"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 2, Overall Suitability for Field Applications", a:"Maheshwari, B., McMahon, T.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1993.1008", c:5},
-    {y:1992, t:"Suitability of different flow equations and hydraulic resistance parameters for flows in surface irrigation: A review", a:"Maheshwari, B.L.", v:"Water Resources Research", d:"10.1029/92wr00424", c:14},
+    {k:"journal", y:2026, t:"Assessing Water Sustainability for the Sustainable Development Goals: A Systematic Review and Bibliometric Analysis Highlighting Gaps in Current Assessment Frameworks", a:"Dhanasekaran, N.C., Maheshwari, B., Donovan-Mak, M., Huda, S.", v:"Sustainability", d:"10.3390/su18052514", c:2},
+    {k:"journal", y:2026, t:"Evaluating the Effectiveness of Village Groundwater Cooperatives for Groundwater Commons in Gujarat and Rajasthan Using Ostrom’s Design Principles", a:"Gajurel, S., Maheshwari, B., Hagare, D., Ward, J., Singh, P.K.", v:"Sustainability", d:"10.3390/su18031561", c:1},
+    {k:"journal", y:2026, t:"Understanding Drought Dynamics in Semiarid Regions: A Multidecadal, Multi‐Index Case Study From Western Rajasthan, India", a:"Upadhyay, E., Biswas, J., Mishra, A., Kumar, P., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70081"},
+    {k:"journal", y:2026, t:"Comparison of Uptake of Cadmium at Low Concentrations Under Hydroponic and Soil‐Based Agriculture Systems for Lettuce, Indian Spinach and Methi", a:"Kotresh, D.J., Jayadeva, H.M., Hagare, D., Kadalli, G.G., Maheshwari, B., Saraswathy, B.P. et al.", v:"Journal of Sustainable Agriculture and Environment", d:"10.1002/sae2.70138"},
+    {k:"journal", y:2026, t:"From Crisis to Resilience: Rethinking Urban Flooding and Groundwater Recharge in Bengaluru City, India", a:"Biswas, S., Patel, S.V.B., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70098"},
+    {k:"journal", y:2026, t:"Farm‐Scale Recharge Pits for Improving Local Groundwater Availability: Insights From a Hardrock Watershed in Rajasthan, India", a:"Soni, P., Maheshwari, B., Dashora, Y., Dillon, P., Singh, P.K.", v:"World Water Policy", d:"10.1002/wwp2.70094"},
+    {k:"journal", y:2026, t:"Revitalizing Traditional Tank Systems: Case Study Insights From Sri Lanka's Village Tank Cascade Systems for Climate Resilience and Water Governance", a:"Nanthakumaran, A., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.70097"},
+    {k:"journal", y:2025, t:"From Dialogue to Policy Learning: Water Policy Labs for Transformative Water Governance", a:"Ojha, H., Maheshwari, B., Camkin, J., Bhattarai, B., Banjade, P., Gurung, P. et al.", v:"World Water Policy", d:"10.1002/wwp2.70041"},
+    {k:"journal", y:2025, t:"Assessing Urban Lake Performance for Stormwater Harvesting: Insights from Two Lake Systems in Western Sydney, Australia", a:"Natarajan, S.K., Hagare, D., Maheshwari, B.", v:"Water", d:"10.3390/w17172504"},
+    {k:"journal", y:2025, t:"Closed Loop Phosphorus Recovery and Recycling for Sustainable Hydroponic Farming", a:"Malkawi, S., Hagare, D., Maheshwari, B.", v:"Journal of Sustainable Agriculture and Environment", d:"10.1002/sae2.70094"},
+    {k:"journal", y:2024, t:"Rejuvenation of the Springs in the Hindu Kush Himalayas Through Transdisciplinary Approaches—A Review", a:"Pant, N., Hagare, D., Maheshwari, B., Rai, S.P., Sharma, M., Dollin, J. et al.", v:"Water", d:"10.3390/w16243675", c:19},
+    {k:"journal", y:2024, t:"Assessing groundwater quality, health risks, and policy implications: A case study of West Medinipur District, West Bengal, India", a:"Alam, M.A., Mailapalli, D.R., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12160", c:2},
+    {k:"journal", y:2023, t:"Managing floods in Chennai City as part of situation understanding and improvement project", a:"Shivakumar, S., Shanmuganathan, M., Goonetilleke, A., Day, D., Sarkar, A., Hagare, D. et al.", v:"World Water Policy", d:"10.1002/wwp2.12119", c:4},
+    {k:"journal", y:2023, t:"Training young water professionals in leadership and transdisciplinary competencies for sustainable water management in India", a:"Maheshwari, B., Hagare, D., Spencer, R., Dollin, J., Reynolds, J., Atkins, D. et al.", v:"World Water Policy", d:"10.1002/wwp2.12114", c:4},
+    {k:"journal", y:2023, t:"A reflective evaluation of young water professionals' transdisciplinary learning", a:"Dollin, J., Hagare, D., Maheshwari, B., Packham, R., Reynolds, J., Garg, A. et al.", v:"World Water Policy", d:"10.1002/wwp2.12121", c:3},
+    {k:"journal", y:2023, t:"Training and capacity building of young water professionals—role of an innovative and transformative program for sustainable water futures", a:"Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12103", c:3},
+    {k:"journal", y:2023, t:"The impact of irrigation with treated wastewaters on soil and kikuyu grass nutrient compositions", a:"Shahrivar, A.A., Hagare, D., Maheshwari, B., Rahman, M.M.", v:"Water Environment Research", d:"10.1002/wer.10873", c:3},
+    {k:"journal", y:2023, t:"Mentoring in the young water professionals' training program: Lessons for effective capacity development", a:"Maheshwari, B., Atkins, D., Hagare, D., Spencer, R., Dillon, P., Jain, S. et al.", v:"World Water Policy", d:"10.1002/wwp2.12129", c:2},
+    {k:"journal", y:2023, t:"Building capacity of young water professionals through action research and transdisciplinary approaches", a:"Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12127", c:1},
+    {k:"journal", y:2023, t:"Transdisciplinary approach for planning the expansion of irrigation infrastructure at a regional scale", a:"Issac, A.M., Mullassery, H.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Dollin, J. et al.", v:"World Water Policy", d:"10.1002/wwp2.12120", c:1},
+    {k:"journal", y:2023, t:"Geospatial data and web based tools for managing irrigation infrastructure expansion projects", a:"Issac, A.M., Harshitha, M.S., Lakshmi, T.V., Hagare, D., Maheshwari, B., Reynolds, J.K. et al.", v:"World Water Policy", d:"10.1002/wwp2.12130"},
+    {k:"journal", y:2022, t:"Impact of Recycled Water Irrigation on Soil Salinity and Its Remediation", a:"Rahman, M.M., Shahrivar, A.A., Hagare, D., Maheshwari, B.", v:"Soil Systems", d:"10.3390/soilsystems6010013", c:22},
+    {k:"journal", y:2022, t:"Hydrologic and Cost–Benefit Analysis of Multiple Check Dams in Catchments of Ephemeral Streams, Rajasthan, India", a:"Dashora, Y., Cresswell, D., Dillon, P., Maheshwari, B., Clark, R., Soni, P. et al.", v:"Water", d:"10.3390/w14152378", c:9},
+    {k:"journal", y:2022, t:"Understanding the role of groundwater in the lives of rural women in India", a:"Swaraj, A., Maheshwari, B.", v:"World Water Policy", d:"10.1002/wwp2.12085", c:7},
+    {k:"journal", y:2022, t:"Assessment of Urban Land Use and Cover on Groundwater Recharge and Quality", a:"Hagare, D., Ezemba, S.N., Pant, N., Rahman, M.M., Maheshwari, B., Siddiqui, Z.", v:"CivilEng", d:"10.3390/civileng3020029", c:5},
+    {k:"journal", y:2021, t:"Adaptation of EVIAVE methodology to landfill environmental impact assessment in Uganda – A case study of Kiteezi landfill", a:"Aryampa, S., Maheshwari, B., Zamorano, M., Sabiiti, E.N., Olobo, C., Bateganya, N.L.", v:"Journal of African Earth Sciences", d:"10.1016/j.jafrearsci.2021.104310", c:13},
+    {k:"journal", y:2020, t:"Is urbanisation also the culprit of climate change? – Evidence from Australian cities", a:"Maheshwari, B., Pinto, U., Akbar, S., Fahey, P.", v:"Urban Climate", d:"10.1016/j.uclim.2020.100581", c:48},
+    {k:"journal", y:2019, t:"Status of Waste Management in the East African Cities: Understanding the Drivers of Waste Generation, Collection and Disposal and Their Impacts on Kampala City’s Sustainability", a:"Aryampa, S., Maheshwari, B., Sabiiti, E., Bateganya, N.L., Bukenya, B.", v:"Sustainability", d:"10.3390/su11195523", c:49},
+    {k:"journal", y:2019, t:"Qualitative and quantitative analysis of perceived liveability in the context of socio-ecohydrology: evidence from the urban and peri-urban Cirebon-Indonesia", a:"Titisari Danielaini, T., Maheshwari, B., Hagare, D.", v:"Journal of Environmental Planning and Management", d:"10.1080/09640568.2018.1524576", c:5},
+    {k:"journal", y:2018, t:"Estimation of specific yield using water table fluctuations and cropped area in a hardrock aquifer system of Rajasthan, India", a:"Chinnasamy, P., Maheshwari, B., Dillon, P., Purohit, R., Dashora, Y., Soni, P. et al.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2018.02.016", c:28},
+    {k:"journal", y:2018, t:"Defining rural–urban interfaces for understanding ecohydrological processes in West Java, Indonesia: Part I. Development of methodology to delineate peri-urban areas", a:"Danielaini, T.T., Maheshwari, B., Hagare, D.", v:"Ecohydrology & Hydrobiology", d:"10.1016/j.ecohyd.2017.11.006", c:25},
+    {k:"journal", y:2018, t:"Adaptation of Standardised Precipitation Index for understanding watertable fluctuations and groundwater resilience in hard-rock areas of India", a:"Chinnasamy, P., Maheshwari, B., Prathapar, S.A.", v:"Environmental Earth Sciences", d:"10.1007/s12665-018-7734-6", c:23},
+    {k:"journal", y:2018, t:"Combining imaging techniques with nonparametric modelling to predict seepage hotspots in irrigation channels", a:"Akbar, S., Kathuria, A., Maheshwari, B.", v:"Irrigation Science", d:"10.1007/s00271-018-0596-6", c:7},
+    {k:"journal", y:2018, t:"A framework for evaluating ecohydrological-based liveability in a rapidly urbanising region of Indonesia", a:"Danielaini, T.T., Maheshwari, B., Hagare, D.", v:"International Journal of Urban Sustainable Development", d:"10.1080/19463138.2018.1531874", c:6},
+    {k:"journal", y:2017, t:"Perspectives on impacts of water quality on agriculture and community well-being—a key informant study from Sri Lanka", a:"Thoradeniya, B., Pinto, U., Maheshwari, B.", v:"Environmental Science and Pollution Research", d:"10.1007/s11356-017-0493-1", c:12},
+    {k:"journal", y:2016, t:"Assisting community management of groundwater: Irrigator attitudes in two watersheds in Rajasthan and Gujarat, India", a:"Varua, M., Ward, J., Maheshwari, B., Oza, S., Purohit, R., Hakimuddin et al.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2016.02.003", c:21},
+    {k:"journal", y:2015, t:"Framework to assess sources controlling soil salinity resulting from irrigation using recycled water: an application of Bayesian Belief Network", a:"Rahman, M.M., Hagare, D., Maheshwari, B.", v:"Journal of Cleaner Production", d:"10.1016/j.jclepro.2014.04.068", c:29},
+    {k:"journal", y:2015, t:"Evaluating the effectiveness of water infrastructures for increasing groundwater recharge and agricultural production – A case study of Gujarat, India", a:"Chinnasamy, P., Misra, G., Shah, T., Maheshwari, B., Prathapar, S.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2015.05.009", c:28},
+    {k:"journal", y:2014, t:"The Role of Transdisciplinary Approach and Community Participation in Village Scale Groundwater Management: Insights from Gujarat and Rajasthan, India", a:"Maheshwari, B., Varua, M., Ward, J., Packham, R., Chinnasamy, P., Dashora, Y. et al.", v:"Water", d:"10.3390/w6113386", c:70},
+    {k:"journal", y:2013, t:"TREATED EFFLUENT AND SALINE WATER IRRIGATION INFLUENCES SOIL PROPERTIES, YIELD, WATER PRODUCTIVITY AND SODIUM CONTENT OF SNOW PEAS AND CELERY", a:"Grewal, H.S., Maheshwari, B.L.", v:"Journal of Plant Nutrition", d:"10.1080/01904167.2013.776080", c:9},
+    {k:"journal", y:2013, t:"The hydrological and economic impacts of changing water allocation in political regions within the peri-urban South Creek catchment in Western Sydney I: Model development", a:"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2013.06.052", c:7},
+    {k:"journal", y:2013, t:"The hydrological and economic impacts of changing water allocations in political regions within the peri-urban South Creek catchment in Western Sydney II: Scenarios", a:"Davidson, B., Malano, H., Nawarathna, B., Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/j.jhydrol.2013.06.030", c:7},
+    {k:"journal", y:2012, t:"Analysis of long-term water quality for effective river health monitoring in peri-urban landscapes—a case study of the Hawkesbury–Nepean river system in NSW, Australia", a:"Pinto, U., Maheshwari, B.L., Ollerton, R.L.", v:"Environmental Monitoring and Assessment", d:"10.1007/s10661-012-2888-2", c:35},
+    {k:"journal", y:2012, t:"Modelling eutrophication and microbial risks in peri-urban river systems using discriminant function analysis", a:"Pinto, U., Maheshwari, B., Shrestha, S., Morris, C.", v:"Water Research", d:"10.1016/j.watres.2012.09.025", c:27},
+    {k:"journal", y:2012, t:"Understanding the meaning of river health for a community: perspectives from the peri-urban region of the Hawkesbury–Nepean catchment, Australia", a:"Pinto, U., Maheshwari, B.L., Shrestha, S., Morris, C.", v:"Water Policy", d:"10.2166/wp.2012.074", c:9},
+    {k:"journal", y:2012, t:"Role and Complexity of Integrated Water-Resources Management for Periurban Landscapes in Australia", a:"Maheshwari, B.L., Simmons, B.L., Singh, V.P.", v:"Journal of Hydrologic Engineering", d:"10.1061/(asce)he.1943-5584.0000471", c:8},
+    {k:"journal", y:2012, t:"Impacts of Water Quality on the Harvest of School Prawn (Metapenaeus macleayi) in a Peri-Urban River System", a:"Pinto, U., Maheshwari, B.L.", v:"Journal of Shellfish Research", d:"10.2983/035.031.0332", c:4},
+    {k:"journal", y:2012, t:"WATER CONSERVATION AROUND HOMES—THE ROLE OF AUDIT IN IMPROVING IRRIGATION SYSTEM PERFORMANCE", a:"Maheshwari, B.", v:"Irrigation and Drainage", d:"10.1002/ird.1668", c:2},
+    {k:"journal", y:2012, t:"Water-yield relations of maize (Zea mays L) in temperate climatic conditions", v:"Maydica"},
+    {k:"journal", y:2011, t:"Water and nutrient use efficiency of a low-cost hydroponic greenhouse for a cucumber crop: An Australian case study", a:"Grewal, H.S., Maheshwari, B., Parks, S.E.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2010.12.010", c:144},
+    {k:"journal", y:2011, t:"River health assessment in peri-urban landscapes: An application of multivariate analysis to identify the key variables", a:"Pinto, U., Maheshwari, B.", v:"Water Research", d:"10.1016/j.watres.2011.04.044", c:72},
+    {k:"journal", y:2011, t:"Developing a multimedia package for university teaching and learning - lessons learnt", v:"Asia-Pacific Forum on Science Learning and Teaching"},
+    {k:"journal", y:2010, t:"Effects of greywater irrigation on plant growth, water use and soil properties", a:"Pinto, U., Maheshwari, B., Grewal, H.", v:"Resources, Conservation and Recycling", d:"10.1016/j.resconrec.2009.09.007", c:90},
+    {k:"journal", y:2010, t:"Magnetic treatment of irrigation water and snow pea and chickpea seeds enhances early growth and nutrient contents of seedlings", a:"Grewal, H.S., Maheshwari, B.L.", v:"Bioelectromagnetics", d:"10.1002/bem.20615", c:74},
+    {k:"journal", y:2010, t:"Reuse of greywater for irrigation around homes in Australia: Understanding community views, issues and practices", a:"Pinto, U., Maheshwari, B.L.", v:"Urban Water Journal", d:"10.1080/15730620903447639", c:43},
+    {k:"journal", y:2010, t:"Natural spaces – how do they influence stewardship attitudes and actions of university students?", a:"Burgin, S., Williamson, D., Maheshwari, B.", v:"International Journal of Environmental Studies", d:"10.1080/00207230902738925", c:2},
+    {k:"journal", y:2009, t:"Magnetic treatment of irrigation water: Its effects on vegetable crop yield and water productivity", a:"Maheshwari, B.L., Grewal, H.S.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2009.03.016", c:150},
+    {k:"journal", y:2009, t:"Community awareness of the use of alternative water sources for irrigation of golf courses: a case study of a selected site within the Sydney metropolitan area", a:"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.", v:"International Journal of Management and Decision Making", d:"10.1504/ijmdm.2009.024991"},
+    {k:"conference", y:2009, t:"Developing a conceptual model for water accounting in peri-urban catchments", v:"18th World IMACS Congress and MODSIM09 International Congress on Modelling and Simulation. Modelling and Simulation Society of Australia and New Zealand and International Association for Mathematics and Computers in Simulation, Cairns, Australia"},
+    {k:"conference", y:2009, t:"System harmonisation framework for water resources planning in peri-urban catchments", v:"18th World IMACS Congress and MODSIM09 International Congress on Modelling and Simulation: Interfacing Modelling and Simulation with Mathematical and Computational Sciences, Proceedings"},
+    {k:"journal", y:2008, t:"Action Research for Sustainable Water Futures in Western Sydney: Reaching Beyond Traditional Stakeholder Engagement to Understand Community Stakeholder Language and Its Implications for Action", a:"Webb, T., Burgin, S., Maheshwari, B.", v:"Systemic Practice and Action Research", d:"10.1007/s11213-008-9102-z", c:10},
+    {k:"conference", y:2008, t:"Integrating alternative water sources in urbanised environments", a:"Schwecke, M., Simmons, B., Maheshwari, B., Ramsay, G.", v:"WIT Transactions on Ecology and the Environment", d:"10.2495/si080341", c:3},
+    {k:"conference", y:2008, t:"Evaluating water saving using smart irrigation and harvesting systems", v:"Irrigation Australia Conference"},
+    {k:"journal", y:2007, t:"Sustainable use of stormwater for irrigation case study: Manly Golf Course", a:"Schwecke, M., Simmons, B., Maheshwari, B.", v:"The Environmentalist", d:"10.1007/s10669-007-9013-z", c:9},
+    {k:"journal", y:2007, t:"Sustaining public open spaces through water recycling for irrigation: developing decision support tools and framework", a:"Mulley, P., Simmons, B., Maheshwari, B.", v:"International Journal of Water", d:"10.1504/ijw.2007.016322", c:4},
+    {k:"journal", y:2006, t:"Urban irrigation - Looking at water use in our own backyard", v:"Water"},
+    {k:"journal", y:2005, t:"Local provenance in rehabilitation of degraded landscapes: a case study from the Hawkesbury–Nepean catchment, Australia", a:"Burgin, S., Carson, J., Maheshwari, B.", v:"Area", d:"10.1111/j.1475-4762.2005.00636.x", c:8},
+    {k:"journal", y:2005, t:"The sustainability challenge for irrigation", v:""},
+    {k:"journal", y:2004, t:"Temporal variations in water quality of farm dams: impacts of land use and water sources", a:"Brainwood, M., Burgin, S., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/j.agwat.2004.03.006", c:70},
+    {k:"journal", y:2004, t:"Field Evaluation of Selected Soil Erosion Models for Catchment Management in Indonesia", a:"Moehansyah, H., Maheshwari, B., Armstrong, J.", v:"Biosystems Engineering", d:"10.1016/j.biosystemseng.2004.04.013", c:23},
+    {k:"journal", y:2003, t:"Effects of different landuses on runoff and erosion characteristics of the Riam Kanan Catchment, Indonesia", v:"International Agricultural Engineering Journal"},
+    {k:"conference", y:2003, t:"Farmers’ perceptions about irrigation scheduling in the Hawkesbury-Nepean catchment", v:"Australasia Pacific Extension Network Conference"},
+    {k:"journal", y:2002, t:"Options for alternative irrigation water supplies in the Murray–Darling Basin, Australia: a case study of the Shepparton Irrigation Region", a:"Smith, A., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(02)00002-1", c:7},
+    {k:"journal", y:2002, t:"Impact of land-use changes and sedimentation on the Muhammad Nur Reservoir, South Kalimantan, Indonesia", a:"Moehansyah, H., Maheshwari, B.L., Armstrong, J.", v:"Journal of Soils and Sediments", d:"10.1007/bf02991245", c:6},
+    {k:"journal", y:2001, t:"SW—Soil and Water", a:"Esfandiari, M., Maheshwari, B.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.2001.0717", c:11},
+    {k:"journal", y:2001, t:"SW—soil and water: field evaluation of furrow irrigation models", v:"Journal of agricultural engineering research"},
+    {k:"journal", y:2000, t:"Availability of nitrogen and phosphorus under recycled water irrigation", a:"Sakadevan, K., Maheshwari, B.L., Bavor, H.J.", v:"Australian Journal of Soil Research", d:"10.1071/sr99040", c:12},
+    {k:"journal", y:2000, t:"Sensitivity of a furrow irrigation model to input parameters", v:"International Agricultural Engineering Journal"},
+    {k:"journal", y:1998, t:"Suitability of Selected Flow Equations and Variation of Manning's n in Furrow Irrigation", a:"Esfandiari, M., Maheshwari, B.L.", v:"Journal of Irrigation and Drainage Engineering", d:"10.1061/(asce)0733-9437(1998)124:2(89)", c:6},
+    {k:"conference", y:1998, t:"Infiltration and roughness equations for surface irrigation: How form influences estimation", v:"2001 ASAE Annual Meeting"},
+    {k:"journal", y:1997, t:"Application of the optimization method for estimating infiltration characteristics in furrow irrigation and its comparison with other methods", a:"Esfandiari, M., Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(97)00007-3", c:19},
+    {k:"journal", y:1997, t:"Field values of the shape factor for estimating surface storage in furrows on a clay soil", a:"Esfandiari, M., Maheshwari, B.L.", v:"Irrigation Science", d:"10.1007/s002710050034", c:11},
+    {k:"journal", y:1997, t:"Estimating recession times in furrows with small longitudinal slope on a clay soil", a:"Esfandiari, M., Maheshwari, B., Cornish, P.", v:"Agricultural Water Management", d:"10.1016/s0378-3774(97)00013-9", c:2},
+    {k:"journal", y:1997, t:"Evaluation of Time-Rated Infiltration Families for Noncracking Soils", a:"Maheshwari, B.L., Kelly, D.", v:"Journal of Irrigation and Drainage Engineering", d:"10.1061/(asce)0733-9437(1997)123:4(238)", c:2},
+    {k:"journal", y:1997, t:"Interrelations Among Physical and Hydraulic Parameters of Non-Cracking Soils", a:"Maheshwari, B.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1997.0207", c:2},
+    {k:"journal", y:1997, t:"Fuzzy-genetic study of hydraulic resistance families in surface irrigation", v:"Complexity International"},
+    {k:"journal", y:1996, t:"Development of an automated double-ring infiltrometer", a:"Maheshwari, B.", v:"Australian Journal of Soil Research", d:"10.1071/sr9960709", c:14},
+    {k:"journal", y:1995, t:"Effects of regulation on the flow regime of the river Murray, Australia", a:"Maheshwari, B.L., Walker, K.F., McMahon, T.A.", v:"Regulated Rivers: Research & Management", d:"10.1002/rrr.3450100103", c:240},
+    {k:"journal", y:1994, t:"Values for the exponent of the storage-discharge equation in runoff-routing models", a:"Maheshwari, B.", v:"Journal of Hydrology", d:"10.1016/0022-1694(94)90024-8", c:2},
+    {k:"journal", y:1994, t:"Development of a regression-based model of border irrigation on cracking soils", a:"Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/0378-3774(94)90043-4"},
+    {k:"journal", y:1993, t:"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 1, Advance and Recession Characteristics", a:"Maheshwari, B., McMahon, T.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1993.1005", c:7},
+    {k:"journal", y:1993, t:"Performance Evaluation of Border Irrigation Models for South-East Australia: Part 2, Overall Suitability for Field Applications", a:"Maheshwari, B., McMahon, T.", v:"Journal of Agricultural Engineering Research", d:"10.1006/jaer.1993.1008", c:5},
+    {k:"other", y:1993, t:"The impact of flow regulation on the hydrology of the River Murray and its ecological implications", v:""},
+    {k:"journal", y:1992, t:"Suitability of different flow equations and hydraulic resistance parameters for flows in surface irrigation: A review", a:"Maheshwari, B.L.", v:"Water Resources Research", d:"10.1029/92wr00424", c:14},
+    {k:"journal", y:1992, t:"Modeling Shallow Overland Flow in Surface Irrigation", a:"Maheshwari, B.L., McMahon, T.A.", v:"Journal of Irrigation and Drainage Engineering", d:"10.1061/(asce)0733-9437(1992)118:2(201)", c:12},
+    {k:"journal", y:1992, t:"Infiltration characteristics of some clayey soils measured during border irrigation", a:"Maheshwari, B., Jayawardane, N.", v:"Agricultural Water Management", d:"10.1016/0378-3774(92)90050-7", c:10},
+    {k:"journal", y:1992, t:"Effects of recession criteria on prediction of recession times in border irrigation models", a:"Maheshwari, B.", v:"Agricultural Water Management", d:"10.1016/0378-3774(92)90091-a", c:2},
+    {k:"conference", y:1991, t:"Border irrigation design and management using a simulation software", v:"National Conference Publication - Institution of Engineers, Australia"},
+    {k:"journal", y:1990, t:"Sensitivity analysis of parameters of border irrigation models", a:"Maheshwari, B., McMahon, T., Turner, A.", v:"Agricultural Water Management", d:"10.1016/0378-3774(90)90011-m", c:7},
+    {k:"journal", y:1988, t:"An optimization technique for estimating infiltration characteristics in border irrigation", a:"Maheshwari, B., Turner, A., McMahon, T., Campbell, B.", v:"Agricultural Water Management", d:"10.1016/0378-3774(88)90129-1", c:22},
+    {k:"journal", y:1987, t:"MODELS OF BORDER IRRIGATION FOR FLAT CLAYEY SOILS.", v:""},
+    {k:"journal", y:1986, t:"Some low-cost methods for seepage control in storage tanks in alfisols and vertisols", a:"Maheshwari, B., Turner, A.", v:"Agricultural Water Management", d:"10.1016/0378-3774(86)90005-3", c:2},
   ];
 
   /* ═══════════════════════════════════════════════════════════════════
@@ -716,6 +939,115 @@
 
   const esc = v => String(v).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
   const searchText = e => [e.name, e.blurb, ...(e.tags||[])].join(" ").toLowerCase();
+
+  /* ═══════════════════════════════════════════════════════════════════
+     FILTERED GROUPS
+     Publications and My team are the same interaction, so they are the
+     same code. A panel opts in by rendering this markup:
+
+       <section class="group" data-kind="ID">
+         <div class="group-head"><h2>…</h2><span data-role="count"></span></div>
+         <p class="group-empty" hidden>…</p>
+         [<div data-subgroup>]  <x data-item data-search="…">  [</div>]
+       </section>
+
+     `data-subgroup` is optional — publications use it to band entries by
+     year, the team list has no second level.
+
+     The chip filter and the text search INTERSECT rather than replace one
+     another, so choosing a role and then typing narrows within that role
+     instead of silently discarding it. Everything is recomputed from the
+     two pieces of state on every change rather than toggled incrementally:
+     with two inputs that is cheap, and it removes the whole class of bug
+     where the visible list disagrees with the controls above it.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /** Render the chip row. Counts sit on the chips so the shape of the
+      set is legible before you click anything. */
+  function renderChips(el, kinds, items, key){
+    el.innerHTML = [
+      {id:"all", label:"All", n:items.length},
+      ...kinds.map(k => ({id:k.id, label:k.label, n:items.filter(i => i[key] === k.id).length})),
+    ].map(k => `
+      <button type="button" class="chip-btn" data-kind-filter="${esc(k.id)}"
+        data-count="${k.n}" aria-pressed="${k.id === "all"}">${esc(k.label)} <b>${k.n}</b></button>`).join("");
+  }
+
+  function wireFilteredGroups({listEl, filterEl, searchEl, countEl, emptyEl, scopeOf, noun}){
+    let kind = "all";
+
+    function apply(){
+      const query = searchEl.value.trim().toLowerCase();
+      const searching = query.length > 0;
+      let shown = 0;
+
+      listEl.querySelectorAll(".group").forEach(group => {
+        const kindOK = kind === "all" || kind === group.dataset.kind;
+        const total = group.querySelectorAll("[data-item]").length;
+
+        const scan = holder => {
+          let n = 0;
+          holder.querySelectorAll("[data-item]").forEach(item => {
+            const hit = kindOK && (!query || matchesQuery(item.dataset.search, query));
+            item.hidden = !hit;
+            if(hit) n++;
+          });
+          return n;
+        };
+
+        let inGroup = 0;
+        const subs = group.querySelectorAll("[data-subgroup]");
+        if(subs.length){
+          /* A band with nothing left in it hides its heading too, so the
+             result reads as a list rather than a column of empty years. */
+          subs.forEach(sub => { const n = scan(sub); sub.hidden = n === 0; inGroup += n; });
+        } else {
+          inGroup = scan(group);
+        }
+        shown += inGroup;
+
+        group.querySelector("[data-role=count]").textContent =
+          searching && kindOK ? `${inGroup} of ${total}` : String(total);
+
+        const emptyMsg = group.querySelector(".group-empty");
+        if(!kindOK){
+          /* Filtered out by kind — not a result of zero, so say nothing. */
+          group.hidden = true;
+        } else if(inGroup > 0){
+          group.hidden = false;
+          emptyMsg.hidden = true;
+        } else if(searching){
+          /* No match for this search. Showing "no theses" under every
+             query would be noise, so the whole section stands down. */
+          group.hidden = true;
+        } else {
+          /* Genuinely empty kind, and nothing is narrowing the view: show
+             the section and explain that it can be filled. */
+          group.hidden = false;
+          emptyMsg.hidden = false;
+        }
+      });
+
+      /* The global "nothing matches" line belongs to the search only. A
+         kind that is simply empty already says so in its own section, and
+         showing both reads as two different problems instead of one fact. */
+      emptyEl.hidden = shown > 0 || !searching;
+      const scope = scopeOf(kind);
+      countEl.textContent = searching ? `${shown} of ${scope}` : `${scope} ${noun}`;
+    }
+
+    filterEl.addEventListener("click", e => {
+      const button = e.target.closest("[data-kind-filter]");
+      if(!button) return;
+      kind = button.dataset.kindFilter;
+      filterEl.querySelectorAll("[data-kind-filter]").forEach(b =>
+        b.setAttribute("aria-pressed", String(b === button)));
+      apply();
+    });
+
+    searchEl.addEventListener("input", apply);
+    apply();
+  }
 
   function entryHTML(entry){
     const title = entry.links?.[0]
@@ -800,35 +1132,57 @@
      ═══════════════════════════════════════════════════════════════════ */
 
   (function renderPubs(){
-    const byYear = new Map();
-    for(const p of PUBLICATIONS){
-      const y = p.y || "Undated";
-      if(!byYear.has(y)) byYear.set(y, []);
-      byYear.get(y).push(p);
-    }
-
     const emphasise = a =>
       esc(a).replace(/Maheshwari, B\./g, "<b>Maheshwari, B.</b>");
 
-    document.getElementById("pub-list").innerHTML = [...byYear.entries()].map(([year, list]) => `
-      <div class="pub-year" data-year="${esc(year)}">
-        <div class="yr">${esc(year)}</div>
-        <div>${list.map(p => `
-          <article class="pub" data-search="${esc([p.t, p.a, p.v, p.y].join(" ").toLowerCase())}">
-            <p class="t"><a href="https://doi.org/${esc(p.d)}" target="_blank" rel="noreferrer"
-              data-doi="${esc(p.d)}">${esc(p.t)}</a></p>
-            <p class="a">${emphasise(p.a)}</p>
-            <p class="v">${esc(p.v)}${p.c ? ` &middot; <i>${p.c} citations</i>` : ""}</p>
-          </article>`).join("")}</div>
-      </div>`).join("");
+    /* An entry without a DOI is listed but not linked. A dead link on a
+       publication list is worse than no link: it reads as a citation the
+       reader can check, and then cannot. */
+    const titleHTML = p => p.d
+      ? `<a href="https://doi.org/${esc(p.d)}" target="_blank" rel="noreferrer" data-doi="${esc(p.d)}">${esc(p.t)}</a>`
+      : esc(p.t);
 
-    document.getElementById("pub-count").textContent = PUBLICATIONS.length + " with DOI";
+    const pubHTML = p => `
+      <article class="pub" data-item data-search="${esc([p.t, p.a || "", p.v, p.y].join(" ").toLowerCase())}">
+        <p class="t">${titleHTML(p)}</p>
+        ${p.a ? `<p class="a">${emphasise(p.a)}</p>` : ""}
+        ${p.v || p.c ? `<p class="v">${esc(p.v || "")}${
+          p.c ? `${p.v ? " &middot; " : ""}<i>${p.c} citations</i>` : ""}</p>` : ""}
+      </article>`;
+
+    document.getElementById("pub-list").innerHTML = PUB_KINDS.map(kind => {
+      const list = PUBLICATIONS.filter(p => p.k === kind.id);
+      const byYear = new Map();
+      for(const p of list){
+        const y = p.y || "Undated";
+        if(!byYear.has(y)) byYear.set(y, []);
+        byYear.get(y).push(p);
+      }
+      const years = [...byYear.entries()].map(([year, ps]) => `
+        <div class="pub-year" data-subgroup data-year="${esc(year)}">
+          <div class="yr">${esc(year)}</div>
+          <div>${ps.map(pubHTML).join("")}</div>
+        </div>`).join("");
+      return `
+        <section class="group" data-kind="${esc(kind.id)}">
+          <div class="group-head">
+            <h2>${esc(kind.label)}</h2>
+            <span data-role="count">${list.length}</span>
+          </div>
+          <p class="group-empty"${list.length ? " hidden" : ""}>${esc(kind.empty)}</p>
+          ${years}
+        </section>`;
+    }).join("");
+
+    renderChips(document.getElementById("pub-filter"), PUB_KINDS, PUBLICATIONS, "k");
 
     document.getElementById("pub-note").innerHTML =
-      `This list is generated from <a href="https://orcid.org/0000-0002-5496-4345" target="_blank"
-       rel="noreferrer">ORCID</a> and enriched with authors, venues and citation counts from Crossref, so every
-       entry resolves to a registered DOI. It is therefore a subset: the full record of more than 230 publications,
-       including book chapters, conference papers and reports without a DOI, is on
+      `Generated from <a href="https://orcid.org/0000-0002-5496-4345" target="_blank"
+       rel="noreferrer">ORCID</a> and enriched with authors, venues and citation counts from
+       <a href="https://api.crossref.org/" target="_blank" rel="noreferrer">Crossref</a>. Titles link to
+       doi.org wherever a DOI is registered; the older records without one are listed but not linked.
+       This remains a subset of a record of more than 230 outputs — the complete list, including book
+       chapters and technical reports, is on
        <a href="https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&amp;hl=en" target="_blank"
        rel="noreferrer">Google Scholar</a>.`;
   })();
@@ -865,31 +1219,64 @@
   addEventListener("hashchange", resolveHash);
   resolveHash();
 
-  /* ─── Publication search ───────────────────────────────────────── */
-  (function wirePubSearch(){
-    const input = document.getElementById("pub-search");
-    const empty = document.getElementById("pub-empty");
-    const count = document.getElementById("pub-count");
-    input.addEventListener("input", () => {
-      const query = input.value.trim().toLowerCase();
-      let shown = 0;
-      document.querySelectorAll(".pub-year").forEach(group => {
-        let inGroup = 0;
-        group.querySelectorAll(".pub").forEach(pub => {
-          const hit = !query || matchesQuery(pub.dataset.search, query);
-          pub.hidden = !hit;
-          if(hit){ inGroup++; shown++; }
-        });
-        /* A year with nothing left in it hides its heading too, so the
-           result reads as a list rather than a column of empty years. */
-        group.hidden = inGroup === 0;
-      });
-      empty.hidden = shown > 0;
-      count.textContent = query
-        ? shown + " of " + PUBLICATIONS.length
-        : PUBLICATIONS.length + " with DOI";
-    });
+  /* ═══════════════════════════════════════════════════════════════════
+     MY TEAM
+     Same group markup as Publications, without the year banding.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  (function renderTeam(){
+    const personHTML = p => `
+      <article class="person" data-item data-search="${esc([p.n, p.p, p.f || "", p.w || ""].join(" ").toLowerCase())}">
+        <h3>${p.l?.[0] ? `<a href="${esc(p.l[0].href)}" target="_blank" rel="noreferrer">${esc(p.n)}</a>` : esc(p.n)}</h3>
+        ${p.p ? `<span class="pos">${esc(p.p)}</span>` : ""}
+        ${p.f ? `<p class="focus">${esc(p.f)}</p>` : ""}
+        ${p.w ? `<p class="where">${esc(p.w)}</p>` : ""}
+      </article>`;
+
+    document.getElementById("team-list").innerHTML = TEAM_ROLES.map(role => {
+      const list = TEAM.filter(p => p.r === role.id);
+      return `
+        <section class="group" data-kind="${esc(role.id)}">
+          <div class="group-head">
+            <h2>${esc(role.label)}</h2>
+            <span data-role="count">${list.length}</span>
+          </div>
+          <p class="group-empty"${list.length ? " hidden" : ""}>${esc(role.empty)}</p>
+          ${list.map(personHTML).join("")}
+        </section>`;
+    }).join("");
+
+    renderChips(document.getElementById("team-filter"), TEAM_ROLES, TEAM, "r");
+
+    document.getElementById("team-note").innerHTML =
+      `The people listed here are those named on the
+       <a href="https://www.westernsydney.edu.au/marvi/our-people" target="_blank" rel="noreferrer">MARVI
+       participants page</a> at Western Sydney University, with the titles that page gives them. Current
+       postdoctoral researchers and doctoral candidates are not published anywhere that could be checked,
+       so those sections are empty rather than guessed at — co-authorship is not evidence of supervision.
+       Both fill themselves as soon as the names are supplied.`;
   })();
+
+  wireFilteredGroups({
+    listEl:   document.getElementById("team-list"),
+    filterEl: document.getElementById("team-filter"),
+    searchEl: document.getElementById("team-search"),
+    countEl:  document.getElementById("team-count"),
+    emptyEl:  document.getElementById("team-empty"),
+    scopeOf:  role => role === "all" ? TEAM.length : TEAM.filter(p => p.r === role).length,
+    noun: "listed",
+  });
+
+  wireFilteredGroups({
+    listEl:   document.getElementById("pub-list"),
+    filterEl: document.getElementById("pub-filter"),
+    searchEl: document.getElementById("pub-search"),
+    countEl:  document.getElementById("pub-count"),
+    emptyEl:  document.getElementById("pub-empty"),
+    scopeOf:  kind => kind === "all" ? PUBLICATIONS.length
+                : PUBLICATIONS.filter(p => p.k === kind).length,
+    noun: "listed",
+  });
 
   /* ═══════════════════════════════════════════════════════════════════
      THE CROSS-SECTION

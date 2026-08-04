@@ -45,6 +45,9 @@ the wrong change.
 | `TEACHING`     | Teaching and capacity building                                 |
 | `NEWS`         | News items, newest first                                       |
 | `CONTACT`      | Contact channels and profile links                             |
+| `TEAM_ROLES`   | The My team sections, their order and their empty states       |
+| `TEAM`         | The people — see the format below                              |
+| `PUB_KINDS`    | The Publications sections, their order and their empty states  |
 | `PUBLICATIONS` | The publication list — see the format below                    |
 
 A research, programme or news entry looks like this:
@@ -63,16 +66,57 @@ A research, programme or news entry looks like this:
 A publication is deliberately terser, because there are many of them:
 
 ```js
-{y:2026, t:"Title as published", a:"Family, I., Family, I.", v:"Journal name",
- d:"10.1002/wwp2.70094", c:2},
+{k:"journal", y:2026, t:"Title as published", a:"Family, I., Family, I.",
+ v:"Journal name", d:"10.1002/wwp2.70094", c:2},
 ```
 
-`y` year · `t` title · `a` authors · `v` venue · `d` DOI · `c` citation count.
+`k` kind · `y` year · `t` title · `a` authors · `v` venue · `d` DOI ·
+`c` citation count.
+
+**`k` must be one of the `PUB_KINDS` ids** — currently `journal`,
+`conference`, `thesis`, `other`. An entry with an unknown kind renders into
+no section and silently vanishes from the page, so `verify.mjs` blocks on it.
+
+`a`, `d` and `c` are **optional**. An entry with no DOI is listed without a
+link, which is correct for theses and for older conference papers — a dead
+doi.org link is worse than no link, because it reads as a citation the reader
+can check and then cannot. An entry with no author list simply omits that
+line; sixteen older records are in that state and **no author list was
+invented for them**. Do not fill one in unless you have a source.
+
 Authors are `Family, I.` separated by commas, truncated to six followed by
 `et al.`. Write his own name exactly `Maheshwari, B.` — the renderer matches
 that string to set it in bold, and any other spelling will silently fail to
-emphasise. Publications are listed newest first and grouped by year
-automatically; insert a new one in the right place in the array.
+emphasise.
+
+Publications are listed newest first, grouped into kind sections and then by
+year, both automatically. Insert a new one in year order in the array; the
+kind sections are built from `k`, so position within the array only affects
+ordering inside its own year.
+
+**Choosing the kind.** Prefer the venue over the upstream type: Crossref and
+ORCID both type a good number of proceedings papers as `journal-article`, and
+the existing entries were classified by treating a venue naming a *conference,
+congress, proceedings, symposium* or *workshop* as decisive. Follow that rule
+for new entries.
+
+**Adding a thesis.** The `thesis` section is deliberately present and empty,
+showing a message rather than being hidden — it covers both supervised higher
+degree theses and his own doctoral thesis. Add one as:
+
+```js
+{k:"thesis", y:2024, t:"Thesis title", a:"Candidate, A.",
+ v:"PhD, Western Sydney University"},
+```
+
+Put the degree and awarding institution in `v`. If the issue does not say
+whether he supervised or examined it, ask — do not assume supervision.
+
+**Adding a new kind** (say book chapters) is two steps: add
+`{id:"chapter", label:"Book chapters", empty:"…"}` to `PUB_KINDS` in the
+position you want it displayed, and tag entries `k:"chapter"`. The filter
+chips, the section headings and the counts all build themselves from that
+array, and `verify.mjs` will then accept the new id.
 
 Adding a whole new section means adding one object to `SECTIONS` **and** a
 matching `<section class="panel" data-panel="…">` in the HTML. The rail, the
@@ -90,6 +134,59 @@ here in `AGENTS.md`. Do not move either of those into `README.md`.
 
 Only `index.html` is published to the website itself — the deploy workflow
 copies that one file into `_site/`. Everything else is tooling.
+
+## My team, and naming real people
+
+A person entry:
+
+```js
+{r:"phd", n:"Priya Sharma", p:"PhD candidate",
+ f:"Managed aquifer recharge in hardrock watersheds of Rajasthan.",
+ w:"Western Sydney University", l:[{label:"Profile", href:"https://…"}]},
+```
+
+`r` role — one of the `TEAM_ROLES` ids (`postdoc`, `phd`, `other`) ·
+`n` name · `p` position · `f` what they work on · `w` institution · `l` links.
+Everything except `r` and `n` is optional and simply omitted when absent.
+
+**This section names living people, so it has a stricter rule than the rest of
+the site.** Add a person only when the issue explicitly supplies them, or when
+a public page names them in that role. Never infer:
+
+- A **co-author is not a student.** Do not promote frequent collaborators into
+  the postdoc or PhD sections because they publish with him often.
+- Do not carry a role over from another context. Someone listed as a project
+  participant is a project participant, not a supervised candidate.
+- The **“Add a team member” issue form has a consent checkbox** for exactly
+  this reason. If an issue names someone without it, ask before publishing.
+- To remove someone, delete the object. Do not leave them in with a note.
+
+The two empty sections are empty on purpose and say so. Leave them that way
+until someone supplies the names.
+
+## Filtered groups: one pattern, two panels
+
+Publications and My team use the same interaction and therefore the same code,
+`wireFilteredGroups`. A panel opts in by rendering this markup:
+
+```html
+<section class="group" data-kind="ID">
+  <div class="group-head"><h2>…</h2><span data-role="count"></span></div>
+  <p class="group-empty" hidden>…</p>
+  [<div data-subgroup>]  <x data-item data-search="…">  [</div>]
+</section>
+```
+
+`data-subgroup` is optional — Publications uses it to band by year, My team
+has no second level. The chip row must carry `class="chip-filter"` and the
+chips are generated by `renderChips`.
+
+If you change one of these class names, change it in **both** the stylesheet
+and the markup. A container that keeps its id but loses `chip-filter` still
+works — the script finds it, filtering still filters — but it never becomes a
+flex row, so the chips silently stack down the page instead of scrolling
+across it. Nothing throws. `verify.mjs` blocks on this specific case because it
+has already happened once.
 
 ## Editorial direction
 

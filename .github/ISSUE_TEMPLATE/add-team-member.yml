@@ -1,0 +1,72 @@
+name: Add or update a team member
+description: A postdoctoral researcher, doctoral candidate or other member of the group.
+title: "Team: "
+labels:
+  - website
+  - team
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The **Postdoctoral researchers** and **PhD candidates** sections are currently
+        empty. Nothing was put in them because no public source lists who they are, and
+        guessing from co-authorship would have been wrong — a co-author is not
+        necessarily a student.
+
+        One issue per person is easiest, but a list in the last box is fine too.
+
+  - type: dropdown
+    id: role
+    attributes:
+      label: Role
+      description: This decides which section they appear in.
+      options:
+        - Postdoctoral researcher
+        - PhD candidate
+        - Other team member
+        - Remove this person from the site
+    validations:
+      required: true
+
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: As they would want it written, including any title they use.
+      placeholder: "Dr Priya Sharma"
+    validations:
+      required: true
+
+  - type: input
+    id: position
+    attributes:
+      label: Position
+      description: Their actual title, if it is more specific than the role above.
+      placeholder: "Postdoctoral Research Fellow"
+
+  - type: textarea
+    id: focus
+    attributes:
+      label: What they work on
+      description: >
+        One or two sentences, or a thesis title. This is what appears under their name.
+
+  - type: input
+    id: where
+    attributes:
+      label: Institution
+      description: Only needed if they are not at Western Sydney University.
+
+  - type: input
+    id: link
+    attributes:
+      label: Profile link
+      description: Optional — a staff page, ORCID or Google Scholar profile.
+
+  - type: checkboxes
+    id: approval
+    attributes:
+      label: Confirmation
+      options:
+        - label: This person is happy to be named on a public website, and the details above are correct.
+          required: true
