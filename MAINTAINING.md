@@ -85,6 +85,10 @@ deploy if the page would be broken or would stop being self-contained:
 - a nav entry with no matching panel, so the link goes to a blank page
 - a publication whose `k` — or a person whose `r` — is not a declared kind or
   role, which would render into no section at all and silently disappear
+- collapsible sections that have lost the code which opens them on a search,
+  or a `<details>` with no `<summary>` to open it — both leave content that
+  the page insists exists but never shows
+- an `open:` that is not literally `true` or `false`
 - a filter container that has lost its `chip-filter` class, which leaves the
   chips stacking down the page instead of scrolling across it, with nothing
   thrown and nothing obviously wrong in the DOM
@@ -131,6 +135,34 @@ One known data problem, inherited from ORCID and left as-is rather than
 guessed at: *Infiltration and roughness equations for surface irrigation* is
 dated 1998 but its venue is given as the *2001 ASAE Annual Meeting*. One of
 the two is wrong. It is one issue away from being fixed.
+
+## Collapsible publication sections
+
+The four publication sections start **shut**, which takes the page from about
+12,400px to 1,200px. They are `<details>` elements, so opening and closing is
+the browser's own behaviour — keyboard, screen readers and find-in-page all
+work without any script.
+
+Whether a section starts open is data. Put `open:true` on its `PUB_KINDS`
+entry and it will be expanded on arrival:
+
+```js
+{id:"journal", label:"Journal articles", open:true, empty:"…"},
+```
+
+Three things happen automatically and should stay that way:
+
+- **A search opens whatever it matches.** Searching *rajasthan* expands
+  Journal articles and shows 7 of 94; searching *imacs* expands Conference
+  papers instead. Without this the counter would report results while the list
+  looked empty, with nothing thrown.
+- **Choosing a single kind opens it**, since that is an explicit request to
+  see it.
+- **Printing opens everything**, then puts it back. A shut section prints as a
+  heading with nothing underneath, which would silently drop most of a printed
+  publication list.
+
+Anything you opened by hand stays open when you clear a search.
 
 ## The Team page
 

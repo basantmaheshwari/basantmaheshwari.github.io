@@ -184,6 +184,40 @@ a public page names them in that role. Never infer:
 The two empty sections are empty on purpose and say so. Leave them that way
 until someone supplies the names.
 
+## Collapsible sections
+
+The Publications sections are `<details>` and **start shut**; the Team
+sections are plain `<section>` and are always open. `groupHTML({collapsible})`
+is the switch, and the wiring reads which one it got from the tag name, so the
+two cannot drift apart.
+
+Whether a given publication section starts open is data, not code — put
+`open:true` on its `PUB_KINDS` entry:
+
+```js
+{id:"journal", label:"Journal articles", open:true, empty:"…"},
+```
+
+It must be a literal `true` or `false`; `verify.mjs` blocks anything else,
+because `"no"` and `0` are truthy or falsy by accident rather than on purpose.
+
+**The one rule you must not break: a search has to open whatever it matches.**
+If a shut section keeps its matches hidden, the reader types a query, the
+counter says results exist, and the list looks empty — with nothing thrown and
+nothing in the console. `apply()` therefore forces a group open when a search
+has found something in it, or when the filter has narrowed to it alone, and
+otherwise returns it to the reader's last choice (or the section default).
+`verify.mjs` fails the build if collapsible markup ever exists without the code
+that opens it.
+
+The reader's own open/shut choice is recorded on **click**, not on the
+`toggle` event: `toggle` fires asynchronously and also fires when the script
+sets `open` itself, so it cannot tell the reader's intent from the code's.
+
+Everything opens for printing and returns afterwards, because a shut section
+prints as a heading with nothing under it — which would quietly drop most of
+the publication list from a printed CV.
+
 ## Filtered groups: one pattern, two panels
 
 Publications and My team use the same interaction and therefore the same code,

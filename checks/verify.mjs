@@ -137,6 +137,30 @@ if (!KIND_IDS.size) fail("PUB_KINDS is empty — publications would have nowhere
 for (const k of data.PUB_KINDS || []) {
   if (!k.id || !k.label) fail(`PUB_KINDS entry missing id or label: ${JSON.stringify(k)}`);
   if (!k.empty) warn(`PUB_KINDS "${k.id}" has no empty-state message`);
+  if ("open" in k && typeof k.open !== "boolean") {
+    fail(`PUB_KINDS "${k.id}" has open:${JSON.stringify(k.open)} — it must be true or false. ` +
+         `Any other value is truthy or falsy by accident rather than on purpose.`);
+  }
+}
+
+/* The publication sections are collapsible and shut by default, which
+   creates one specific way to lose content in silence: if the wiring
+   stops opening a group when a search matches inside it, the reader
+   searches, the count says results exist, and the list looks empty.
+   Nothing throws. So the two halves are required to travel together —
+   collapsible markup may not exist without the code that opens it. */
+if (/<details class="group"/.test(html)) {
+  if (!/\bgroup\.open\s*=/.test(html)) {
+    fail("groups render as <details> but nothing ever assigns group.open — " +
+         "a search would match entries inside a shut section and appear to find nothing");
+  }
+  if (!/searching\s*&&\s*inGroup\s*>\s*0/.test(html)) {
+    warn("the open-on-search condition looks changed; check that a search still expands its matches");
+  }
+  if (!/summary class="group-head"/.test(html)) {
+    fail("<details class=\"group\"> has no <summary class=\"group-head\"> — " +
+         "the section would have no control to open it and its contents would be unreachable");
+  }
 }
 
 const seenDoi = new Set();

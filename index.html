@@ -274,7 +274,24 @@
   .group:first-of-type .group-head{margin-top:14px}
   .group-head h2{margin:0;font-family:var(--serif);font-weight:400;font-size:1.5rem;letter-spacing:-.015em}
   .group-head span{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--faint);white-space:nowrap}
+    text-transform:uppercase;color:var(--faint);white-space:nowrap;margin-left:auto}
+
+  /* Collapsible groups. <details>/<summary> rather than a scripted
+     accordion: it carries the disclosure semantics, the keyboard
+     behaviour and the expanded state natively, and it still works if the
+     script never runs. Only Publications opts in — the team list is
+     short enough that hiding it behind a click would be obstruction. */
+  summary.group-head{cursor:pointer;list-style:none}
+  summary.group-head::-webkit-details-marker{display:none}
+  summary.group-head:hover h2{color:var(--water)}
+  summary.group-head:hover{border-bottom-color:var(--water)}
+  /* The chevron points right when shut and down when open. */
+  summary.group-head::after{content:"";flex:0 0 auto;align-self:center;
+    width:7px;height:7px;margin:0 2px 0 4px;
+    border-right:1.5px solid var(--faint);border-bottom:1.5px solid var(--faint);
+    transform:rotate(-45deg);transition:transform .3s var(--ease),border-color .3s var(--ease)}
+  details.group[open] > summary.group-head::after{transform:rotate(45deg)}
+  summary.group-head:hover::after{border-color:var(--water)}
   .group-empty{padding:22px 0 4px;color:var(--faint);font-size:.9rem;max-width:64ch}
   .group-empty[hidden]{display:none}
 
@@ -800,6 +817,10 @@
      entries `k:"chapter"` is the whole change, and `verify.mjs` will then
      accept that kind. A kind with no entries still renders, with an honest
      empty state — it advertises the section rather than hiding it. */
+  /* `open:true` on any of these starts that section expanded; the
+     default is shut, which keeps the page short when there are ninety-odd
+     journal articles. A search always expands whatever it matches,
+     whatever this says. */
   const PUB_KINDS = [
     {id:"journal",    label:"Journal articles",
      empty:"No journal articles listed yet."},
@@ -1002,6 +1023,23 @@
         data-count="${k.n}" aria-pressed="${k.id === "all"}">${esc(k.label)} <b>${k.n}</b></button>`).join("");
   }
 
+  /** One group section. `collapsible` renders it as a <details> shut by
+      default; otherwise it is a plain <section> that is always open. The
+      wiring below reads which one it got from the tag name, so the two
+      cannot fall out of step. */
+  function groupHTML({id, label, count, empty, body, collapsible, open}){
+    const head = `<h2>${esc(label)}</h2><span data-role="count">${count}</span>`;
+    const inner = `<p class="group-empty"${count ? " hidden" : ""}>${esc(empty)}</p>${body}`;
+    /* `open` on the section object is the section's *default* state, kept
+       on the element so the wiring can return to it after a search rather
+       than assuming everything starts shut. */
+    return collapsible
+      ? `<details class="group" data-kind="${esc(id)}" data-default-open="${open ? "1" : "0"}"${open ? " open" : ""}>
+           <summary class="group-head">${head}</summary>${inner}</details>`
+      : `<section class="group" data-kind="${esc(id)}">
+           <div class="group-head">${head}</div>${inner}</section>`;
+  }
+
   function wireFilteredGroups({listEl, filterEl, searchEl, countEl, emptyEl, scopeOf, noun}){
     let kind = "all";
 
@@ -1055,6 +1093,18 @@
           group.hidden = false;
           emptyMsg.hidden = false;
         }
+
+        /* Never let a shut section swallow a result. A group opens when a
+           search has found something inside it, or when the filter has
+           narrowed to it alone — both are explicit requests to see that
+           content. Otherwise it returns to whatever the reader last chose,
+           which starts shut. */
+        if(group.tagName === "DETAILS" && !group.hidden){
+          const fallback = group.dataset.userOpen ?? group.dataset.defaultOpen;
+          group.open = (searching && inGroup > 0)
+            || kind !== "all"
+            || fallback === "1";
+        }
       });
 
       /* The global "nothing matches" line belongs to the search only. A
@@ -1073,6 +1123,33 @@
         b.setAttribute("aria-pressed", String(b === button)));
       apply();
     });
+
+    /* The reader's own open/shut choice, recorded on click rather than on
+       the `toggle` event. `toggle` fires asynchronously and also fires
+       when apply() sets `open` itself, so it cannot tell the reader's
+       intent from the code's. At click time `open` is still the
+       pre-toggle value, so the state being moved to is its negation. */
+    listEl.addEventListener("click", e => {
+      const summary = e.target.closest("summary.group-head");
+      if(!summary) return;
+      summary.parentElement.dataset.userOpen = summary.parentElement.open ? "0" : "1";
+    });
+
+    /* An academic page gets printed. A shut section prints as a heading
+       with nothing under it, which would quietly drop most of the
+       publication list from a printed CV, so everything opens for print
+       and returns afterwards. */
+    if(listEl.querySelector("details.group")){
+      let reshut = [];
+      addEventListener("beforeprint", () => {
+        reshut = [...listEl.querySelectorAll("details.group")].filter(g => !g.open);
+        reshut.forEach(g => { g.open = true; });
+      });
+      addEventListener("afterprint", () => {
+        reshut.forEach(g => { g.open = false; });
+        reshut = [];
+      });
+    }
 
     searchEl.addEventListener("input", apply);
     apply();
@@ -1192,15 +1269,9 @@
           <div class="yr">${esc(year)}</div>
           <div>${ps.map(pubHTML).join("")}</div>
         </div>`).join("");
-      return `
-        <section class="group" data-kind="${esc(kind.id)}">
-          <div class="group-head">
-            <h2>${esc(kind.label)}</h2>
-            <span data-role="count">${list.length}</span>
-          </div>
-          <p class="group-empty"${list.length ? " hidden" : ""}>${esc(kind.empty)}</p>
-          ${years}
-        </section>`;
+      return groupHTML({id: kind.id, label: kind.label, count: list.length,
+                        empty: kind.empty, body: years, collapsible: true,
+                        open: kind.open === true});
     }).join("");
 
     renderChips(document.getElementById("pub-filter"), PUB_KINDS, PUBLICATIONS, "k");
@@ -1264,15 +1335,9 @@
 
     document.getElementById("team-list").innerHTML = TEAM_ROLES.map(role => {
       const list = TEAM.filter(p => p.r === role.id);
-      return `
-        <section class="group" data-kind="${esc(role.id)}">
-          <div class="group-head">
-            <h2>${esc(role.label)}</h2>
-            <span data-role="count">${list.length}</span>
-          </div>
-          <p class="group-empty"${list.length ? " hidden" : ""}>${esc(role.empty)}</p>
-          ${list.map(personHTML).join("")}
-        </section>`;
+      return groupHTML({id: role.id, label: role.label, count: list.length,
+                        empty: role.empty, body: list.map(personHTML).join(""),
+                        collapsible: false});
     }).join("");
 
     renderChips(document.getElementById("team-filter"), TEAM_ROLES, TEAM, "r");

@@ -71,7 +71,9 @@ body:
       label: Anything else
       description: >
         Corrections to an existing entry, a supervision role for a thesis, or a note
-        about the work.
+        about the work. You can also ask for a change to the page itself here — a new
+        section, a different order, or a section that starts open rather than folded
+        away.
 
   - type: checkboxes
     id: approval
