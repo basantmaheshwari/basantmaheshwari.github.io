@@ -351,6 +351,12 @@
   .note{margin-top:30px;padding:18px 20px;border-left:2px solid var(--ochre);background:rgba(169,105,26,.045);
     font-size:.9rem;color:var(--muted);max-width:66ch}
 
+  /* Shown only in ?preview mode, where the page watches the repository. */
+  .preview-badge{position:fixed;z-index:120;left:14px;bottom:14px;padding:7px 12px;
+    background:var(--card);border:1px solid var(--line);color:var(--muted);
+    font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+    pointer-events:none;box-shadow:0 6px 20px rgba(21,34,43,.08)}
+
   /* ─── Responsive ───────────────────────────────────────────────── */
   @media (max-width:960px){
     .rail{display:none}
@@ -1766,36 +1772,71 @@
   };
 
   /* ═══════════════════════════════════════════════════════════════════
-     EDITOR PREVIEW
+     INSTANT PREVIEW
 
-     Loaded with ?cms-preview=1, the page becomes the preview pane of the
-     CMS: the editor holds it in an iframe and posts the entry currently
-     being edited, unsaved. The page swaps that into CONTENT and redraws
-     itself. What the editor shows is therefore the real site — the same
-     markup, the same stylesheet, the same water drawings — and not a
-     second rendering of the design that could disagree with it.
+     Open the site with ?preview and it watches the repository: it polls the
+     raw copies of content/*.json, which update within seconds of a save in
+     the editor — long before the Pages build lands — and redraws itself
+     whenever anything changes.
 
-     Same-origin only, and it does nothing at all unless the flag is set,
-     so an ordinary visitor is unaffected.
+     What you get is the finished page, not an approximation of it: the
+     portrait, the typography, the water in the rail, the solved
+     cross-section, every effect, because it is the site. Keep the tab open
+     beside the editor; the editor's "Live Site" button opens it.
+
+     Nothing here runs for an ordinary visitor. The published page carries
+     its content inside itself and fetches nothing.
      ═══════════════════════════════════════════════════════════════════ */
 
-  if(new URLSearchParams(location.search).get("cms-preview") === "1"){
-    addEventListener("message", event => {
-      if(event.origin !== location.origin) return;
-      const msg = event.data;
-      if(!msg || msg.type !== "bm:cms-preview") return;
-      /* `items` is the shape every content file has; `key` names the array
-         it belongs to. Anything unrecognised is ignored rather than
-         guessed at. */
-      if(msg.key && msg.data && Array.isArray(msg.data.items) && msg.key in CONTENT){
-        CONTENT[msg.key] = msg.data.items;
-        renderAll();
-        if(msg.panel) showPanel(msg.panel, false);
+  if(new URLSearchParams(location.search).has("preview")){
+    (function watchRepo(){
+      const RAW = "https://raw.githubusercontent.com/basantmaheshwari/basantmaheshwari/main/content/";
+      const FILES = {
+        SECTIONS:"sections.json", METRICS:"metrics.json", RESEARCH:"research.json",
+        PROGRAMS:"programs.json", TEAM_ROLES:"team-roles.json", TEAM:"team.json",
+        TEACHING:"teaching.json", NEWS:"news.json", CONTACT:"contact.json",
+        PUB_KINDS:"pub-kinds.json", PUBLICATIONS:"publications.json",
+      };
+
+      const badge = document.createElement("div");
+      badge.className = "preview-badge";
+      badge.textContent = "preview · watching the repo";
+      document.body.appendChild(badge);
+
+      async function fetchAll(){
+        const out = {};
+        await Promise.all(Object.entries(FILES).map(async ([key, file]) => {
+          /* cache:no-store, or the browser serves the copy it fetched four
+             seconds ago and the preview never appears to update. */
+          const r = await fetch(RAW + file + "?t=" + Date.now(), {cache:"no-store"});
+          if(!r.ok) throw new Error(file + " " + r.status);
+          const parsed = await r.json();
+          if(Array.isArray(parsed?.items)) out[key] = parsed.items;
+        }));
+        return out;
       }
-    });
-    /* Tell the editor the frame is ready. It cannot know when the page has
-       finished parsing, and a message sent before this is lost. */
-    if(parent !== window) parent.postMessage({type:"bm:cms-preview-ready"}, location.origin);
+
+      let last = JSON.stringify(Object.fromEntries(
+        Object.keys(FILES).map(k => [k, CONTENT[k]])));
+
+      setInterval(async () => {
+        if(document.hidden) return;   /* a hidden tab need not poll */
+        try{
+          const next = await fetchAll();
+          const sig = JSON.stringify(next);
+          if(sig === last) return;
+          last = sig;
+          Object.assign(CONTENT, next);
+          renderAll();
+          /* The panel engine reads the live DOM, so a section added or
+             removed in the editor takes effect here too. */
+          showPanel(location.hash.slice(1) || "home", false);
+          badge.textContent = "preview · updated " + new Date().toLocaleTimeString();
+        }catch(e){
+          badge.textContent = "preview · cannot reach the repo";
+        }
+      }, 4000);
+    })();
   }
 
   /* ═══════════════════════════════════════════════════════════════════

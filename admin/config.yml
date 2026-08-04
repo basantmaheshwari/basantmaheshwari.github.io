@@ -1,10 +1,12 @@
-# Decap CMS — the editing interface for basantmaheshwari.github.io
+# Sveltia CMS — the editing interface for basantmaheshwari.github.io
 #
 # The sidebar mirrors the website: one entry per page of the site, in the same
 # order as its menu. Opening "Publications" here edits the Publications page
 # and nothing else, so it is always clear what a change will affect.
 #
-# Each form previews the real website beside it, live — see admin/preview.js.
+# The preview is the real website: the "Live Site" button opens it in
+# ?preview mode, where it watches the repository and redraws within seconds
+# of a save — the finished page, effects and all.
 #
 # Saving commits JSON to `main`. The publish workflow then runs
 # scripts/build.mjs to copy the content into index.html and deploys it.
@@ -16,7 +18,12 @@ backend:
   name: github
   repo: basantmaheshwari/basantmaheshwari
   branch: main
-  base_url: https://REPLACE-ME.workers.dev
+  # The same authentication worker the other sites in this family already
+  # use, so nothing new has to be deployed. If "Sign in with GitHub" refuses
+  # this origin, add https://basantmaheshwari.github.io to the worker's
+  # ALLOWED_ORIGINS — or use Sveltia's personal access token button, which
+  # needs no worker at all.
+  base_url: https://sveltia-cms-auth.marvi-groundwater.workers.dev
   commit_messages:
     create: 'Edit {{collection}} in the website editor'
     update: 'Edit {{collection}} in the website editor'
@@ -29,7 +36,9 @@ media_folder: ''
 public_folder: ''
 
 site_url: https://basantmaheshwari.github.io/basantmaheshwari/
-display_url: https://basantmaheshwari.github.io/basantmaheshwari/
+# "Live Site" opens the instant preview: the exact page, effects and all,
+# re-rendering seconds after every save.
+display_url: https://basantmaheshwari.github.io/basantmaheshwari/?preview
 
 collections:
   # ── 00 Profile ────────────────────────────────────────────────────────

@@ -204,29 +204,35 @@ plain text search finds the word after the option itself has gone.
 
 ## The editor and its preview
 
-`admin/` is **Decap CMS** — not Sveltia. Sveltia accepts a custom preview
-template and never invokes it, leaving every preview pane blank; that was
-measured, not assumed, and `verify.mjs` fails the build if the editor stops
-loading Decap.
+`admin/` is **Sveltia CMS**, vendored as `admin/sveltia-cms.js` rather than
+fetched from a CDN. It signs in through the authentication worker the other
+sites in this family already use — nothing new is deployed for it.
 
-The preview is the **real website**. `admin/preview.js` renders an iframe of
-`../?cms-preview=1#<panel>` and posts the entry being edited into it. The site
-listens for that message, swaps the array into its `CONTENT` registry and calls
-`renderAll()`. So the preview shows the portrait, the typography, the rail's
-water and the solved cross-section, and it cannot disagree with the published
-page because it is the published page.
+**The preview is the site itself.** Sveltia does not render custom preview
+templates (measured: it accepts the registration and never calls the
+component), so there is no in-pane preview to build. Instead the editor's
+*Live Site* button opens `?preview`, and in that mode the page polls the raw
+`content/*.json` in the repository every four seconds and calls `renderAll()`
+whenever anything differs. The result is the finished page — portrait,
+typography, the rail's water, the solved cross-section — updating seconds
+after a save, well before the Pages build lands.
+
+Do not add `CMS.registerPreviewTemplate`. It silently replaces Sveltia's
+working preview pane with an empty one.
 
 Three things this depends on, none of which may be broken casually:
 
 - **`CONTENT` is the single source the renderers read.** Never read a content
   array directly in rendering code; go through `CONTENT`.
 - **`renderAll()` must stay re-runnable.** Anything it draws has to be safe to
-  draw twice — that is why generated panels carry `data-generated-page` and are
-  removed before being rebuilt, and why the nav is bound by delegation rather
-  than per element.
-- **`showPanel` must not drop the query string.** It once replaced the URL with
-  a bare `#name`, which threw away `?cms-preview=1` on the first click and
-  silently froze the preview.
+  draw twice — hence `data-generated-page` on generated panels, and nav bound
+  by delegation rather than per element.
+- **`showPanel` must not drop the query string.** It once replaced the URL
+  with a bare `#name`, discarding `?preview` on the first click.
+
+`?preview` is the only place the site touches the network, and only when that
+flag is set. An ordinary visitor still gets one self-contained file that
+fetches nothing.
 
 ## Which files are public
 

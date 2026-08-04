@@ -373,34 +373,30 @@ try {
       }
     }
 
-    /* The editor previews the real site in an iframe, so preview.js must
-       register a template for every collection file — without one, Decap
-       falls back to a field list and the point is lost. */
-    let js = null;
-    try { js = readFileSync(join(ROOT, "admin/preview.js"), "utf8"); } catch { /* below */ }
-    if (js === null) {
-      warn("admin/preview.js is missing — the editor would show field lists instead of the site");
-    } else {
-      const mapped = [...js.matchAll(/^\s{4}([a-z_]+):\s*\{/gm)].map(m => m[1]);
-      const fileNames = [...cfg.matchAll(/^\s*-\s*name:\s*([a-z_]+)\s*$/gm)].map(m => m[1])
-        .filter(n => n.includes("_"));
-      for (const n of fileNames) {
-        if (!mapped.includes(n)) warn(`admin/config.yml has "${n}" but admin/preview.js gives it no preview`);
-      }
-      for (const n of mapped) {
-        if (!fileNames.includes(n)) warn(`admin/preview.js previews "${n}", which no collection file is called`);
-      }
-      if (!/decap-cms/.test(readFileSync(join(ROOT, "admin/index.html"), "utf8"))) {
-        fail("admin/index.html does not load Decap CMS. Sveltia accepts a preview " +
-             "template and never renders it, leaving every preview pane blank — " +
-             "this was measured, not assumed.");
-      }
+    /* The preview is the site in ?preview mode, opened from the editor's
+       "Live Site" button. Two things have to line up for that to work. */
+    /* The setting, not a mention of it — this file explains ?preview in a
+       comment, and matching that is how the check passed while the setting
+       itself had been removed. */
+    if (!/^\s*display_url:.*\?preview/m.test(cfg)) {
+      warn('admin/config.yml has no display_url ending in ?preview — the editor\'s ' +
+           '"Live Site" button would open the published page rather than the live preview');
+    }
+    if (!/URLSearchParams\(location\.search\)\.has\("preview"\)/.test(html)) {
+      fail("index.html has no ?preview mode — the editor's Live Site button would " +
+           "show the last published page and never reflect an unsaved change");
+    }
+    if (!/raw\.githubusercontent\.com/.test(html)) {
+      fail("the ?preview mode does not watch the repository, so it would never update");
     }
 
-    /* The preview frame depends on the site honouring ?cms-preview=1. */
-    if (!/cms-preview/.test(html)) {
-      fail("index.html has no ?cms-preview=1 handler — the editor's preview would " +
-           "show saved content and never reflect what is being typed");
+    /* Vendored on purpose: no CDN, and the editor cannot change underfoot. */
+    const adminHtml = (() => {
+      try { return readFileSync(join(ROOT, "admin/index.html"), "utf8"); } catch { return ""; }
+    })();
+    if (/https?:\/\/[^"']*(decap|sveltia|unpkg|cdn)/i.test(adminHtml)) {
+      warn("admin/index.html loads the editor from another host — it is vendored " +
+           "as admin/sveltia-cms.js so that nothing is fetched from a CDN");
     }
   }
 } catch (e) {

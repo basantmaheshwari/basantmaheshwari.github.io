@@ -7,15 +7,15 @@
   <title>Edit the website — Basant Maheshwari</title>
 </head>
 <body>
-  <!-- Decap CMS, not Sveltia.
-       Sveltia accepts a custom preview template and never renders it — the
-       preview pane simply goes blank (measured: zero calls under five name
-       variants, with both a function and a class component; it does not
-       bundle React, which the API needs). Decap does render them, which is
-       what lets the preview below be the real website rather than a list
-       of field values. The other sites in this family use Decap for the
-       same reason. -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script src="preview.js"></script>
+  <!-- Sveltia CMS, vendored rather than fetched from a CDN, exactly as on
+       alanntl.github.io. Nothing here is loaded from a third party, and the
+       editor cannot change under Basant without someone choosing it.
+
+       The preview is not in this pane: Sveltia does not render custom
+       preview templates (measured — it accepts the registration and never
+       calls it). Instead the "Live Site" button opens the real page in
+       ?preview mode, where it watches the repository and redraws seconds
+       after every save. `display_url` in config.yml points at it. -->
+  <script src="sveltia-cms.js"></script>
 </body>
 </html>

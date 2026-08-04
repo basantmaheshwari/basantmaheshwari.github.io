@@ -24,15 +24,14 @@ in the same order as its menu:
 Opening *Publications* edits the Publications page and nothing else, so it is
 always clear what a change will affect.
 
-**Every form previews the real website beside it, live.** Not a mock-up of
-it: the actual page, in an iframe, with what you are typing pushed into it.
-The portrait, the typography, the water in the sidebar, the solved
-cross-section — all of it, redrawing as you type, because it *is* the site.
+**The preview is the real website.** Press **Live Site** in the editor and the
+page opens in `?preview` mode, where it watches the repository and redraws
+within seconds of every save — the portrait, the typography, the water in the
+sidebar, the solved cross-section, every effect, because it *is* the site, not
+a drawing of it. Keep that tab beside the editor while you work.
 
-That is why the editor is Decap rather than Sveltia. Sveltia accepts a custom
-preview and never renders it, leaving the pane blank; Decap renders it. The
-site cooperates by accepting `?cms-preview=1`, which lets the editor hand it
-unsaved content to draw.
+It updates long before the published page does: it reads the content straight
+from the repository rather than waiting for the site to rebuild.
 
 Saving commits the change and the site republishes itself within a minute or
 so. No files, no code.
@@ -57,26 +56,19 @@ content/*.json  →  scripts/build.mjs  →  index.html  →  checks/verify.mjs 
 If you edit `content/` by hand, run `node scripts/build.mjs` afterwards. The
 check refuses to publish a branch where the two disagree.
 
-### Setting up the editor
+### Signing in
 
-One-time, and it needs Basant's GitHub account. A static page cannot keep an
-OAuth secret, so the sign-in step runs on a small free service.
+The editor signs in with GitHub through the same authentication worker the
+other sites in this family already use, so **nothing new has to be deployed**:
 
-1. **Create a GitHub OAuth app** — GitHub → *Settings* → *Developer settings* →
-   *OAuth Apps* → *New OAuth App*.
-   - Homepage URL: `https://basantmaheshwari.github.io/basantmaheshwari/`
-   - Authorization callback URL: the worker address from step 2, ending
-     `/callback`
-   - Note the **Client ID** and generate a **Client secret**.
-2. **Deploy the authentication worker** — [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth)
-   runs free on Cloudflare Workers. Set `GITHUB_CLIENT_ID`,
-   `GITHUB_CLIENT_SECRET` and `ALLOWED_DOMAINS` (`basantmaheshwari.github.io`)
-   as its secrets. It gives you an address like
-   `https://sveltia-cms-auth.<name>.workers.dev`.
-3. **Point the editor at it** — in `admin/config.yml`, replace
-   `https://REPLACE-ME.workers.dev` with that address. The publish check warns
-   until you do.
-4. Open `/admin/`, sign in, and save something small to confirm the round trip.
+```
+https://sveltia-cms-auth.marvi-groundwater.workers.dev
+```
+
+If *Sign in with GitHub* refuses this origin, add
+`https://basantmaheshwari.github.io` to that worker's `ALLOWED_ORIGINS` in
+Cloudflare. Sveltia also offers a personal access token button, which needs no
+worker at all.
 
 Anyone who should be able to edit needs write access to the repository.
 
@@ -114,7 +106,7 @@ plausible invention. If a date, a co-author or a number matters, include it.
 
 ## What the CMS actually is
 
-[Decap CMS](https://decapcms.org/) — a Git-based editor. It
+[Sveltia CMS](https://github.com/sveltia/sveltia-cms) — a Git-based editor. It
 is a static page at `/admin/` that talks to the GitHub API in the browser:
 there is no server, no database, and nothing to keep running. Every change is
 an ordinary commit, so the history, review and rollback are git's.
@@ -122,7 +114,7 @@ an ordinary commit, so the history, review and rollback are git's.
 | Piece | What it does |
 | ----- | ------------ |
 | `admin/` | The editor — one form per page of the site |
-| `admin/preview.js` | Puts the real site in the preview pane and feeds it your edits |
+| `?preview` on the site | Watches the repository and redraws — the Live Site button |
 | `content/*.json` | What it reads and writes |
 | `scripts/build.mjs` | Copies that content into `index.html` |
 | `checks/verify.mjs` | Refuses to publish a broken or unsafe change |
