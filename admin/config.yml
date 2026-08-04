@@ -1,8 +1,10 @@
-# Sveltia CMS — the editing interface for basantmaheshwari.github.io
+# Decap CMS — the editing interface for basantmaheshwari.github.io
 #
 # The sidebar mirrors the website: one entry per page of the site, in the same
 # order as its menu. Opening "Publications" here edits the Publications page
 # and nothing else, so it is always clear what a change will affect.
+#
+# Each form previews the real website beside it, live — see admin/preview.js.
 #
 # Saving commits JSON to `main`. The publish workflow then runs
 # scripts/build.mjs to copy the content into index.html and deploys it.
@@ -305,3 +307,48 @@ collections:
               - {name: label, label: Menu label, widget: string}
               - {name: tc, label: Number, widget: string,
                  hint: 'Two digits, in menu order: 00, 01, 02…'}
+              - name: page
+                label: Build this page here (optional)
+                widget: object
+                required: false
+                collapsed: true
+                hint: >
+                  Leave empty for the pages that already exist. Fill it in and a
+                  whole new page is built from what you put below — it appears in
+                  the menu and gets its own address, with no code written anywhere.
+                fields:
+                  - {name: title, label: Heading, widget: string, required: false}
+                  - {name: lede, label: One line under the heading, widget: text, required: false}
+                  - name: blocks
+                    label: Blocks
+                    label_singular: block
+                    widget: list
+                    required: false
+                    hint: 'Add as many as you like, in any order, mixing the kinds freely.'
+                    types:
+                      - label: Text
+                        name: text
+                        widget: object
+                        summary: '{{fields.heading}}'
+                        fields:
+                          - {name: tag, label: Small label beside it, widget: string, required: false}
+                          - {name: heading, label: Heading, widget: string, required: false}
+                          - {name: paragraphs, label: Paragraphs, widget: list, field: {name: text, label: Paragraph, widget: text}}
+                      - label: List of entries
+                        name: entries
+                        widget: object
+                        summary: '{{fields.heading}}'
+                        fields:
+                          - {name: tag, label: Small label beside it, widget: string, required: false}
+                          - {name: heading, label: Heading, widget: string, required: false}
+                          - name: entries
+                            label: Entries
+                            label_singular: entry
+                            widget: list
+                            summary: '{{fields.name}}'
+                            fields:
+                              - {name: name, label: Name, widget: string}
+                              - {name: year, label: When, widget: string, required: false}
+                              - {name: status, label: Status, widget: string, required: false}
+                              - {name: blurb, label: Description, widget: text, required: false}
+                              - {name: tags, label: Tags, widget: list, required: false, allow_add: true}

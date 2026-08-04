@@ -1,63 +1,103 @@
 /**
- * preview.js — styles the preview pane beside each form.
+ * preview.js — shows the real website beside each form.
  *
- * The preview itself is Sveltia's own: it lists the fields of the entry and
- * updates as you type. This file hands it the website's stylesheet, so the
- * values appear in the site's typography and colour rather than the
- * editor's.
+ * The preview is not a second rendering of the design. It is the site
+ * itself, loaded in an iframe with `?cms-preview=1`, with the entry you
+ * are editing posted into it. The page swaps that into its content
+ * registry and redraws — so what you see is the actual page, with its
+ * typography, its portrait, the rail's water and the solved cross-section,
+ * and it cannot drift from the published site because it *is* the
+ * published site.
  *
- * ── Why there are no custom preview templates here ────────────────────
- *
- * There were. They rendered each entry in the site's own markup, and they
- * worked correctly in isolation — all eleven, checked against the real
- * content. Inside the CMS they did not run at all, and worse, registering
- * them *replaced* Sveltia's working preview with an empty pane. Every
- * collection previewed as a blank white rectangle.
- *
- * Measured rather than assumed:
- *
- *   - `CMS.registerPreviewTemplate` exists and accepts a registration
- *     without throwing.
- *   - The component is then never invoked. Probes registered under five
- *     name variants — collection name, collection-file name, field name,
- *     "collection/file", and the display label — recorded zero calls.
- *   - Both a plain function component and a class with a `render` method
- *     were tried. Neither ran.
- *   - `window.React` is undefined. Sveltia does not bundle React, and the
- *     documented API expects a React component.
- *   - Removing the registrations restores the built-in preview.
- *
- * So custom previews are unavailable in this build, and attempting them
- * costs the preview that does work. If a later version renders them, the
- * renderers are recoverable from this file's history.
- *
- * `registerPreviewStyle` does work — verified: 193 rules applied inside the
- * preview iframe, with the page's paper background reaching it.
+ * `createClass` and `h` are Decap globals.
  */
 
-(function stylePreview() {
-  const attach = () => {
-    const CMS = window.CMS;
-    if (!CMS || typeof CMS.registerPreviewStyle !== "function") return false;
-    try {
-      /* Resolved against this page rather than written as an absolute
-         path: the site lives under /basantmaheshwari/ once deployed but at
-         the root when served locally, and a hardcoded path is wrong in one
-         of those two places. */
-      CMS.registerPreviewStyle(new URL("preview.css", location.href).href);
-    } catch (e) {
-      /* An unstyled preview is still a working preview. */
-      console.warn("could not style the preview pane", e);
-    }
-    return true;
+(function () {
+  /* collection file name → the array it edits, and the page to show. */
+  var PAGES = {
+    profile_metrics:       { key: 'METRICS',      panel: 'home' },
+    research_themes:       { key: 'RESEARCH',     panel: 'research' },
+    publications_list:     { key: 'PUBLICATIONS', panel: 'publications' },
+    publications_sections: { key: 'PUB_KINDS',    panel: 'publications' },
+    programmes_list:       { key: 'PROGRAMS',     panel: 'programs' },
+    team_people:           { key: 'TEAM',         panel: 'team' },
+    team_sections:         { key: 'TEAM_ROLES',   panel: 'team' },
+    teaching_areas:        { key: 'TEACHING',     panel: 'teaching' },
+    news_items:            { key: 'NEWS',         panel: 'news' },
+    contact_channels:      { key: 'CONTACT',      panel: 'contact' },
+    site_sections:         { key: 'SECTIONS',     panel: 'home' }
   };
 
-  /* The CMS script loads before this one, but wait for it rather than
-     assume: a registration that runs too early is silently lost, which
-     looks exactly like a preview that does not work. */
-  if (attach()) return;
-  let tries = 0;
-  const timer = setInterval(() => {
-    if (attach() || ++tries > 100) clearInterval(timer);
-  }, 50);
+  /* A newly chosen image is a blob in the browser and not yet a file in the
+     repository, so resolve any asset path to something the frame can load
+     before sending it across. */
+  var resolveAssets = function (props, value) {
+    if (Array.isArray(value)) {
+      return value.map(function (item) { return resolveAssets(props, item); });
+    }
+    if (!value || typeof value !== 'object') return value;
+    return Object.keys(value).reduce(function (copy, key) {
+      var v = value[key];
+      if (typeof v === 'string' && /^(image|portrait|photo)$/i.test(key)) {
+        var asset = props.getAsset && props.getAsset(v);
+        copy[key] = asset ? asset.toString() : v;
+      } else {
+        copy[key] = resolveAssets(props, v);
+      }
+      return copy;
+    }, {});
+  };
+
+  var createPagePreview = function (name) {
+    var target = PAGES[name];
+    return createClass({
+      componentDidMount: function () {
+        var self = this;
+        /* The frame announces itself when it is ready. A message sent
+           before that is simply lost, and the preview would sit showing
+           saved content while the form says something else. */
+        this.onReady = function (event) {
+          if (event.origin === window.location.origin &&
+              self.frame && event.source === self.frame.contentWindow &&
+              event.data && event.data.type === 'bm:cms-preview-ready') {
+            self.send();
+          }
+        };
+        window.addEventListener('message', this.onReady);
+      },
+
+      componentWillUnmount: function () {
+        if (this.onReady) window.removeEventListener('message', this.onReady);
+      },
+
+      componentDidUpdate: function () { this.send(); },
+
+      send: function () {
+        if (!this.frame || !this.frame.contentWindow) return;
+        var data = this.props.entry.get('data').toJS();
+        this.frame.contentWindow.postMessage({
+          type: 'bm:cms-preview',
+          key: target.key,
+          panel: target.panel,
+          data: resolveAssets(this.props, data)
+        }, window.location.origin);
+      },
+
+      render: function () {
+        var self = this;
+        return h('iframe', {
+          src: '../?cms-preview=1#' + target.panel,
+          title: 'Live preview of the website',
+          style: { width: '100%', height: '100%', border: '0', display: 'block' },
+          ref: function (frame) { self.frame = frame; },
+          onLoad: function () { self.send(); }
+        });
+      }
+    });
+  };
+
+  CMS.registerPreviewStyle('preview-pane.css');
+  Object.keys(PAGES).forEach(function (name) {
+    CMS.registerPreviewTemplate(name, createPagePreview(name));
+  });
 })();

@@ -5,52 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Edit the website — Basant Maheshwari</title>
-  <style>
-    /* Shown only while the editor loads, or if it cannot. */
-    body{margin:0;background:#f6f4ef;color:#15222b;
-      font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-      line-height:1.6}
-    #boot{max-width:44rem;margin:14vh auto;padding:0 24px}
-    h1{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-weight:400;
-      font-size:2rem;letter-spacing:-.02em;margin:0 0 12px}
-    p{color:#5b6b74;margin:0 0 14px}
-    code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
-      background:rgba(18,97,127,.10);padding:1px 5px}
-    a{color:#12617f}
-    .note{border-left:2px solid #a9691a;background:rgba(169,105,26,.05);
-      padding:14px 18px;margin-top:22px;font-size:.94rem}
-  </style>
 </head>
 <body>
-  <!-- Replaced by the editor once it starts. If you are still reading this
-       after a few seconds, the editor did not load — the message explains
-       the usual reason. -->
-  <div id="boot">
-    <h1>Edit the website</h1>
-    <p>Loading the editor…</p>
-    <div class="note">
-      <p><strong>Still loading?</strong> This page needs to reach the internet
-      to fetch the editor, and it needs sign-in with GitHub to save changes.</p>
-      <p>If sign-in fails, the authentication service has probably not been
-      set up yet — see <code>MAINTAINING.md</code>, “Setting up the editor”.
-      Until then you can still request changes by
-      <a href="../../../issues/new/choose">filing a form</a> or by asking a
-      coding assistant.</p>
-    </div>
-  </div>
-
-  <!-- Sveltia CMS. Pinned to a major version so the editor cannot change
-       under Basant without someone choosing it. This is the only place in
-       the repository that loads anything from another host, and it is
-       deliberate: the editor is a tool, not part of the published site.
-       index.html itself stays entirely self-contained. -->
-  <!-- No type="module": Sveltia warns that it breaks the JavaScript API,
-       which is what preview.js uses to register previews. -->
-  <script src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js"></script>
-
-  <!-- The preview beside each form: the site's own markup under the site's
-       own stylesheet, both generated from index.html so they cannot drift.
-       Loaded after the CMS because it registers against it. -->
-  <script src="./preview.js" defer></script>
+  <!-- Decap CMS, not Sveltia.
+       Sveltia accepts a custom preview template and never renders it — the
+       preview pane simply goes blank (measured: zero calls under five name
+       variants, with both a function and a class component; it does not
+       bundle React, which the API needs). Decap does render them, which is
+       what lets the preview below be the real website rather than a list
+       of field values. The other sites in this family use Decap for the
+       same reason. -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script src="preview.js"></script>
 </body>
 </html>

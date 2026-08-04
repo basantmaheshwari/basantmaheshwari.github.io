@@ -1167,6 +1167,21 @@
   ];
 
   /* ═══════════════════════════════════════════════════════════════════
+     THE LIVE CONTENT REGISTRY
+
+     Everything the page draws reads from here rather than from the arrays
+     directly, so the whole site can be re-rendered against different data
+     without reloading. That is what makes the editor's preview possible:
+     it hands over an unsaved entry and the real page redraws itself.
+
+     `scripts/build.mjs` still writes the arrays above, so the file on disk
+     stays a complete, self-contained copy of the content.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  const CONTENT = {SECTIONS, METRICS, RESEARCH, PROGRAMS, TEACHING, NEWS,
+                   CONTACT, TEAM_ROLES, TEAM, PUB_KINDS, PUBLICATIONS};
+
+  /* ═══════════════════════════════════════════════════════════════════
      SEARCH MATCHING
 
      This is the one piece of behaviour worth arguing about, so it is
@@ -1423,9 +1438,13 @@
      page here — because a nav entry with neither leads to a blank screen.
      ═══════════════════════════════════════════════════════════════════ */
 
-  (function generatePages(){
+  function generatePages(){
     const main = document.getElementById("content");
-    for(const s of SECTIONS){
+    /* Drop any panel this made earlier. Re-rendering must not leave two
+       copies of a generated page in the DOM: a duplicate data-panel breaks
+       the panel engine, and does it silently. */
+    main.querySelectorAll("[data-generated-page]").forEach(el => el.remove());
+    for(const s of CONTENT.SECTIONS){
       if(!s.page || document.querySelector(`[data-panel="${s.id}"]`)) continue;
       const p = s.page;
       const blocks = (p.blocks || []).map(b => {
@@ -1442,6 +1461,7 @@
       el.id = "panel-" + s.id;
       el.dataset.panel = s.id;
       el.hidden = true;
+      el.dataset.generatedPage = "1";
       el.innerHTML =
         `<div class="head" data-numeral="${esc(s.tc)}"><div class="shell">
            <p class="tc">${esc(s.tc)} — ${esc(s.label)}</p>
@@ -1451,18 +1471,16 @@
          <div class="body"><div class="shell">${blocks}</div></div>`;
       main.appendChild(el);
     }
-  })();
-
-  renderList("research-list", RESEARCH);
-  renderList("programs-list", PROGRAMS);
-  renderList("news-list", NEWS);
-
-  if(!NEWS.length){
-    const empty = document.getElementById("news-empty");
-    empty.hidden = false;
   }
 
-  document.getElementById("metrics").innerHTML = METRICS.map(m =>
+  function renderStatics(){
+  renderList("research-list", CONTENT.RESEARCH);
+  renderList("programs-list", CONTENT.PROGRAMS);
+  renderList("news-list", CONTENT.NEWS);
+
+  document.getElementById("news-empty").hidden = CONTENT.NEWS.length > 0;
+
+  document.getElementById("metrics").innerHTML = CONTENT.METRICS.map(m =>
     `<div><b>${esc(m.value)}</b><span>${m.label}</span></div>`).join("");
 
   document.getElementById("research-note").innerHTML =
@@ -1474,7 +1492,7 @@
   document.getElementById("teaching-body").innerHTML = `
     <div class="split">
       <div><p class="tag">Areas</p><h2 class="display">What the teaching covers.</h2></div>
-      <div><ul class="list">${TEACHING.map(t => `
+      <div><ul class="list">${CONTENT.TEACHING.map(t => `
         <li class="item">
           <h3>${esc(t.name)}</h3>
           <div class="meta"><span class="chip live">${esc(t.when)}</span></div>
@@ -1492,17 +1510,18 @@
       </div>
     </div>`;
 
-  document.getElementById("contact-links").innerHTML = CONTACT.map(c => `
+  document.getElementById("contact-links").innerHTML = CONTENT.CONTACT.map(c => `
     <a href="${esc(c.href)}"${c.href.startsWith("http") ? ' target="_blank" rel="noreferrer"' : ""}>
       <strong>${esc(c.label)}</strong><span>${esc(c.detail)}</span>
     </a>`).join("");
 
-  document.getElementById("rail-nav").innerHTML = SECTIONS.map(s =>
+  document.getElementById("rail-nav").innerHTML = CONTENT.SECTIONS.map(s =>
     `<button type="button" role="tab" data-tab="${s.id}" aria-selected="${s.id === "home"}">
       <i>${s.tc}</i><span>${s.label}</span></button>`).join("");
 
-  document.getElementById("bar-nav").innerHTML = SECTIONS.map(s =>
+  document.getElementById("bar-nav").innerHTML = CONTENT.SECTIONS.map(s =>
     `<button type="button" data-tab="${s.id}">${s.label}<span class="tag">${s.tc}</span></button>`).join("");
+  }
 
   /* ═══════════════════════════════════════════════════════════════════
      PUBLICATIONS
@@ -1510,7 +1529,7 @@
      the reader can find his position in the list at a glance.
      ═══════════════════════════════════════════════════════════════════ */
 
-  (function renderPubs(){
+  function renderPubs(){
     const emphasise = a =>
       esc(a).replace(/Maheshwari, B\./g, "<b>Maheshwari, B.</b>");
 
@@ -1529,8 +1548,8 @@
           p.c ? `${p.v ? " &middot; " : ""}<i>${p.c} citations</i>` : ""}</p>` : ""}
       </article>`;
 
-    document.getElementById("pub-list").innerHTML = PUB_KINDS.map(kind => {
-      const list = PUBLICATIONS.filter(p => p.k === kind.id);
+    document.getElementById("pub-list").innerHTML = CONTENT.PUB_KINDS.map(kind => {
+      const list = CONTENT.PUBLICATIONS.filter(p => p.k === kind.id);
       const byYear = new Map();
       for(const p of list){
         const y = p.y || "Undated";
@@ -1547,7 +1566,7 @@
                         open: kind.open === true});
     }).join("");
 
-    renderChips(document.getElementById("pub-filter"), PUB_KINDS, PUBLICATIONS, "k");
+    renderChips(document.getElementById("pub-filter"), CONTENT.PUB_KINDS, CONTENT.PUBLICATIONS, "k");
 
     document.getElementById("pub-note").innerHTML =
       `Generated from <a href="https://orcid.org/0000-0002-5496-4345" target="_blank"
@@ -1558,7 +1577,7 @@
        chapters and technical reports, is on
        <a href="https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&amp;hl=en" target="_blank"
        rel="noreferrer">Google Scholar</a>.`;
-  })();
+  }
 
   /* ═══════════════════════════════════════════════════════════════════
      PANEL ENGINE
@@ -1566,27 +1585,54 @@
      deep links working.
      ═══════════════════════════════════════════════════════════════════ */
 
-  const panels = [...document.querySelectorAll("[data-panel]")];
-  const names = new Set(SECTIONS.map(s => s.id));
+  /* Everything the page draws, in one call. Running it again redraws the
+     whole site against whatever CONTENT now holds — which is how the
+     editor previews an unsaved entry in the real page rather than in a
+     facsimile of it. Event wiring stays outside, attached once to
+     containers that survive a redraw. */
+  function renderAll(){
+    generatePages();
+    renderStatics();
+    renderTeam();
+    renderPubs();
+  }
 
+  renderAll();
+
+  /* Queried on each call rather than captured once: re-rendering replaces
+     the generated panels, so a snapshot taken at load would point at
+     elements no longer in the document — and the page would simply stop
+     switching, with nothing thrown. The same goes for the section names,
+     which the editor's preview can change. */
   function showPanel(name, updateHash = true){
+    const panels = [...document.querySelectorAll("[data-panel]")];
+    const names = new Set(CONTENT.SECTIONS.map(s => s.id));
     if(!names.has(name)) name = "home";
     panels.forEach(p => p.hidden = p.dataset.panel !== name);
     document.querySelectorAll("[data-tab]").forEach(t =>
       t.setAttribute("aria-selected", String(t.dataset.tab === name)));
-    const section = SECTIONS.find(s => s.id === name);
+    const section = CONTENT.SECTIONS.find(s => s.id === name);
     document.title = name === "home"
       ? "Basant Maheshwari"
       : `${section.label} — Basant Maheshwari`;
-    if(updateHash) history.replaceState(null, "", "#" + name);
+    /* Keep the path and query. Replacing the URL with a bare "#name"
+       silently drops everything before it — which threw away the
+       ?cms-preview=1 flag on the first navigation, so the editor's frame
+       stopped listening the moment anyone clicked a menu item. */
+    if(updateHash) history.replaceState(null, "", location.pathname + location.search + "#" + name);
     window.scrollTo({top:0, behavior:"smooth"});
     document.getElementById("bar-menu").removeAttribute("open");
   }
 
-  document.querySelectorAll("[data-tab]").forEach(t =>
-    t.addEventListener("click", () => showPanel(t.dataset.tab)));
-  document.querySelectorAll("[data-go]").forEach(link =>
-    link.addEventListener("click", e => { e.preventDefault(); showPanel(link.dataset.go); }));
+  /* Delegated from the document rather than bound to each button: the rail
+     and the menu are regenerated on every render, and per-element listeners
+     would be lost on the first redraw. */
+  document.addEventListener("click", e => {
+    const tab = e.target.closest("[data-tab]");
+    if(tab){ showPanel(tab.dataset.tab); return; }
+    const go = e.target.closest("[data-go]");
+    if(go){ e.preventDefault(); showPanel(go.dataset.go); }
+  });
 
   const resolveHash = () => showPanel(decodeURIComponent(location.hash.slice(1)) || "home", false);
   addEventListener("hashchange", resolveHash);
@@ -1597,7 +1643,7 @@
      Same group markup as Publications, without the year banding.
      ═══════════════════════════════════════════════════════════════════ */
 
-  (function renderTeam(){
+  function renderTeam(){
     const personHTML = p => `
       <article class="person" data-item data-search="${esc([p.n, p.p, p.f || "", p.w || ""].join(" ").toLowerCase())}">
         <h3>${p.l?.[0] ? `<a href="${esc(p.l[0].href)}" target="_blank" rel="noreferrer">${esc(p.n)}</a>` : esc(p.n)}</h3>
@@ -1606,14 +1652,14 @@
         ${p.w ? `<p class="where">${esc(p.w)}</p>` : ""}
       </article>`;
 
-    document.getElementById("team-list").innerHTML = TEAM_ROLES.map(role => {
-      const list = TEAM.filter(p => p.r === role.id);
+    document.getElementById("team-list").innerHTML = CONTENT.TEAM_ROLES.map(role => {
+      const list = CONTENT.TEAM.filter(p => p.r === role.id);
       return groupHTML({id: role.id, label: role.label, count: list.length,
                         empty: role.empty, body: list.map(personHTML).join(""),
                         collapsible: false});
     }).join("");
 
-    renderChips(document.getElementById("team-filter"), TEAM_ROLES, TEAM, "r");
+    renderChips(document.getElementById("team-filter"), CONTENT.TEAM_ROLES, CONTENT.TEAM, "r");
 
     document.getElementById("team-note").innerHTML =
       `The people listed here are those named on the
@@ -1623,7 +1669,7 @@
        postdoctoral researchers and doctoral candidates are not published anywhere that could be checked,
        so those sections are empty rather than guessed at — co-authorship is not evidence of supervision.
        They fill themselves as soon as the names are supplied.`;
-  })();
+  }
 
   wireFilteredGroups({
     listEl:   document.getElementById("team-list"),
@@ -1631,7 +1677,7 @@
     searchEl: document.getElementById("team-search"),
     countEl:  document.getElementById("team-count"),
     emptyEl:  document.getElementById("team-empty"),
-    scopeOf:  role => role === "all" ? TEAM.length : TEAM.filter(p => p.r === role).length,
+    scopeOf:  role => role === "all" ? CONTENT.TEAM.length : CONTENT.TEAM.filter(p => p.r === role).length,
     noun: "listed",
   });
 
@@ -1641,8 +1687,8 @@
     searchEl: document.getElementById("pub-search"),
     countEl:  document.getElementById("pub-count"),
     emptyEl:  document.getElementById("pub-empty"),
-    scopeOf:  kind => kind === "all" ? PUBLICATIONS.length
-                : PUBLICATIONS.filter(p => p.k === kind).length,
+    scopeOf:  kind => kind === "all" ? CONTENT.PUBLICATIONS.length
+                : CONTENT.PUBLICATIONS.filter(p => p.k === kind).length,
     noun: "listed",
   });
 
@@ -1718,6 +1764,39 @@
       return NK_MIN + (NK_PEAK - NK_MIN) * Math.exp(-3.1 * (phase - 0.10) / 0.90);
     },
   };
+
+  /* ═══════════════════════════════════════════════════════════════════
+     EDITOR PREVIEW
+
+     Loaded with ?cms-preview=1, the page becomes the preview pane of the
+     CMS: the editor holds it in an iframe and posts the entry currently
+     being edited, unsaved. The page swaps that into CONTENT and redraws
+     itself. What the editor shows is therefore the real site — the same
+     markup, the same stylesheet, the same water drawings — and not a
+     second rendering of the design that could disagree with it.
+
+     Same-origin only, and it does nothing at all unless the flag is set,
+     so an ordinary visitor is unaffected.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  if(new URLSearchParams(location.search).get("cms-preview") === "1"){
+    addEventListener("message", event => {
+      if(event.origin !== location.origin) return;
+      const msg = event.data;
+      if(!msg || msg.type !== "bm:cms-preview") return;
+      /* `items` is the shape every content file has; `key` names the array
+         it belongs to. Anything unrecognised is ignored rather than
+         guessed at. */
+      if(msg.key && msg.data && Array.isArray(msg.data.items) && msg.key in CONTENT){
+        CONTENT[msg.key] = msg.data.items;
+        renderAll();
+        if(msg.panel) showPanel(msg.panel, false);
+      }
+    });
+    /* Tell the editor the frame is ready. It cannot know when the page has
+       finished parsing, and a message sent before this is lost. */
+    if(parent !== window) parent.postMessage({type:"bm:cms-preview-ready"}, location.origin);
+  }
 
   /* ═══════════════════════════════════════════════════════════════════
      THE RAIL AS A MONITORING WELL

@@ -204,22 +204,29 @@ plain text search finds the word after the option itself has gone.
 
 ## The editor and its preview
 
-`admin/` is Sveltia CMS. Its collections mirror the site's pages one for one —
-opening *Publications* edits the Publications page and nothing else.
+`admin/` is **Decap CMS** — not Sveltia. Sveltia accepts a custom preview
+template and never invokes it, leaving every preview pane blank; that was
+measured, not assumed, and `verify.mjs` fails the build if the editor stops
+loading Decap.
 
-The preview beside each form is **Sveltia's own**: it lists the entry's fields
-and updates as you type. `admin/preview.js` does one thing — hands it
-`admin/preview.css`, a generated copy of the `<style>` block in `index.html`,
-so values appear in the site's typography rather than the editor's. Never
-hand-edit `preview.css`; `scripts/build.mjs` rewrites it.
+The preview is the **real website**. `admin/preview.js` renders an iframe of
+`../?cms-preview=1#<panel>` and posts the entry being edited into it. The site
+listens for that message, swaps the array into its `CONTENT` registry and calls
+`renderAll()`. So the preview shows the portrait, the typography, the rail's
+water and the solved cross-section, and it cannot disagree with the published
+page because it is the published page.
 
-**Do not add custom preview templates.** It has been tried and it breaks the
-editor: `CMS.registerPreviewTemplate` accepts the registration, never invokes
-the component, and replaces the working preview with an empty pane for every
-collection. Probes under five name variants recorded zero calls, with both a
-function component and a class; `window.React` is undefined, and the API
-expects a React component. The full measurement is at the top of
-`admin/preview.js`, and `verify.mjs` warns if a registration reappears.
+Three things this depends on, none of which may be broken casually:
+
+- **`CONTENT` is the single source the renderers read.** Never read a content
+  array directly in rendering code; go through `CONTENT`.
+- **`renderAll()` must stay re-runnable.** Anything it draws has to be safe to
+  draw twice — that is why generated panels carry `data-generated-page` and are
+  removed before being rebuilt, and why the nav is bound by delegation rather
+  than per element.
+- **`showPanel` must not drop the query string.** It once replaced the URL with
+  a bare `#name`, which threw away `?cms-preview=1` on the first click and
+  silently froze the preview.
 
 ## Which files are public
 

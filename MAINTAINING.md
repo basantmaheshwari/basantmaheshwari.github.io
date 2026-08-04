@@ -24,17 +24,15 @@ in the same order as its menu:
 Opening *Publications* edits the Publications page and nothing else, so it is
 always clear what a change will affect.
 
-**Every form has a live preview beside it**, updating as you type. It shows
-the entry's fields and their values, set in the website's own typography and
-colours — `admin/preview.css` is a copy of the site's stylesheet, regenerated
-on every build.
+**Every form previews the real website beside it, live.** Not a mock-up of
+it: the actual page, in an iframe, with what you are typing pushed into it.
+The portrait, the typography, the water in the sidebar, the solved
+cross-section — all of it, redrawing as you type, because it *is* the site.
 
-It is a preview of the *content*, not a rendering of the finished page. A
-version that reproduced the page's exact layout was built and had to be
-withdrawn: Sveltia accepts a custom preview template but never runs it, and
-registering one replaces the working preview with an empty pane. The note at
-the top of `admin/preview.js` records what was measured. To see the real page,
-use the site link in the editor after publishing.
+That is why the editor is Decap rather than Sveltia. Sveltia accepts a custom
+preview and never renders it, leaving the pane blank; Decap renders it. The
+site cooperates by accepting `?cms-preview=1`, which lets the editor hand it
+unsaved content to draw.
 
 Saving commits the change and the site republishes itself within a minute or
 so. No files, no code.
@@ -116,7 +114,7 @@ plausible invention. If a date, a co-author or a number matters, include it.
 
 ## What the CMS actually is
 
-[Sveltia CMS](https://github.com/sveltia/sveltia-cms) — a Git-based editor. It
+[Decap CMS](https://decapcms.org/) — a Git-based editor. It
 is a static page at `/admin/` that talks to the GitHub API in the browser:
 there is no server, no database, and nothing to keep running. Every change is
 an ordinary commit, so the history, review and rollback are git's.
@@ -124,8 +122,7 @@ an ordinary commit, so the history, review and rollback are git's.
 | Piece | What it does |
 | ----- | ------------ |
 | `admin/` | The editor — one form per page of the site |
-| `admin/preview.js` | Styles the preview pane with the site's stylesheet |
-| `admin/preview.css` | Generated from `index.html` on every build |
+| `admin/preview.js` | Puts the real site in the preview pane and feeds it your edits |
 | `content/*.json` | What it reads and writes |
 | `scripts/build.mjs` | Copies that content into `index.html` |
 | `checks/verify.mjs` | Refuses to publish a broken or unsafe change |

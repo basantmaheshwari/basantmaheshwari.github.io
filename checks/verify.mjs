@@ -373,34 +373,34 @@ try {
       }
     }
 
-    /* preview.js only styles the preview pane — see the note at the top
-       of that file for why custom preview templates were removed. It is
-       still required: without it the preview is styled by the editor
-       rather than by the site. */
+    /* The editor previews the real site in an iframe, so preview.js must
+       register a template for every collection file — without one, Decap
+       falls back to a field list and the point is lost. */
     let js = null;
     try { js = readFileSync(join(ROOT, "admin/preview.js"), "utf8"); } catch { /* below */ }
     if (js === null) {
-      warn("admin/preview.js is missing — the preview pane loses the site's styling");
-    } else if (/\bCMS\.registerPreviewTemplate\s*\(/.test(js)) {
-      /* Matches a call, not a mention: the file explains at length why
-         these were removed, and that prose names the method. */
-      warn("admin/preview.js registers a preview template. Sveltia accepts the " +
-           "registration but never invokes it, and doing so replaces the working " +
-           "preview with an empty pane — see the note at the top of that file.");
+      warn("admin/preview.js is missing — the editor would show field lists instead of the site");
+    } else {
+      const mapped = [...js.matchAll(/^\s{4}([a-z_]+):\s*\{/gm)].map(m => m[1]);
+      const fileNames = [...cfg.matchAll(/^\s*-\s*name:\s*([a-z_]+)\s*$/gm)].map(m => m[1])
+        .filter(n => n.includes("_"));
+      for (const n of fileNames) {
+        if (!mapped.includes(n)) warn(`admin/config.yml has "${n}" but admin/preview.js gives it no preview`);
+      }
+      for (const n of mapped) {
+        if (!fileNames.includes(n)) warn(`admin/preview.js previews "${n}", which no collection file is called`);
+      }
+      if (!/decap-cms/.test(readFileSync(join(ROOT, "admin/index.html"), "utf8"))) {
+        fail("admin/index.html does not load Decap CMS. Sveltia accepts a preview " +
+             "template and never renders it, leaving every preview pane blank — " +
+             "this was measured, not assumed.");
+      }
     }
 
-    /* The preview stylesheet is generated from index.html. If it is stale
-       the preview is styled by an older design than the page. */
-    const cssFile = (() => {
-      try { return readFileSync(join(ROOT, "admin/preview.css"), "utf8"); } catch { return null; }
-    })();
-    if (cssFile === null) warn("admin/preview.css is missing — run: node scripts/build.mjs");
-    else {
-      const {previewCss} = await import("../scripts/content.mjs");
-      if (cssFile !== previewCss(html)) {
-        warn("admin/preview.css is out of date with the stylesheet in index.html — " +
-             "the editor would preview an older design. Run: node scripts/build.mjs");
-      }
+    /* The preview frame depends on the site honouring ?cms-preview=1. */
+    if (!/cms-preview/.test(html)) {
+      fail("index.html has no ?cms-preview=1 handler — the editor's preview would " +
+           "show saved content and never reflect what is being typed");
     }
   }
 } catch (e) {
