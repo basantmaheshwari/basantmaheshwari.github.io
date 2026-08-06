@@ -1853,12 +1853,21 @@
   if(PREVIEWING){
     (function watchRepo(){
       const RAW = "https://raw.githubusercontent.com/basantmaheshwari/basantmaheshwari.github.io/main/content/";
-      const FILES = {
-        SECTIONS:"sections.json", METRICS:"metrics.json", RESEARCH:"research.json",
-        PROGRAMS:"programs.json", TEAM_ROLES:"team-roles.json", TEAM:"team.json",
-        TEACHING:"teaching.json", NEWS:"news.json", CONTACT:"contact.json",
-        PUB_KINDS:"pub-kinds.json", PUBLICATIONS:"publications.json",
-      };
+        /* One file per page, and a file may carry more than one array — the
+           same map scripts/content.mjs uses. The two must stay in step: a
+           file named here that no longer exists makes the whole poll throw,
+           and the preview then stops updating without saying so. */
+        const FILES = {
+          "home.json":         {HOME:"hero", METRICS:"metrics"},
+          "sections.json":     {SECTIONS:"items"},
+          "research.json":     {RESEARCH:"items"},
+          "publications.json": {PUBLICATIONS:"items", PUB_KINDS:"sections"},
+          "programs.json":     {PROGRAMS:"items"},
+          "team.json":         {TEAM:"items", TEAM_ROLES:"sections"},
+          "teaching.json":     {TEACHING:"items"},
+          "news.json":         {NEWS:"items"},
+          "contact.json":      {CONTACT:"items"},
+        };
 
       const badge = document.createElement("div");
       badge.className = "preview-badge";
@@ -1867,19 +1876,21 @@
 
       async function fetchAll(){
         const out = {};
-        await Promise.all(Object.entries(FILES).map(async ([key, file]) => {
-          /* cache:no-store, or the browser serves the copy it fetched four
-             seconds ago and the preview never appears to update. */
-          const r = await fetch(RAW + file + "?t=" + Date.now(), {cache:"no-store"});
-          if(!r.ok) throw new Error(file + " " + r.status);
-          const parsed = await r.json();
-          if(Array.isArray(parsed?.items)) out[key] = parsed.items;
-        }));
+        await Promise.all(Object.entries(FILES).map(async ([file, map]) => {
+            /* cache:no-store, or the browser serves the copy it fetched four
+               seconds ago and the preview never appears to update. */
+            const r = await fetch(RAW + file + "?t=" + Date.now(), {cache:"no-store"});
+            if(!r.ok) throw new Error(file + " " + r.status);
+            const parsed = await r.json();
+            for(const [name, key] of Object.entries(map)){
+              if(Array.isArray(parsed?.[key])) out[name] = parsed[key];
+            }
+          }));
         return out;
       }
 
-      let last = JSON.stringify(Object.fromEntries(
-        Object.keys(FILES).map(k => [k, CONTENT[k]])));
+      const NAMES = Object.values(FILES).flatMap(m => Object.keys(m));
+      let last = JSON.stringify(Object.fromEntries(NAMES.map(k => [k, CONTENT[k]])));
 
       setInterval(async () => {
         if(document.hidden) return;   /* a hidden tab need not poll */

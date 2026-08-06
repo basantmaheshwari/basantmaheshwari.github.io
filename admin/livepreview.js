@@ -27,7 +27,9 @@
   var open  = state.open !== false;        /* open unless told otherwise */
   /* Proportional by default so the editor keeps room on a laptop, and
      absolute once the reader has dragged it. */
-  var width = Math.min(Math.max(state.width || Math.round(Math.min(560, innerWidth * 0.45)), 300), 1000);
+  /* Half the window by default: this is the only preview now, so it earns
+     the space rather than being a sidecar to a field list. */
+  var width = Math.min(Math.max(state.width || Math.round(Math.min(720, innerWidth * 0.5)), 300), 1200);
 
   var css = document.createElement('style');
   css.textContent = [

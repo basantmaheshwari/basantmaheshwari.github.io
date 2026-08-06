@@ -37,6 +37,14 @@ backend:
 # Uploaded images land in assets/ as ordinary files. scripts/build.mjs then
 # inlines the portrait into index.html as a data URI, so the published page
 # is still one self-contained file that fetches nothing.
+# Sveltia's own preview pane is turned off. It shows a list of field values,
+# which is not what anyone wants to look at while editing — the marvi sites
+# put the real website beside the form instead, and so does this one. The
+# panel on the right of the editor (admin/livepreview.js) is the live site,
+# and it is the only preview there is.
+editor:
+  preview: false
+
 media_folder: assets
 public_folder: assets
 

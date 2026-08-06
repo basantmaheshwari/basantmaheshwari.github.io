@@ -418,6 +418,21 @@ try {
     if (!/raw\.githubusercontent\.com/.test(html)) {
       fail("the ?preview mode does not watch the repository, so it would never update");
     }
+    /* The watcher carries its own copy of the file map. If it names a file
+       that no longer exists the whole poll throws and the preview stops
+       updating without saying so. */
+    for (const file of Object.keys(FILES)) {
+      if (!html.includes(`"${file}"`)) {
+        fail(`the ?preview watcher in index.html does not list content/${file} — ` +
+             "it would preview stale content for that page");
+      }
+    }
+    for (const m of html.matchAll(/"([a-z-]+\.json)":\s*\{/g)) {
+      if (!(m[1] in FILES)) {
+        fail(`the ?preview watcher fetches content/${m[1]}, which is not a content file — ` +
+             "the poll would throw and the preview would stop updating");
+      }
+    }
 
     /* The panel that docks the live site beside the editor. Without it the
        editor shows only its own field list, and the whole point of the
