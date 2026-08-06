@@ -373,6 +373,21 @@ try {
       }
     }
 
+    /* The hero is the thing an editor most wants to change, and it was
+       hardcoded until recently — the photograph, the headline and the
+       opening paragraphs could not be touched from the CMS at all. */
+    /* The whole declaration, not a substring: "profile_heroX" contains
+       "profile_hero", and a bare includes() passes while the collection has
+       actually been renamed away. */
+    if (!/^\s*-\s*name:\s*profile_hero\s*$/m.test(cfg)) {
+      warn('admin/config.yml has no "profile_hero" — the front page\'s photograph ' +
+           "and opening words would stop being editable");
+    }
+    if (!/id="hero-portrait"/.test(html)) {
+      fail('index.html has no id="hero-portrait" — scripts/build.mjs finds the ' +
+           "photograph by that id, so a newly uploaded one would never reach the page");
+    }
+
     /* The preview is the site in ?preview mode, opened from the editor's
        "Live Site" button. Two things have to line up for that to work. */
     /* The setting, not a mention of it — this file explains ?preview in a

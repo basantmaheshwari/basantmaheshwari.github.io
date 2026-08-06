@@ -23,6 +23,7 @@ export const CONTENT = join(ROOT, "content");
 
 /** JS array name → the file Sveltia edits. Order is display order. */
 export const FILES = {
+  HOME:         "home.json",
   SECTIONS:     "sections.json",
   METRICS:      "metrics.json",
   RESEARCH:     "research.json",
@@ -126,6 +127,26 @@ export function injectArrays(html, data) {
     out = out.slice(0, span.open) + formatArray(name, data[name]) + out.slice(span.close);
   }
   return out;
+}
+
+/**
+ * Inline the portrait named in content/home.json as a data URI.
+ *
+ * This is what lets the photograph be *both* things it needs to be: an
+ * ordinary image file that the CMS can upload and replace, and — in the
+ * published page — bytes carried inside the one self-contained file, so
+ * the site still opens offline and fetches nothing.
+ */
+export function inlinePortrait(html, home) {
+  const src = home?.[0]?.portrait;
+  if (!src) return html;
+  let bytes;
+  try { bytes = readFileSync(join(ROOT, src)); }
+  catch { throw new Error(`content/home.json points at ${src}, which is not in the repository`); }
+  const type = /\.png$/i.test(src) ? "png" : /\.jpe?g$/i.test(src) ? "jpeg" : "webp";
+  const uri = `data:image/${type};base64,${bytes.toString("base64")}`;
+  /* Only the hero portrait — matched by its id so nothing else is touched. */
+  return html.replace(/(<img id="hero-portrait" src=")[^"]*(")/, `$1${uri}$2`);
 }
 
 export const readHtml = () => readFileSync(HTML, "utf8");

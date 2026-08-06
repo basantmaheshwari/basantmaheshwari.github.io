@@ -75,6 +75,7 @@ surface; the HTML is the artefact.
 
 | File in `content/` | Array | Drives |
 | ------------------ | ----- | ------ |
+| `home.json`         | `HOME`         | The front page's photograph, headline and opening paragraphs |
 | `sections.json`     | `SECTIONS`     | The rail, the mobile menu, the panel engine — and whole pages, via `page` |
 | `metrics.json`      | `METRICS`      | The four figures on the profile page |
 | `research.json`     | `RESEARCH`     | Research themes |
@@ -201,6 +202,22 @@ unreportable — there is no way to file a request against it. `verify.mjs`
 warns on the mismatch in either direction, reading the options list rather
 than the file, because these forms also explain their options in prose and a
 plain text search finds the word after the option itself has gone.
+
+## The photograph
+
+It is two things at once, deliberately. In the repository it is an ordinary
+image file under `assets/`, so the CMS can upload and replace it like any
+other picture. In the published page it is a base64 `data:` URI, so the site
+is still one self-contained file that fetches nothing.
+
+`scripts/build.mjs` does the conversion: it reads the path in
+`content/home.json` and inlines those bytes into the `<img id="hero-portrait">`
+tag. **Do not remove that id** — it is how the build finds the photograph, and
+without it an uploaded picture silently never reaches the page. `verify.mjs`
+fails the build if it goes missing.
+
+In `?preview` the path is used directly rather than the inlined copy, so a
+photograph that was uploaded a moment ago shows before any build has run.
 
 ## The editor and its preview
 

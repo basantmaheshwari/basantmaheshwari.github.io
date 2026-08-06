@@ -12,7 +12,7 @@
  *     node scripts/build.mjs --check   exit 1 if it would change anything
  */
 
-import {readHtml, writeHtml, readContentFiles, injectArrays, FILES} from "./content.mjs";
+import {readHtml, writeHtml, readContentFiles, injectArrays, inlinePortrait, FILES} from "./content.mjs";
 
 const check = process.argv.includes("--check");
 const {content, missing, malformed} = readContentFiles();
@@ -29,7 +29,7 @@ if (malformed.length) {
 const before = readHtml();
 let after;
 try {
-  after = injectArrays(before, content);
+  after = inlinePortrait(injectArrays(before, content), content.HOME);
 } catch (e) {
   console.error("FATAL  " + e.message);
   process.exit(1);

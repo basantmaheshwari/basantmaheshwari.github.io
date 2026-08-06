@@ -10,7 +10,8 @@ Sign in with GitHub and the sidebar shows **one entry per page of the site**,
 in the same order as its menu:
 
 ```
-00 · Profile page        the four figures
+00 · Profile page        the photograph, headline and opening words;
+                         and the four figures
 01 · Research page       research themes
 02 · Publications page   the list, and the sections it is grouped under
 03 · Programmes page     MARVI, AIWC, the training programmes

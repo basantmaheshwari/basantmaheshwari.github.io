@@ -33,11 +33,11 @@ backend:
     update: 'Edit {{collection}} in the website editor'
     delete: 'Remove an entry from {{collection}}'
 
-# Images are embedded in index.html as data URIs, so there is no media folder
-# to write into. Uploads are off rather than pointing somewhere that would
-# silently do nothing.
-media_folder: ''
-public_folder: ''
+# Uploaded images land in assets/ as ordinary files. scripts/build.mjs then
+# inlines the portrait into index.html as a data URI, so the published page
+# is still one self-contained file that fetches nothing.
+media_folder: assets
+public_folder: assets
 
 site_url: https://basantmaheshwari.github.io/basantmaheshwari/
 # "Live Site" opens the instant preview: the exact page, effects and all,
@@ -50,6 +50,37 @@ collections:
     label: '00 · Profile page'
     icon: person
     files:
+      - name: profile_hero
+        label: Name, photograph and opening words
+        file: content/home.json
+        format: json
+        description: >
+          The top of the front page — the photograph, the headline, and the two
+          paragraphs beside it.
+        fields:
+          - name: items
+            label: Hero
+            widget: list
+            max: 1
+            min: 1
+            summary: '{{fields.role}}'
+            fields:
+              - {name: portrait, label: Photograph, widget: image, required: false,
+                 hint: 'Square works best. Uploading here replaces the picture on the site.'}
+              - {name: portraitAlt, label: Photograph description, widget: string, required: false,
+                 hint: 'Read aloud by screen readers. "Portrait of Basant Maheshwari" is enough.'}
+              - {name: portraitCaption, label: Caption under the photograph, widget: string, required: false,
+                 hint: 'A <br> splits it over two lines.'}
+              - {name: eyebrow, label: Small line above the headline, widget: string, required: false}
+              - {name: headline1, label: 'Headline — first line', widget: string, required: false}
+              - {name: headline2, label: 'Headline — start of the second line', widget: string, required: false,
+                 hint: 'Usually just "a " with a trailing space.'}
+              - {name: headlineAccent, label: 'Headline — the word in colour', widget: string, required: false}
+              - {name: headline3, label: 'Headline — rest of the second line', widget: string, required: false}
+              - {name: role, label: Role, widget: text, required: false,
+                 hint: 'The larger paragraph directly under the headline.'}
+              - {name: bio, label: Opening paragraph, widget: text, required: false}
+
       - name: profile_metrics
         label: The four figures
         file: content/metrics.json

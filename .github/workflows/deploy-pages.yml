@@ -75,6 +75,11 @@ jobs:
           mkdir -p _site
           cp index.html _site/index.html
           cp -R admin _site/admin
+          # assets/ holds the uploadable images. The published page carries
+          # the portrait inlined as a data URI and does not need them, but
+          # ?preview does: it must be able to show a photograph that has just
+          # been uploaded, before a build has inlined it.
+          [ -d assets ] && cp -R assets _site/assets || true
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
