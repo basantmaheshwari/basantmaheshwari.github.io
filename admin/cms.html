@@ -27,5 +27,57 @@
        after every save. `display_url` in config.yml points at it. -->
   <script src="sveltia-cms.js"></script>
 
+  <!-- Push each save straight to the preview.
+
+       The preview used to rely on polling raw.githubusercontent.com every
+       four seconds with a ?t= cache-buster on the URL. That buster does
+       nothing: raw.githubusercontent.com does not vary its cache on the
+       query string, so every distinct ?t= still answers `x-cache: HIT`
+       from a copy held under `max-age=300`. A save could take five minutes
+       to appear, and no amount of polling made it faster.
+
+       So the editor hands the content over directly instead. Sveltia fires
+       postSave with the entry that was just written; the parent frame
+       relays it to the preview, which redraws immediately without asking
+       the network for anything. The poll stays on as a slow backstop for
+       edits made somewhere else. -->
+  <script>
+  (function () {
+    /* Only useful inside the split screen — opened on its own there is no
+       preview to talk to. */
+    if (window.parent === window) return;
+
+    function announce(entry) {
+      try {
+        const get  = k => (typeof entry?.get === "function" ? entry.get(k) : entry?.[k]);
+        const path = get("path");
+        const raw  = get("data");
+        /* Decap hands out Immutable maps and Sveltia copies that shape. */
+        const data = raw && typeof raw.toJS === "function" ? raw.toJS() : raw;
+        if (!path || !data) return;
+        window.parent.postMessage(
+          {source: "bm-editor", file: String(path).split("/").pop(), data},
+          window.location.origin);
+      } catch (e) {
+        /* A failure here must never take the save down with it. */
+        console.error("could not send the save to the preview", e);
+      }
+    }
+
+    /* CMS is defined by the bundle above, but registration is only accepted
+       once it has finished starting up. */
+    let tries = 0;
+    (function register() {
+      if (!window.CMS || typeof window.CMS.registerEventListener !== "function") {
+        if (tries++ < 100) return void setTimeout(register, 100);
+        return console.warn("Sveltia exposed no event API — the preview will fall back to polling");
+      }
+      for (const name of ["postSave", "postPublish"]) {
+        try { window.CMS.registerEventListener({name, handler: ({entry}) => announce(entry)}); }
+        catch (e) { console.error("could not listen for " + name, e); }
+      }
+    })();
+  })();
+  </script>
 </body>
 </html>

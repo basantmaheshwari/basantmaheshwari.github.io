@@ -231,10 +231,43 @@ sites in this family already use — nothing new is deployed for it.
 
 **The editing screen is a split shell.** `admin/index.html` is not the CMS —
 it is a two-pane page that frames `admin/cms.html` (Sveltia) on the left and
-`../?preview` (the real site) on the right, with a draggable divider. In
-`?preview` the page polls the raw `content/*.json` every four seconds and
-calls `renderAll()` whenever anything differs, so the right-hand pane is the
-finished page refreshing seconds after each save.
+`../?preview` (the real site) on the right, with a draggable divider.
+
+**The preview is immediate because the editor hands each save over, not
+because it polls.** This is the part to be careful with. `?preview` does poll
+the raw `content/*.json`, and that poll is a slow backstop — nothing more.
+It cannot be made fast:
+
+> `raw.githubusercontent.com` serves every file under `cache-control:
+> max-age=300` **and does not vary its cache on the query string.** A brand
+> new `?t=` still answers `x-cache: HIT` from the old copy. Measured, four
+> distinct query strings in a row, all hits.
+
+So the `?t=` on that fetch does nothing about the CDN, `cache: "no-store"`
+only governs the browser's own store, and a save could take five minutes to
+appear however often you polled. Do not "fix" a slow preview by shortening
+the interval; the interval was never the problem.
+
+What makes it instant is a hand-over across three files, all of which must
+agree — `verify.mjs` warns if any end goes missing:
+
+1. `admin/cms.html` registers Sveltia's `postSave`/`postPublish` events and
+   posts the saved entry to its parent as `{source: "bm-editor", file, data}`.
+2. `admin/index.html` is the only page holding both frames, so it relays that
+   message across to the preview.
+3. `index.html` receives it, updates `CONTENT` and calls `renderAll()`. No
+   fetch happens, so nothing can be stale.
+
+The receiving end also **holds** what it was given, in `PUSHED`. Without that,
+the change would appear the instant it was saved and be wiped out four seconds
+later when the poll came back with the pre-save copy the CDN is still serving.
+A held file is released as soon as the poll agrees with it, or after ten
+minutes if it never does.
+
+Sveltia has no `change` event — the supported list is `preSave`, `postSave`,
+`prePublish`, `postPublish`, `preUnpublish`, `postUnpublish` — so the preview
+updates on save, not on every keystroke. That is a limit of the CMS, not a
+thing left undone.
 
 **Do not go back to injecting a panel into the CMS's own page.** That was
 tried. Sveltia's shell is `position:fixed` across the viewport, so making room

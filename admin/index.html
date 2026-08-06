@@ -116,6 +116,19 @@
     });
     document.getElementById("reload").addEventListener("click", load);
 
+    /* Carry a save from the editor frame across to the preview frame.
+       Neither can reach the other directly — this page is the only thing
+       that holds both — so it passes the message along. Origin is checked
+       on the way in and named on the way out; nothing from anywhere else
+       is relayed. */
+    addEventListener("message", function (e) {
+      if (e.origin !== location.origin) return;
+      if (!e.data || e.data.source !== "bm-editor") return;
+      if (!on) return;   /* preview hidden: nothing to tell */
+      try { view.contentWindow.postMessage(e.data, location.origin); }
+      catch (err) { console.error("could not reach the preview", err); }
+    });
+
     var dragging = false;
     grip.addEventListener("mousedown", function (e) { dragging = true; body.dataset.dragging = "1"; e.preventDefault(); });
     addEventListener("mousemove", function (e) {

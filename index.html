@@ -1869,6 +1869,21 @@
           "contact.json":      {CONTACT:"items"},
         };
 
+      /* What the editor has told us it just saved, by file.
+
+         The poll below cannot see a fresh save quickly. Every file is held
+         by raw.githubusercontent.com under `max-age=300`, and that cache
+         does not vary on the query string — a brand new ?t= still answers
+         `x-cache: HIT` from the old copy (measured). So for up to five
+         minutes after a save the poll keeps returning the previous
+         content.
+
+         The editor therefore hands the saved content over directly. This
+         holds it, so that the stale answer arriving four seconds later
+         does not wipe out the change that was just made. Each entry is
+         dropped the moment the poll agrees with it. */
+      const PUSHED = Object.create(null);
+
       const badge = document.createElement("div");
       badge.className = "preview-badge";
       badge.textContent = "preview · watching the repo";
@@ -1879,9 +1894,23 @@
         await Promise.all(Object.entries(FILES).map(async ([file, map]) => {
             /* cache:no-store, or the browser serves the copy it fetched four
                seconds ago and the preview never appears to update. */
+            /* cache:no-store keeps the *browser* from answering out of its
+               own store. It has no effect on the CDN in front of the file,
+               which is why PUSHED exists. */
             const r = await fetch(RAW + file + "?t=" + Date.now(), {cache:"no-store"});
             if(!r.ok) throw new Error(file + " " + r.status);
-            const parsed = await r.json();
+            let parsed = await r.json();
+            const held = PUSHED[file];
+            if(held){
+              /* Once the network agrees with what we were handed, the CDN
+                 has caught up and the file can look after itself again.
+                 The time limit is for the case where it never agrees —
+                 someone edits the same file on GitHub while our copy is
+                 still being held, and the two never match. Twice the CDN's
+                 own five minutes, after which the network wins. */
+              if(JSON.stringify(parsed) === held.json || Date.now() - held.at > 600000) delete PUSHED[file];
+              else parsed = held.data;
+            }
             for(const [name, key] of Object.entries(map)){
               const v = parsed?.[key];
               /* The hero is stored as one object rather than a list of
@@ -1896,6 +1925,26 @@
 
       const NAMES = Object.values(FILES).flatMap(m => Object.keys(m));
       let last = JSON.stringify(Object.fromEntries(NAMES.map(k => [k, CONTENT[k]])));
+
+      /* A save, handed over by the editor. This is what makes the preview
+         immediate: nothing is fetched, so nothing can be stale. */
+      addEventListener("message", e => {
+        if(e.origin !== location.origin) return;
+        const m = e.data;
+        if(!m || m.source !== "bm-editor" || !FILES[m.file] || !m.data) return;
+        PUSHED[m.file] = {data: m.data, json: JSON.stringify(m.data), at: Date.now()};
+        for(const [name, key] of Object.entries(FILES[m.file])){
+          const v = m.data[key];
+          if(Array.isArray(v)) CONTENT[name] = v;
+          else if(v && typeof v === "object") CONTENT[name] = [v];
+        }
+        /* Move the watermark too, or the next poll sees a difference and
+           redraws the page from the stale copy it was given. */
+        last = JSON.stringify(Object.fromEntries(NAMES.map(k => [k, CONTENT[k]])));
+        renderAll();
+        showPanel(location.hash.slice(1) || "home", false);
+        badge.textContent = "preview · updated " + new Date().toLocaleTimeString();
+      });
 
       setInterval(async () => {
         if(document.hidden) return;   /* a hidden tab need not poll */

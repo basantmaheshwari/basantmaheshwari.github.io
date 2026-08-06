@@ -412,6 +412,31 @@ try {
     /* The setting, not a mention of it — this file explains ?preview in a
        comment, and matching that is how the check passed while the setting
        itself had been removed. */
+    /* The preview is immediate only because the editor hands each save
+       straight over. Polling cannot replace it: raw.githubusercontent.com
+       holds every file under max-age=300 and does not vary its cache on
+       the query string, so the ?t= buster on the fetch below is measurably
+       useless and a save can take five minutes to show up. Three files
+       have to agree for the hand-over to work, and losing any one of them
+       fails silently — the preview simply goes back to being slow. */
+    {
+      const slurp = p => { try { return readFileSync(join(ROOT, p), "utf8"); } catch { return ""; } };
+      const cms   = slurp("admin/cms.html");
+      const shell = slurp("admin/index.html");
+      const ends = [
+        [/registerEventListener/.test(cms) && /postSave/.test(cms) && /bm-editor/.test(cms),
+         "admin/cms.html no longer tells the preview when something is saved"],
+        [/bm-editor/.test(shell) && /postMessage/.test(shell),
+         "admin/index.html no longer passes a save across to the preview"],
+        [/m\.source !== "bm-editor"/.test(html),
+         "index.html no longer listens for a save from the editor"],
+      ];
+      for (const [ok, what] of ends) {
+        if (!ok) warn(what + " — saving would still work, but the preview would " +
+                      "take up to five minutes to show it rather than being immediate");
+      }
+    }
+
     if (!/^\s*display_url:.*\?preview/m.test(cfg)) {
       warn('admin/config.yml has no display_url ending in ?preview — the editor\'s ' +
            '"Live Site" button would open the published page rather than the live preview');
