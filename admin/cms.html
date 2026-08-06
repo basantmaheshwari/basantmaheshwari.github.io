@@ -1,5 +1,9 @@
 <!doctype html>
-<html lang="en">
+<!-- data-theme picks Sveltia's light palette; its own CSS only follows the
+     operating system on :root:not([data-theme]), so setting it wins. And
+     data-auto-theming stops its script putting the dark one back the moment
+     the machine is in dark mode. -->
+<html lang="en" data-theme="light" data-auto-theming="false">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">

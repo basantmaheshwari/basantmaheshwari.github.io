@@ -27,6 +27,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 import vm from "node:vm";
+import {formProblems} from "./formcheck.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const FILE = join(ROOT, "index.html");
@@ -394,6 +395,10 @@ try {
              "one form, or the editor asks you to choose before you can see what you are editing");
       }
     }
+    /* Presence was never the problem — shape was. Every check above looks
+       for a string and would have passed while the Profile page sat empty. */
+    for (const problem of formProblems(cfg, ROOT)) fail(problem);
+
     if (!cfg.includes("name: portrait")) {
       warn("admin/config.yml has no portrait field — the photograph would stop being editable");
     }

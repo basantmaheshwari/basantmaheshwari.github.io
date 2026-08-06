@@ -1883,7 +1883,12 @@
             if(!r.ok) throw new Error(file + " " + r.status);
             const parsed = await r.json();
             for(const [name, key] of Object.entries(map)){
-              if(Array.isArray(parsed?.[key])) out[name] = parsed[key];
+              const v = parsed?.[key];
+              /* The hero is stored as one object rather than a list of
+                 one, so the editor can show it as a form. Everything here
+                 works in arrays, so wrap it. */
+              if(Array.isArray(v)) out[name] = v;
+              else if(v && typeof v === "object") out[name] = [v];
             }
           }));
         return out;

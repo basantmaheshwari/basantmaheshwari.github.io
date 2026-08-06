@@ -40,8 +40,14 @@ backend:
 # Sveltia's own preview pane is turned off. It shows a list of field values,
 # which is not what anyone wants to look at while editing — the marvi sites
 # put the real website beside the form instead, and so does this one. The
-# panel on the right of the editor (admin/livepreview.js) is the live site,
-# and it is the only preview there is.
+# right-hand half of admin/index.html is the live site, and it is the only
+# preview there is.
+#
+# One rule this file has to keep: a field's widget must match the shape of
+# the thing it edits in content/. `hero` is an object here because
+# content/home.json holds an object. Declaring it as an object over a list
+# of one is what left the Profile page showing an empty form — and an empty
+# form saves as empty content. checks/formcheck.mjs now refuses that.
 editor:
   preview: false
 

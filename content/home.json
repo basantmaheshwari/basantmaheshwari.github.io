@@ -1,18 +1,16 @@
 {
-  "hero": [
-    {
-      "eyebrow": "Water · Environment · Sustainability",
-      "headline1": "The water table is",
-      "headline2": "a ",
-      "headlineAccent": "shared",
-      "headline3": " account.",
-      "role": "Distinguished Professor at Western Sydney University. Director of the Australia India Water Centre. Leader of the MARVI programme.",
-      "bio": "Thirty years of research on water and its interactions with the landscape — groundwater, irrigation, river health and urban water — built on a conviction that the people who draw from an aquifer are the ones who can manage it. MARVI turned that into method: village volunteers monitoring their own wells, and a shared record that makes a common resource visible to everyone drawing on it.",
-      "portrait": "assets/portrait.webp",
-      "portraitAlt": "Portrait of Basant Maheshwari",
-      "portraitCaption": "Distinguished Professor<br>School of Science, WSU"
-    }
-  ],
+  "hero": {
+    "eyebrow": "Water · Environment · Sustainability",
+    "headline1": "The water table is",
+    "headline2": "a ",
+    "headlineAccent": "shared",
+    "headline3": " account.",
+    "role": "Distinguished Professor at Western Sydney University. Director of the Australia India Water Centre. Leader of the MARVI programme.",
+    "bio": "Thirty years of research on water and its interactions with the landscape — groundwater, irrigation, river health and urban water — built on a conviction that the people who draw from an aquifer are the ones who can manage it. MARVI turned that into method: village volunteers monitoring their own wells, and a shared record that makes a common resource visible to everyone drawing on it.",
+    "portrait": "assets/portrait.webp",
+    "portraitAlt": "Portrait of Basant Maheshwari",
+    "portraitCaption": "Distinguished Professor<br>School of Science, WSU"
+  },
   "metrics": [
     {
       "value": "5,498",

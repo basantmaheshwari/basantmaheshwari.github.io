@@ -51,6 +51,19 @@ export const ARRAY_NAMES = Object.values(FILES).flatMap(m => Object.keys(m));
 const DENSE = new Set(["PUBLICATIONS"]);
 
 /**
+ * Arrays the page holds as a list of one, because there is only ever one:
+ * the hero.
+ *
+ * The site reads `HOME[0]`, so inside `index.html` it stays an array. In
+ * the JSON it is a plain object, because that is what the editor needs to
+ * show it as a form — a photograph and some words — rather than a list
+ * with one collapsed row and a button offering to add a second hero the
+ * site would silently ignore. Declaring the field as an object over an
+ * array is exactly what left the Profile page blank.
+ */
+export const SINGLETONS = new Set(["HOME"]);
+
+/**
  * Locate `const NAME = [ … ];` and return the exact source span of the
  * bracketed literal, by matching brackets while respecting strings. A
  * regex cannot do this: the content itself contains brackets and quotes.
@@ -106,8 +119,15 @@ export function readContentFiles() {
     if (!existsSync(p)) { missing.push(file); continue; }
     const parsed = JSON.parse(readFileSync(p, "utf8"));
     for (const [name, key] of Object.entries(map)) {
-      if (!Array.isArray(parsed?.[key])) { malformed.push(`${file} → "${key}"`); continue; }
-      out[name] = parsed[key];
+      const raw = parsed?.[key];
+      /* Both shapes are accepted here, deliberately. A singleton is stored
+         as an object, but a file written before that change holds a list
+         of one, and either should load rather than fail. */
+      const value = Array.isArray(raw) ? raw
+                  : (raw && typeof raw === "object") ? [raw]
+                  : null;
+      if (value === null) { malformed.push(`${file} → "${key}"`); continue; }
+      out[name] = value;
     }
   }
   return {content: out, missing, malformed};
@@ -117,7 +137,10 @@ export function readContentFiles() {
 export function writeContentFile(file, data) {
   const map = FILES[file];
   const body = {};
-  for (const [name, key] of Object.entries(map)) body[key] = data[name] ?? [];
+  for (const [name, key] of Object.entries(map)) {
+    const value = data[name] ?? [];
+    body[key] = SINGLETONS.has(name) ? (value[0] ?? {}) : value;
+  }
   writeFileSync(join(CONTENT, file), JSON.stringify(body, null, 2) + "\n");
 }
 

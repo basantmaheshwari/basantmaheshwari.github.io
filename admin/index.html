@@ -24,11 +24,11 @@
      here we provide it.
      ══════════════════════════════════════════════════════════════════ */
   :root{
-    --bar:#1c1f22; --edge:rgba(255,255,255,.14); --ink:#e8eaec; --muted:#98a1a8;
+    --bar:#f2efe9; --edge:rgba(20,32,38,.16); --ink:#1d2528; --muted:#5d6a70;
     --accent:#12617f; --split:420px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:#111}
+  html,body{height:100%;margin:0;background:#e6e2da;color-scheme:light}
   body{display:flex;flex-direction:column;overflow:hidden;
     font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
 
@@ -39,12 +39,12 @@
   header button,header a{font:inherit;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
     padding:6px 12px;border:1px solid var(--edge);border-radius:3px;background:transparent;
     color:var(--ink);cursor:pointer;text-decoration:none}
-  header button:hover,header a:hover{border-color:var(--accent);color:#8ecae6}
+  header button:hover,header a:hover{border-color:var(--accent);color:var(--accent)}
   header button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
 
   main{flex:1 1 auto;display:flex;min-height:0}
   iframe{border:0;display:block;height:100%;width:100%}
-  #edit{flex:1 1 auto;min-width:0;background:#1c1f22}
+  #edit{flex:1 1 auto;min-width:0;background:#fff}
   #view{flex:0 0 var(--split);min-width:0;background:#f6f4ef;position:relative}
   body[data-preview="off"] #view,body[data-preview="off"] #grip{display:none}
 
