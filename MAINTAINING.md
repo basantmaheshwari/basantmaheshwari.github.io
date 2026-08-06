@@ -1,10 +1,10 @@
 # Maintaining this website
 
-Everything you need to change <https://basantmaheshwari.github.io/basantmaheshwari/>.
+Everything you need to change <https://basantmaheshwari.github.io/>.
 
 ## Edit the website in a browser
 
-The editor is at **<https://basantmaheshwari.github.io/basantmaheshwari/admin/>**.
+The editor is at **<https://basantmaheshwari.github.io/admin/>**.
 
 Sign in with GitHub and the sidebar shows **one entry per page of the site**,
 in the same order as its menu:

@@ -11,7 +11,7 @@ management, managed aquifer recharge, irrigation, river health and urban water
 — built on the conviction that the people who draw from an aquifer are the ones
 who can manage it.
 
-### 🌐 [basantmaheshwari.github.io/basantmaheshwari](https://basantmaheshwari.github.io/basantmaheshwari/)
+### 🌐 [basantmaheshwari.github.io](https://basantmaheshwari.github.io/)
 
 Research, publications, programmes and contact details.
 

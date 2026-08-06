@@ -16,7 +16,7 @@
 
 backend:
   name: github
-  repo: basantmaheshwari/basantmaheshwari
+  repo: basantmaheshwari/basantmaheshwari.github.io
   branch: main
   # Sign-in goes through a small authentication service, because a static
   # page cannot hold an OAuth secret. This one is an existing shared worker
@@ -39,10 +39,10 @@ backend:
 media_folder: assets
 public_folder: assets
 
-site_url: https://basantmaheshwari.github.io/basantmaheshwari/
+site_url: https://basantmaheshwari.github.io/
 # "Live Site" opens the instant preview: the exact page, effects and all,
 # re-rendering seconds after every save.
-display_url: https://basantmaheshwari.github.io/basantmaheshwari/?preview
+display_url: https://basantmaheshwari.github.io/?preview
 
 collections:
   # ── 00 Profile ────────────────────────────────────────────────────────

@@ -7,7 +7,7 @@ Basant Maheshwari** — water, environment and sustainability at the School of
 Science, Western Sydney University; Director of the Australia India Water
 Centre; leader of the MARVI programme.
 
-It publishes to <https://basantmaheshwari.github.io/basantmaheshwari/>.
+It publishes to <https://basantmaheshwari.github.io/>.
 
 Most requests here will come from someone describing a change in ordinary
 language — a new paper, a corrected title, an event to add. Turn that request
