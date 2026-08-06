@@ -474,7 +474,9 @@ try {
        site in the other. Injecting a panel into the CMS's own page was
        tried and cut the form in half once an entry was open, because the
        entry editor is a separate full-window layer. */
-    if (!/src="cms\.html"/.test(adminIdx)) {
+    /* The src is assigned in script, with a cache-busting token, so match
+       the assignment rather than an attribute. */
+    if (!/cms\.html\?v="?\s*\+/.test(adminIdx) && !/src="cms\.html"/.test(adminIdx)) {
       fail("admin/index.html does not frame cms.html — the editing screen would " +
            "have no editor in it");
     }

@@ -76,7 +76,13 @@
 
   <main>
     <!-- The CMS, laid out normally inside its own frame. -->
-    <iframe id="edit" src="cms.html" title="Website editor"></iframe>
+    <!-- src is set below, with a token on the end. GitHub Pages serves this
+         directory with `max-age=600`, so a browser that has been here in the
+         last ten minutes would otherwise keep running the editor it already
+         has — which is how you end up saving into a version that has no idea
+         it is meant to tell the preview anything. The 2 MB CMS bundle that
+         cms.html loads is untouched by this and stays cached. -->
+    <iframe id="edit" title="Website editor"></iframe>
     <div id="grip" role="separator" aria-orientation="vertical" tabindex="0"
          aria-label="Drag to resize the preview"></div>
     <!-- The real website. ?preview makes it watch the repository and redraw
@@ -91,6 +97,8 @@
     var grip = document.getElementById("grip");
     var body = document.body;
     var KEY = "bm-editor-layout";
+
+    document.getElementById("edit").src = "cms.html?v=" + Date.now();
 
     var state = {};
     try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
