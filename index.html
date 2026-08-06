@@ -1202,6 +1202,13 @@
      stays a complete, self-contained copy of the content.
      ═══════════════════════════════════════════════════════════════════ */
 
+  /* Declared here, above everything that renders, because renderHero()
+     reads it. It used to sit down with the preview watcher, several hundred
+     lines below the first render — a `const` in its temporal dead zone, so
+     the very first thing renderAll() did was throw. Nothing was caught, so
+     the navigation and every list simply never appeared. */
+  const PREVIEWING = new URLSearchParams(location.search).has("preview");
+
   const CONTENT = {HOME, SECTIONS, METRICS, RESEARCH, PROGRAMS, TEACHING, NEWS,
                    CONTACT, TEAM_ROLES, TEAM, PUB_KINDS, PUBLICATIONS};
 
@@ -1647,11 +1654,15 @@
   }
 
   function renderAll(){
-    renderHero();
-    generatePages();
-    renderStatics();
-    renderTeam();
-    renderPubs();
+    /* Each step is isolated. A single throw used to abort the whole
+       function, and because renderHero() ran first, one bad reference in it
+       left the site with no navigation and no lists at all — silently, since
+       nothing caught it. A section that fails should cost that section, not
+       the page. */
+    for(const step of [renderHero, generatePages, renderStatics, renderTeam, renderPubs]){
+      try { step(); }
+      catch(e){ console.error("render step failed: " + step.name, e); }
+    }
   }
 
   renderAll();
@@ -1839,7 +1850,6 @@
      its content inside itself and fetches nothing.
      ═══════════════════════════════════════════════════════════════════ */
 
-  const PREVIEWING = new URLSearchParams(location.search).has("preview");
   if(PREVIEWING){
     (function watchRepo(){
       const RAW = "https://raw.githubusercontent.com/basantmaheshwari/basantmaheshwari/main/content/";
