@@ -229,22 +229,27 @@ photograph that was uploaded a moment ago shows before any build has run.
 fetched from a CDN. It signs in through the authentication worker the other
 sites in this family already use — nothing new is deployed for it.
 
-**The preview is the site itself, docked beside the form.**
-`admin/livepreview.js` adds a resizable panel holding an iframe of
-`../?preview`, and in that mode the page polls the raw `content/*.json` in the
-repository every four seconds and calls `renderAll()` whenever anything
-differs. So the editor shows the finished page — portrait, typography, the
-rail's water, the solved cross-section — refreshing after each save, well
-before the Pages build lands.
+**The editing screen is a split shell.** `admin/index.html` is not the CMS —
+it is a two-pane page that frames `admin/cms.html` (Sveltia) on the left and
+`../?preview` (the real site) on the right, with a draggable divider. In
+`?preview` the page polls the raw `content/*.json` every four seconds and
+calls `renderAll()` whenever anything differs, so the right-hand pane is the
+finished page refreshing seconds after each save.
 
-That panel deliberately uses **none** of the CMS preview API. Sveltia accepts
-a custom preview template and never calls the component (measured), and
-registering one replaces its working pane with an empty rectangle. The panel
-is plain DOM on the admin page, so it cannot be broken by that.
+**Do not go back to injecting a panel into the CMS's own page.** That was
+tried. Sveltia's shell is `position:fixed` across the viewport, so making room
+meant pulling its right edge in — which worked until an entry was opened,
+because the entry editor is a *separate* full-window fixed layer. The form ran
+underneath the preview and was cut in half. Constraining each new layer as it
+appears is a losing game; splitting one level up means the CMS lays itself out
+normally inside its frame and cannot overlap anything.
 
-One detail worth keeping: Sveltia's shell is `position:fixed` across the whole
-viewport, so making room for the panel means pulling that shell's right edge
-in — padding on `<html>` does nothing and the panel just covers the form.
+Sveltia's own field preview is off (`editor: preview: false`). The website is
+the only preview, which is the point.
+
+`admin/cms.html` carries `<link rel="cms-config-url" href="config.yml">`.
+Without it Sveltia looks for a config beside a page called `index.html`, does
+not find one, and reports that the configuration could not be retrieved.
 
 Do not add `CMS.registerPreviewTemplate`. It silently replaces Sveltia's
 working preview pane with an empty one.

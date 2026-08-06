@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Editor — Basant Maheshwari</title>
+  <!-- Say where the config is rather than relying on the default. Sveltia
+       looks for /admin/config.yml beside a page called index.html; this
+       page is cms.html, framed by the split screen next door, so without
+       this it reports "The configuration file could not be retrieved." -->
+  <link rel="cms-config-url" type="text/yaml" href="config.yml">
+</head>
+<body>
+  <!-- Sveltia CMS, vendored rather than fetched from a CDN. Nothing here is
+       loaded from a third party, and the editor cannot change underfoot
+       without someone choosing to update this file.
+
+       The preview is not in this pane: Sveltia does not render custom
+       preview templates (measured — it accepts the registration and never
+       calls it). Instead the "Live Site" button opens the real page in
+       ?preview mode, where it watches the repository and redraws seconds
+       after every save. `display_url` in config.yml points at it. -->
+  <script src="sveltia-cms.js"></script>
+
+</body>
+</html>

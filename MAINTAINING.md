@@ -25,11 +25,11 @@ in the same order as its menu:
 Opening *Publications* edits the Publications page and nothing else, so it is
 always clear what a change will affect.
 
-**The real website sits beside the form.** The editor has a *Live preview*
-panel docked on the right showing the actual page — the portrait, the
-typography, the water in the sidebar, the solved cross-section, every effect,
-because it is the site rather than a drawing of it. Drag its left edge to
-resize, *Hide* to collapse it, *Open in a tab* for a full-width look.
+**The real website sits beside the form.** The editing screen is split: the
+form on the left, the actual page on the right — the portrait, the typography,
+the water in the sidebar, the solved cross-section, every effect, because it
+is the site rather than a drawing of it. Drag the divider to resize it,
+*Preview* to hide or show it, *Open the site* for a full-width look.
 
 It refreshes a moment after each save, and updates long before the published
 page does: it reads content straight from the repository rather than waiting

@@ -5,22 +5,139 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Edit the website — Basant Maheshwari</title>
+  <style>
+  /* ══════════════════════════════════════════════════════════════════
+     The editing screen: the form on the left, the real website on the
+     right.
+
+     Both are iframes, and that is the point. An earlier version injected
+     a panel into the CMS's own page and then tried to make room for it by
+     pulling the app's right edge in. It worked until an entry was opened,
+     because the entry editor is a *separate* fixed-position layer that
+     spans the whole window — so the form ran underneath the preview and
+     was cut off. Constraining each new layer as it appeared would have
+     been a losing game.
+
+     Splitting one level up instead means the CMS lays itself out normally
+     inside its own frame and cannot overlap anything. It is also how the
+     marvi sites do it, except that there the CMS provides the split and
+     here we provide it.
+     ══════════════════════════════════════════════════════════════════ */
+  :root{
+    --bar:#1c1f22; --edge:rgba(255,255,255,.14); --ink:#e8eaec; --muted:#98a1a8;
+    --accent:#12617f; --split:420px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:#111}
+  body{display:flex;flex-direction:column;overflow:hidden;
+    font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+
+  header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:0 14px;height:44px;
+    background:var(--bar);color:var(--ink);border-bottom:1px solid var(--edge)}
+  header b{font-weight:500;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+  header .sp{margin-left:auto}
+  header button,header a{font:inherit;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
+    padding:6px 12px;border:1px solid var(--edge);border-radius:3px;background:transparent;
+    color:var(--ink);cursor:pointer;text-decoration:none}
+  header button:hover,header a:hover{border-color:var(--accent);color:#8ecae6}
+  header button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  main{flex:1 1 auto;display:flex;min-height:0}
+  iframe{border:0;display:block;height:100%;width:100%}
+  #edit{flex:1 1 auto;min-width:0;background:#1c1f22}
+  #view{flex:0 0 var(--split);min-width:0;background:#f6f4ef;position:relative}
+  body[data-preview="off"] #view,body[data-preview="off"] #grip{display:none}
+
+  /* The divider. Sized generously — a 1px target is a nuisance to hit. */
+  #grip{flex:0 0 8px;cursor:col-resize;background:var(--bar);border-left:1px solid var(--edge);
+    border-right:1px solid var(--edge)}
+  #grip:hover,#grip[data-dragging]{background:var(--accent)}
+  /* While dragging, the pointer is over an iframe half the time and the
+     parent stops seeing mousemove. This blanket sits above both. */
+  #shield{position:fixed;inset:0;z-index:9;display:none;cursor:col-resize}
+  body[data-dragging] #shield{display:block}
+
+  @media (max-width:900px){
+    /* Side by side stops being useful once neither half is readable. */
+    main{flex-direction:column}
+    #view{flex:0 0 45%}
+    #grip{flex:0 0 8px;cursor:row-resize}
+  }
+  </style>
 </head>
-<body>
-  <!-- Sveltia CMS, vendored rather than fetched from a CDN. Nothing here is
-       loaded from a third party, and the editor cannot change underfoot
-       without someone choosing to update this file.
+<body data-preview="on">
+  <header>
+    <b>Edit the website</b>
+    <span class="sp"></span>
+    <button type="button" id="toggle" aria-pressed="true">Preview</button>
+    <button type="button" id="reload">Refresh</button>
+    <a href="../?preview" target="_blank" rel="noopener">Open the site</a>
+  </header>
 
-       The preview is not in this pane: Sveltia does not render custom
-       preview templates (measured — it accepts the registration and never
-       calls it). Instead the "Live Site" button opens the real page in
-       ?preview mode, where it watches the repository and redraws seconds
-       after every save. `display_url` in config.yml points at it. -->
-  <script src="sveltia-cms.js"></script>
+  <main>
+    <!-- The CMS, laid out normally inside its own frame. -->
+    <iframe id="edit" src="cms.html" title="Website editor"></iframe>
+    <div id="grip" role="separator" aria-orientation="vertical" tabindex="0"
+         aria-label="Drag to resize the preview"></div>
+    <!-- The real website. ?preview makes it watch the repository and redraw
+         within seconds of a save. -->
+    <iframe id="view" title="The website as it will look"></iframe>
+  </main>
+  <div id="shield"></div>
 
-  <!-- The real website, docked beside the editor. This does not use the
-       CMS preview API at all — Sveltia will not render a custom preview
-       template — it just adds a panel of its own holding the live site. -->
-  <script src="livepreview.js" defer></script>
+  <script>
+  (function () {
+    var view = document.getElementById("view");
+    var grip = document.getElementById("grip");
+    var body = document.body;
+    var KEY = "bm-editor-layout";
+
+    var state = {};
+    try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
+    var split = Math.min(Math.max(state.split || Math.round(innerWidth * 0.42), 280), innerWidth - 360);
+    var on = state.on !== false;
+
+    function apply() {
+      document.documentElement.style.setProperty("--split", split + "px");
+      body.dataset.preview = on ? "on" : "off";
+      document.getElementById("toggle").setAttribute("aria-pressed", String(on));
+    }
+    function save() {
+      try { localStorage.setItem(KEY, JSON.stringify({split: split, on: on})); } catch (e) {}
+    }
+    function load() {
+      /* Cache-busted, so Refresh genuinely refetches rather than showing
+         the copy the browser already holds. */
+      view.src = "../?preview&t=" + Date.now();
+    }
+
+    document.getElementById("toggle").addEventListener("click", function () {
+      on = !on; apply(); save(); if (on && !view.src) load();
+    });
+    document.getElementById("reload").addEventListener("click", load);
+
+    var dragging = false;
+    grip.addEventListener("mousedown", function (e) { dragging = true; body.dataset.dragging = "1"; e.preventDefault(); });
+    addEventListener("mousemove", function (e) {
+      if (!dragging) return;
+      split = Math.min(Math.max(innerWidth - e.clientX, 280), innerWidth - 360);
+      apply();
+    });
+    addEventListener("mouseup", function () {
+      if (!dragging) return;
+      dragging = false; delete body.dataset.dragging; save();
+    });
+    /* Keyboard, because a drag handle that only takes a mouse is not a
+       control everyone can use. */
+    grip.addEventListener("keydown", function (e) {
+      var step = e.shiftKey ? 80 : 24;
+      if (e.key === "ArrowLeft")  { split = Math.min(split + step, innerWidth - 360); apply(); save(); e.preventDefault(); }
+      if (e.key === "ArrowRight") { split = Math.max(split - step, 280); apply(); save(); e.preventDefault(); }
+    });
+
+    apply();
+    if (on) load();
+  })();
+  </script>
 </body>
 </html>

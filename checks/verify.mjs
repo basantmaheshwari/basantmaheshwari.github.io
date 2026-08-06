@@ -440,18 +440,29 @@ try {
     const adminIdx = (() => {
       try { return readFileSync(join(ROOT, "admin/index.html"), "utf8"); } catch { return ""; }
     })();
-    if (!/livepreview\.js/.test(adminIdx)) {
-      warn("admin/index.html does not load livepreview.js — the editor would lose " +
-           "the live view of the site beside the form");
+    /* The editing screen is a split shell: the CMS in one frame, the live
+       site in the other. Injecting a panel into the CMS's own page was
+       tried and cut the form in half once an entry was open, because the
+       entry editor is a separate full-window layer. */
+    if (!/src="cms\.html"/.test(adminIdx)) {
+      fail("admin/index.html does not frame cms.html — the editing screen would " +
+           "have no editor in it");
     }
-    try { readFileSync(join(ROOT, "admin/livepreview.js"), "utf8"); }
-    catch { warn("admin/livepreview.js is missing"); }
+    if (!/\.\.\/\?preview/.test(adminIdx)) {
+      warn("admin/index.html never loads ../?preview — the editing screen would " +
+           "lose the live view of the site beside the form");
+    }
+    try { readFileSync(join(ROOT, "admin/cms.html"), "utf8"); }
+    catch { fail("admin/cms.html is missing — /admin/ frames it"); }
 
     /* Vendored on purpose: no CDN, and the editor cannot change underfoot. */
     const adminHtml = (() => {
       try { return readFileSync(join(ROOT, "admin/index.html"), "utf8"); } catch { return ""; }
     })();
-    if (/https?:\/\/[^"']*(decap|sveltia|unpkg|cdn)/i.test(adminHtml)) {
+    const cmsHtml = (() => {
+      try { return readFileSync(join(ROOT, "admin/cms.html"), "utf8"); } catch { return ""; }
+    })();
+    if (/https?:\/\/[^"']*(decap|sveltia|unpkg|cdn)/i.test(adminHtml + cmsHtml)) {
       warn("admin/index.html loads the editor from another host — it is vendored " +
            "as admin/sveltia-cms.js so that nothing is fetched from a CDN");
     }
