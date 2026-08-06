@@ -73,20 +73,24 @@ The site still carries its content inside the one file rather than fetching
 it, because it has to work offline from a file:// URL. The JSON is the editing
 surface; the HTML is the artefact.
 
-| File in `content/` | Array | Drives |
+One file per page of the site, so one page is one thing to edit.
+
+| File in `content/` | Arrays | Drives |
 | ------------------ | ----- | ------ |
-| `home.json`         | `HOME`         | The front page's photograph, headline and opening paragraphs |
+| `home.json`         | `HOME`, `METRICS` | The photograph, headline, opening words and the four figures |
 | `sections.json`     | `SECTIONS`     | The rail, the mobile menu, the panel engine — and whole pages, via `page` |
-| `metrics.json`      | `METRICS`      | The four figures on the profile page |
 | `research.json`     | `RESEARCH`     | Research themes |
+| `publications.json` | `PUBLICATIONS`, `PUB_KINDS` | The publication list and its section headings |
 | `programs.json`     | `PROGRAMS`     | MARVI, AIWC, Young Water Professionals, dam safety training |
+| `team.json`         | `TEAM`, `TEAM_ROLES` | The people and the sections they appear under |
 | `teaching.json`     | `TEACHING`     | Teaching and capacity building |
 | `news.json`         | `NEWS`         | News items, newest first |
 | `contact.json`      | `CONTACT`      | Contact channels and profile links |
-| `team-roles.json`   | `TEAM_ROLES`   | The Team page sections, their order and their empty states |
-| `team.json`         | `TEAM`         | The people — see the format below |
-| `pub-kinds.json`    | `PUB_KINDS`    | The Publications sections, their order and their empty states |
-| `publications.json` | `PUBLICATIONS` | The publication list — see the format below |
+
+A file may carry more than one array — `publications.json` holds both the
+papers and the headings they group under — because in the editor they are one
+page and should be one form. `FILES` in `scripts/content.mjs` maps each file
+to the arrays it fills and the property each lives under.
 
 A research, programme or news entry looks like this:
 

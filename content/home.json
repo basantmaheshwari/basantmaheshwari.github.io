@@ -1,5 +1,5 @@
 {
-  "items": [
+  "hero": [
     {
       "eyebrow": "Water · Environment · Sustainability",
       "headline1": "The water table is",
@@ -11,6 +11,24 @@
       "portrait": "assets/portrait.webp",
       "portraitAlt": "Portrait of Basant Maheshwari",
       "portraitCaption": "Distinguished Professor<br>School of Science, WSU"
+    }
+  ],
+  "metrics": [
+    {
+      "value": "5,498",
+      "label": "Citations<br>Google Scholar"
+    },
+    {
+      "value": "36",
+      "label": "h-index"
+    },
+    {
+      "value": "100",
+      "label": "i10-index"
+    },
+    {
+      "value": "30+",
+      "label": "Years in water<br>research & practice"
     }
   ]
 }

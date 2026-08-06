@@ -12,7 +12,7 @@
  *     node scripts/build.mjs --check   exit 1 if it would change anything
  */
 
-import {readHtml, writeHtml, readContentFiles, injectArrays, inlinePortrait, FILES} from "./content.mjs";
+import {readHtml, writeHtml, readContentFiles, injectArrays, inlinePortrait, ARRAY_NAMES} from "./content.mjs";
 
 const check = process.argv.includes("--check");
 const {content, missing, malformed} = readContentFiles();
@@ -35,7 +35,7 @@ try {
   process.exit(1);
 }
 
-const counts = Object.keys(FILES).map(n => `${content[n].length} ${n.toLowerCase()}`).join(", ");
+const counts = ARRAY_NAMES.map(n => `${(content[n] || []).length} ${n.toLowerCase()}`).join(", ");
 
 /* No stylesheet to generate any more: the editor previews the real site in
    an iframe, so it uses the site's own <style> directly. */

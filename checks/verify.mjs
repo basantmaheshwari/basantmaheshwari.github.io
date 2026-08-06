@@ -347,7 +347,7 @@ try {
 
   const inHtml = readArraysFromHtml(html);
   const drifted = [];
-  for (const name of Object.keys(FILES)) {
+  for (const name of Object.keys(content)) {
     if (!(name in content) || !(name in inHtml)) continue;
     if (JSON.stringify(content[name]) !== JSON.stringify(inHtml[name])) drifted.push(name);
   }
@@ -367,7 +367,7 @@ try {
       warn("admin/config.yml still has the placeholder base_url — saving from the editor " +
            "will fail at sign-in until the auth service is set up (see MAINTAINING.md)");
     }
-    for (const file of Object.values(FILES)) {
+    for (const file of Object.keys(FILES)) {
       if (!cfg.includes(`content/${file}`)) {
         warn(`content/${file} is not in admin/config.yml — it cannot be edited through the editor`);
       }
@@ -379,9 +379,23 @@ try {
     /* The whole declaration, not a substring: "profile_heroX" contains
        "profile_hero", and a bare includes() passes while the collection has
        actually been renamed away. */
-    if (!/^\s*-\s*name:\s*profile_hero\s*$/m.test(cfg)) {
-      warn('admin/config.yml has no "profile_hero" — the front page\'s photograph ' +
-           "and opening words would stop being editable");
+    /* One page, one form: a page split across two files means choosing
+       between forms before you can see what you are editing. */
+    /* Counted per collection, not in total: adding a second form *and* a
+       second file keeps the totals equal while the page is still split,
+       which is exactly the state this is meant to catch. Collections sit at
+       two spaces of indent, their files at six. */
+    const chunks = cfg.split(/^  - name:/m).slice(1);
+    for (const chunk of chunks) {
+      const label = (chunk.match(/^\s*label:\s*'?([^'\n]+)/m) || [, "?"])[1].trim();
+      const n = (chunk.match(/^      - name:/gm) || []).length;
+      if (n > 1) {
+        warn(`admin/config.yml gives "${label}" ${n} separate forms — one page should be ` +
+             "one form, or the editor asks you to choose before you can see what you are editing");
+      }
+    }
+    if (!cfg.includes("name: portrait")) {
+      warn("admin/config.yml has no portrait field — the photograph would stop being editable");
     }
     if (!/id="hero-portrait"/.test(html)) {
       fail('index.html has no id="hero-portrait" — scripts/build.mjs finds the ' +

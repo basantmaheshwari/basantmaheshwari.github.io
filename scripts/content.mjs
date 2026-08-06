@@ -21,21 +21,30 @@ export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const HTML = join(ROOT, "index.html");
 export const CONTENT = join(ROOT, "content");
 
-/** JS array name → the file Sveltia edits. Order is display order. */
+/**
+ * One file per page of the site, so that one page is one thing to edit.
+ *
+ * Each entry maps a content file to the arrays inside `index.html` it
+ * fills, keyed by the property it lives under in the JSON. The Profile
+ * page, for instance, is a single file holding both the hero and the four
+ * figures — because in the editor it is a single page, and splitting it
+ * across two files made you choose between two forms before you could see
+ * what you were editing.
+ */
 export const FILES = {
-  HOME:         "home.json",
-  SECTIONS:     "sections.json",
-  METRICS:      "metrics.json",
-  RESEARCH:     "research.json",
-  PROGRAMS:     "programs.json",
-  TEAM_ROLES:   "team-roles.json",
-  TEAM:         "team.json",
-  TEACHING:     "teaching.json",
-  NEWS:         "news.json",
-  CONTACT:      "contact.json",
-  PUB_KINDS:    "pub-kinds.json",
-  PUBLICATIONS: "publications.json",
+  "home.json":         {HOME: "hero", METRICS: "metrics"},
+  "sections.json":     {SECTIONS: "items"},
+  "research.json":     {RESEARCH: "items"},
+  "publications.json": {PUBLICATIONS: "items", PUB_KINDS: "sections"},
+  "programs.json":     {PROGRAMS: "items"},
+  "team.json":         {TEAM: "items", TEAM_ROLES: "sections"},
+  "teaching.json":     {TEACHING: "items"},
+  "news.json":         {NEWS: "items"},
+  "contact.json":      {CONTACT: "items"},
 };
+
+/** Every array name the site expects, in injection order. */
+export const ARRAY_NAMES = Object.values(FILES).flatMap(m => Object.keys(m));
 
 /** Arrays whose entries are written one per line — long lists where a
     line-per-record keeps diffs readable. */
@@ -76,7 +85,7 @@ export function readArray(html, name) {
 /** Every array, as plain data. */
 export function readArraysFromHtml(html) {
   const out = {};
-  for (const name of Object.keys(FILES)) {
+  for (const name of ARRAY_NAMES) {
     const v = readArray(html, name);
     if (v !== null) out[name] = v;
   }
@@ -92,19 +101,24 @@ export function readArraysFromHtml(html) {
  */
 export function readContentFiles() {
   const out = {}, missing = [], malformed = [];
-  for (const [name, file] of Object.entries(FILES)) {
+  for (const [file, map] of Object.entries(FILES)) {
     const p = join(CONTENT, file);
     if (!existsSync(p)) { missing.push(file); continue; }
     const parsed = JSON.parse(readFileSync(p, "utf8"));
-    if (!Array.isArray(parsed?.items)) { malformed.push(file); continue; }
-    out[name] = parsed.items;
+    for (const [name, key] of Object.entries(map)) {
+      if (!Array.isArray(parsed?.[key])) { malformed.push(`${file} → "${key}"`); continue; }
+      out[name] = parsed[key];
+    }
   }
   return {content: out, missing, malformed};
 }
 
-/** Write one array out in the shape the CMS expects. */
-export function writeContentFile(file, items) {
-  writeFileSync(join(CONTENT, file), JSON.stringify({items}, null, 2) + "\n");
+/** Write one content file from the arrays it carries. */
+export function writeContentFile(file, data) {
+  const map = FILES[file];
+  const body = {};
+  for (const [name, key] of Object.entries(map)) body[key] = data[name] ?? [];
+  writeFileSync(join(CONTENT, file), JSON.stringify(body, null, 2) + "\n");
 }
 
 /** Render an array back to JS source, indented to sit in the script. */
@@ -120,7 +134,7 @@ export function formatArray(name, value) {
 /** Write every array in `data` into `html`, returning the new source. */
 export function injectArrays(html, data) {
   let out = html;
-  for (const name of Object.keys(FILES)) {
+  for (const name of ARRAY_NAMES) {
     if (!(name in data)) continue;
     const span = findArray(out, name);
     if (!span) throw new Error(`index.html has no ${name} array to write into`);
