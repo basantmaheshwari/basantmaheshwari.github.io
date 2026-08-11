@@ -463,21 +463,25 @@ Sources already used, and the right place to check first:
 - Programmes and events — [aiwc.org.au](https://aiwc.org.au/) and
   [westernsydney.edu.au/marvi](https://www.westernsydney.edu.au/marvi).
 
-## The water drawings, and the one number pair not to touch
+## The water drawing, and the one number pair not to touch
 
-Two drawings share one model, `AQUIFER` and `SEASON`, declared just above the
-cross-section in the script:
+One drawing reads the model, `AQUIFER` and `SEASON`, declared just above it in
+the script:
 
-- **The cross-section** on the profile page.
 - **The rail**, which is a monitoring well sunk at `x = L/2` — the centre of
   the watershed, where the recharge mound is highest. The left boundary would
   be the obvious place and is exactly wrong: it is a fixed-head boundary, so
   its level never moves.
 
-Both read phase from absolute time rather than from a first-frame origin, so
-they stay on the same season without either knowing the other exists. If you
-change `SEASON`, both change together — that is the point, and it is why the
-level in the sidebar can never contradict the mound in the figure.
+There used to be a second — a cross-section figure on the profile page, sharing
+the same model so the two could never tell different stories. **It was removed
+on request**, along with the "The water table is a shared account." headline it
+sat beneath. Do not reinstate either without being asked. The model is still
+its own object rather than folded into `railWell()`, because the physics and
+the drawing that reads it are separate concerns.
+
+It reads phase from absolute time rather than from a first-frame origin, so it
+needs no shared state to stay on season.
 
 **The rail's wash alpha and the rail's text colours are a coupled pair.** The
 navigation sits at 4.65:1 against bare paper, which is barely over the 4.5:1
@@ -492,25 +496,36 @@ is drawn at the top of the rail, and therefore how far down the water table
 sits. It was raised to 44 m so the table falls below the navigation rather
 than crossing it.
 
-## The cross-section on the profile page
+## The solved water table
 
-The figure on the profile page is not decoration and should not be treated as
-adjustable styling. The water table is solved each frame from the
-Dupuit–Forchheimer equation for unconfined flow with areal recharge:
+The rail's level is not decoration and should not be treated as adjustable
+styling. It is solved each frame from the Dupuit–Forchheimer equation for
+unconfined flow with areal recharge:
 
 ```
 h(x)² = h₁² + (h₂² − h₁²)·x/L + (N/K)·x·(L − x)
 ```
 
 The final term is the recharge mound. The parameters (`H1`, `H2`, `K`,
-`NK_PEAK`, `NK_MIN`, well depths) are chosen so the numbers stay physically
-plausible: recharge of roughly 0.02–0.46 m/yr, a water table that never
-breaches the land surface, and two of the six wells failing at the driest
-point. If you change one, check the readout still reports sensible metres and
-that the caption still describes what is drawn.
+`NK_PEAK`, `NK_MIN`) are chosen so the numbers stay physically plausible:
+recharge of roughly 0.02–0.46 m/yr, and a water table that never breaches the
+land surface. If you change one, check the level still sits in sensible metres
+against the 22 m column.
 
-Do not replace the solved curve with a hand-drawn or eased path. The claim in
-the caption is that it is computed, and that claim has to stay true.
+Do not replace the solved curve with a hand-drawn or eased path. The claim the
+project makes about this drawing is that it is computed, and that claim has to
+stay true.
+
+## Empty is not absent
+
+`renderHero()` hydrates the hero from `content/home.json` over fallback markup.
+**An empty string means "empty this element"; only an absent field means "keep
+the fallback".** This distinction is load-bearing, not stylistic: the guard
+used to read `if(h.headline1 || h.headlineAccent)`, which collapsed the two,
+and the result was an editor that could change text but never delete it — a
+cleared headline saved, built, deployed and changed nothing on the page.
+
+If you add a hydrated field, guard it on `!= null`, never on truthiness.
 
 ## Required workflow
 

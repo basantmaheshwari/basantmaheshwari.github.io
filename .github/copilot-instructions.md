@@ -31,6 +31,12 @@ Important rules:
 - Use his full title, Distinguished Professor, on first mention. Australian
   spelling. No marketing register.
 - Treat Australia and India as equal partners; no cultural stereotype.
-- The cross-section figure is a solved Dupuit–Forchheimer water table, not
+- The sidebar's water level is a solved Dupuit–Forchheimer water table, not
   decoration. Keep it computed and keep the parameters physical.
+- The cross-section figure under the hero, and the "The water table is a
+  shared account." headline, were removed on request. Do not reinstate either.
+- **An empty string in `content/*.json` means "empty this element", not "use
+  the markup's fallback".** Only an absent field falls back. Guarding a
+  hydration write with `if(value)` is what made the editor unable to delete
+  anything — see `renderHero()`.
 - Finish every change with `node scripts/build.mjs && node checks/verify.mjs`.

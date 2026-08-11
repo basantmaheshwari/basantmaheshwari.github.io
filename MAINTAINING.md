@@ -6,8 +6,8 @@ Everything you need to change <https://basantmaheshwari.github.io/>.
 
 The editor is at **<https://basantmaheshwari.github.io/admin/>**.
 
-Sign in with GitHub and the sidebar shows **one entry per page of the site**,
-in the same order as its menu:
+Sign in with an access token (see [Signing in](#signing-in)) and the sidebar
+shows **one entry per page of the site**, in the same order as its menu:
 
 ```
 00 · Profile page        the photograph, headline and opening words;
@@ -27,8 +27,8 @@ always clear what a change will affect.
 
 **The real website sits beside the form.** The editing screen is split: the
 form on the left, the actual page on the right — the portrait, the typography,
-the water in the sidebar, the solved cross-section, every effect, because it
-is the site rather than a drawing of it. Drag the divider to resize it,
+the water in the sidebar, every effect, because it is the site rather than a
+drawing of it. Drag the divider to resize it,
 *Preview* to hide or show it, *Open the site* for a full-width look.
 
 It refreshes a moment after each save, and updates long before the published
@@ -65,24 +65,28 @@ check refuses to publish a branch where the two disagree.
 
 ### Signing in
 
-The editor signs in with GitHub through a small authentication service — a
-static page cannot hold an OAuth secret. It currently uses an existing shared
-worker, so **nothing new has to be deployed**:
+Press **Sign In Using Access Token** and paste a GitHub fine-grained personal
+access token. Make one at
+<https://github.com/settings/personal-access-tokens>, with:
 
-```
-https://sveltia-cms-auth.marvi-groundwater.workers.dev
-```
+* **Repository access** — only `basantmaheshwari/basantmaheshwari.github.io`
+* **Permissions** → **Contents: Read and write**
 
-If *Sign in with GitHub* refuses this origin, add
-`https://basantmaheshwari.github.io` to that worker's `ALLOWED_ORIGINS` in
-Cloudflare.
+There is no OAuth app and no server anywhere in the flow, so there is nothing
+to keep running and nothing that can be withdrawn from under the site.
 
-**Worth knowing:** that worker is not owned by this account, so if it is ever
-withdrawn, sign-in here stops with it. Nothing else breaks — the website, the
-content and the publishing pipeline are all in this repository and carry on
-regardless. Two ways out when it matters: Sveltia's personal access token
-button needs no worker at all, or the same open-source worker can be deployed
-on Basant's own Cloudflare account and `base_url` pointed at it.
+**Worth knowing:** GitHub caps fine-grained tokens at about a year. When one
+expires the editor simply stops saving, with no warning — issue a new token
+and sign in again.
+
+**What happened before:** sign-in used to route through a shared Cloudflare
+Worker at `sveltia-cms-auth.marvi-groundwater.workers.dev`, which this account
+never owned. It has since been deleted — every path on it answers 404 with
+Cloudflare error 1042 — so *Sign in with GitHub* could not complete. That
+button is gone; `auth_methods: [token]` in `admin/config.yml` pins the editor
+to the path that needs no service. Leaving both out is not an option: with
+neither `base_url` nor `auth_methods`, Sveltia falls back to Netlify's hosted
+OAuth client, which cannot work for a site published on GitHub Pages either.
 
 Anyone who should be able to edit needs write access to the repository.
 
@@ -367,25 +371,28 @@ filtered groups that this shape cannot express; everything else can be data.
 Ask for a new page in plain language through the **Request a website change**
 form — "A new page" is one of the options.
 
-## The figure on the profile page
+## The water in the sidebar
 
-The cross-section is a hydrogeological section whose water table is **solved,
-not drawn**. For steady unconfined flow between two fixed heads with areal
-recharge `N` over an aquifer of conductivity `K`, the Dupuit–Forchheimer
-equation gives
+The cross-section figure that used to sit under the hero — the drag-to-scroll
+aquifer drawing, its readouts and its equation caption — was **removed on
+request**, along with the "The water table is a shared account." headline it
+sat beneath. Do not reinstate either without being asked.
+
+What remains is the sidebar, drawn as a monitoring well sunk at the centre of
+a watershed. Its level is **solved, not drawn**: for steady unconfined flow
+between two fixed heads with areal recharge `N` over an aquifer of
+conductivity `K`, the Dupuit–Forchheimer equation gives
 
 ```
 h(x)² = h₁² + (h₂² − h₁²)·x/L + (N/K)·x·(L − x)
 ```
 
 The final term is the recharge mound: identically zero at both boundaries,
-greatest in between, and proportional to `N`. Driving `N` through a monsoon
-rise and a Maillet exponential recession makes the mound grow and drain, and
-two of the six monitored wells go dry at the low point.
-
-That is the argument the MARVI work makes, drawn in the notation of his own
-field: recharge does not raise the boundaries, it raises everything between
-them — which is why a check dam shows up as water in a well some distance away.
+greatest in between, and proportional to `N`. The rail reads `h(L/2)` — the
+centre, where the mound is highest and where a village volunteer's reading
+actually varies — and drives `N` through a monsoon rise and a Maillet
+exponential recession, so the level in the sidebar rises and falls across the
+year. Keep it computed and keep the parameters physical.
 
 Verified by recovering `N/K` from the rendered SVG path and re-solving: the
 maximum residual across the curve is 1.2 cm, which is exactly the rounding
