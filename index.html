@@ -179,7 +179,9 @@
   .fig-note code{font-family:var(--mono);font-size:.85em;background:var(--water-soft);padding:1px 5px}
 
   /* ─── Metrics ──────────────────────────────────────────────────── */
-  .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line-soft);
+  /* --metric-cols is set from the number of figures in content/home.json,
+     so adding one keeps them on a single row instead of orphaning it. */
+  .metrics{display:grid;grid-template-columns:repeat(var(--metric-cols,4),minmax(0,1fr));gap:1px;background:var(--line-soft);
     border:1px solid var(--line-soft);margin:0}
   .metrics div{background:var(--paper);padding:22px 20px;display:grid;gap:5px}
   .metrics b{font-family:var(--serif);font-size:2rem;font-weight:400;line-height:1;font-variant-numeric:tabular-nums}
@@ -479,8 +481,7 @@
           <div><p class="tag">At a glance</p></div>
           <div>
             <div class="metrics" id="metrics"></div>
-            <p class="fig-note" style="margin-top:14px">Citation metrics from Google Scholar. Publication counts as
-              reported by the Australia India Water Centre; the list on this site covers the works carrying a DOI.</p>
+            <p class="fig-note" style="margin-top:14px" id="metrics-note"></p>
           </div>
         </div>
 
@@ -628,7 +629,8 @@
       "headlineAccent": "",
       "headline3": "",
       "role": "Distinguished Professor at Western Sydney University. Director of the Australia India Water Centre. Leader of the MARVI programme.",
-      "bio": "Over 30 years of research on water and its interactions with the landscape — groundwater, irrigation, river health and urban water — built on a conviction that the people who draw from an aquifer are the ones who can manage it. MARVI turned that into method: village volunteers monitoring their own wells, and a shared record that makes a common resource visible to everyone drawing on it."
+      "bio": "Over 30 years of research on water and its interactions with the landscape — groundwater, irrigation, river health and urban water — built on a conviction that the people who draw from an aquifer are the ones who can manage it. MARVI turned that into method: village volunteers monitoring their own wells, and a shared record that makes a common resource visible to everyone drawing on it.",
+      "citationsChecked": "11 August 2026"
     },
   ];
 
@@ -688,6 +690,11 @@
     {
       "value": "26",
       "label": "i10-index since 2023"
+    },
+    {
+      "value": "262",
+      "source": "publications",
+      "label": "Publications<br>listed on this site"
     },
     {
       "value": "30+",
@@ -1636,13 +1643,50 @@
 
   document.getElementById("news-empty").hidden = CONTENT.NEWS.length > 0;
 
-  document.getElementById("metrics").innerHTML = CONTENT.METRICS.map(m =>
-    `<div><b>${esc(m.value)}</b><span>${m.label}</span></div>`).join("");
+  /* A figure may name a source instead of carrying a number, in which case
+     it is counted from the page it describes and nobody has to remember to
+     update it. Counting beats fetching here: the list in this repository is
+     the most complete record of his work that exists anywhere — fuller than
+     Google Scholar, and far fuller than OpenAlex or Semantic Scholar, both
+     of which split him across half a dozen author records. It also costs no
+     network, which the self-contained page could not spend anyway.
+
+     Citations and the h-index are not here and cannot be: Google Scholar
+     publishes no API and forbids automated queries, so those stay typed in
+     by hand. See the note under the figures. */
+  const METRIC_SOURCES = {
+    publications: () => CONTENT.PUBLICATIONS.length,
+  };
+
+  const metricsEl = document.getElementById("metrics");
+  /* However many figures the file carries, they sit on one row. Hard-coding
+     four meant a fifth dropped onto a row of its own. */
+  metricsEl.style.setProperty("--metric-cols", Math.max(1, CONTENT.METRICS.length));
+  metricsEl.innerHTML = CONTENT.METRICS.map(m => {
+    const count = m.source && METRIC_SOURCES[m.source];
+    /* An unknown source falls back to the typed value rather than blanking
+       the tile — a figure naming a list that has since been renamed should
+       go stale visibly, not vanish. */
+    const value = count ? count().toLocaleString("en-AU") : m.value;
+    return `<div><b>${esc(value)}</b><span>${m.label}</span></div>`;
+  }).join("");
+
+  /* Which figures look after themselves and which do not. A reader deserves
+     to know that, and so does whoever next wonders why one number is older
+     than the others. `citationsChecked` is a date in content/home.json. */
+  const checked = (CONTENT.HOME && CONTENT.HOME[0] || {}).citationsChecked;
+  document.getElementById("metrics-note").innerHTML =
+    `The publication count is the number of works listed on this site and updates itself as the list grows.
+     Citations, h-index and i10-index are from
+     <a href="https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&amp;hl=en" target="_blank"
+     rel="noreferrer">Google Scholar</a>, which publishes no interface for reading them automatically, so they are
+     checked by hand${checked ? ` — last on ${esc(checked)}` : ""}.`;
 
   document.getElementById("research-note").innerHTML =
-    `The complete list of more than 230 publications, including book chapters, conference papers and technical
-     reports, is on <a href="https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&amp;hl=en" target="_blank"
-     rel="noreferrer">Google Scholar</a> and <a href="https://orcid.org/0000-0002-5496-4345" target="_blank"
+    `The complete list of ${CONTENT.PUBLICATIONS.length} publications, including book chapters, conference papers
+     and technical reports, is <a href="#publications" data-go="publications">on this site</a>, on
+     <a href="https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&amp;hl=en" target="_blank"
+     rel="noreferrer">Google Scholar</a> and on <a href="https://orcid.org/0000-0002-5496-4345" target="_blank"
      rel="noreferrer">ORCID</a>.`;
 
   document.getElementById("teaching-body").innerHTML = `

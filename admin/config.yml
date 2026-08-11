@@ -97,15 +97,33 @@ collections:
               - {name: headline3, label: 'Headline — rest of the second line', widget: string, required: false}
               - {name: role, label: Role, widget: text, required: false}
               - {name: bio, label: Opening paragraph, widget: text, required: false}
+              - {name: citationsChecked, label: Citation figures last checked, widget: string, required: false,
+                 hint: 'Shown under the figures, e.g. "11 August 2026". Update it whenever you copy fresh
+                        numbers from Google Scholar, so a reader can see how current they are.'}
           - name: metrics
-            label: The four figures
+            label: The figures
             label_singular: figure
             widget: list
-            max: 4
+            max: 6
             summary: '{{fields.value}} — {{fields.label}}'
-            hint: 'Check them against Google Scholar, and update them together.'
+            hint: >
+              Citations, h-index and i10-index come from Google Scholar and have to be copied across by hand —
+              Scholar publishes no way to read them automatically. Update them together, and set "Citation
+              figures last checked" above. The publication count looks after itself.
             fields:
-              - {name: value, label: Figure, widget: string}
+              - {name: value, label: Figure, widget: string,
+                 hint: 'Ignored if "Counted automatically" below is set to anything but "Typed above".'}
+              # A figure that names a source is counted from the list it names,
+              # so it can never drift from the page it describes. Leaving this
+              # empty keeps the typed value, which is what every hand-checked
+              # Google Scholar figure needs.
+              - {name: source, label: Counted automatically, widget: select, required: false,
+                 options:
+                   - {label: 'Typed above — no counting', value: ''}
+                   - {label: 'Publications listed on this site', value: 'publications'}
+                 default: '',
+                 hint: 'Pick a list and the figure counts it every time the page loads, so adding a publication
+                        updates this number on its own.'}
               - {name: label, label: Caption, widget: string, hint: 'A <br> splits it over two lines.'}
 
   - name: research

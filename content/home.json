@@ -9,7 +9,8 @@
     "headlineAccent": "",
     "headline3": "",
     "role": "Distinguished Professor at Western Sydney University. Director of the Australia India Water Centre. Leader of the MARVI programme.",
-    "bio": "Over 30 years of research on water and its interactions with the landscape — groundwater, irrigation, river health and urban water — built on a conviction that the people who draw from an aquifer are the ones who can manage it. MARVI turned that into method: village volunteers monitoring their own wells, and a shared record that makes a common resource visible to everyone drawing on it."
+    "bio": "Over 30 years of research on water and its interactions with the landscape — groundwater, irrigation, river health and urban water — built on a conviction that the people who draw from an aquifer are the ones who can manage it. MARVI turned that into method: village volunteers monitoring their own wells, and a shared record that makes a common resource visible to everyone drawing on it.",
+    "citationsChecked": "11 August 2026"
   },
   "metrics": [
     {
@@ -23,6 +24,11 @@
     {
       "value": "26",
       "label": "i10-index since 2023"
+    },
+    {
+      "value": "262",
+      "source": "publications",
+      "label": "Publications<br>listed on this site"
     },
     {
       "value": "30+",

@@ -458,10 +458,36 @@ Sources already used, and the right place to check first:
 - Publications — [ORCID 0000-0002-5496-4345](https://orcid.org/0000-0002-5496-4345),
   enriched from [Crossref](https://api.crossref.org/) for authors and venues.
 - Citation metrics — [Google Scholar](https://scholar.google.com/citations?user=g8Pn5w0AAAAJ&hl=en).
-  Update `METRICS` and the two places in `CONTACT`/`pub-note` together, and
-  put the retrieval date in the comment above `METRICS`.
+  Update `METRICS` and the two places in `CONTACT`/`pub-note` together, and set
+  `hero.citationsChecked` in `content/home.json` to the date you read them.
 - Programmes and events — [aiwc.org.au](https://aiwc.org.au/) and
   [westernsydney.edu.au/marvi](https://www.westernsydney.edu.au/marvi).
+
+### Counted figures, and why the citation ones are not
+
+A `METRICS` entry may carry `source: "publications"` instead of relying on its
+typed `value`. `METRIC_SOURCES` in `renderStatics()` then counts the list it
+names, so the figure cannot drift from the page it describes. Its `value` stays
+in the file as a fallback for an unrecognised source — a figure naming a list
+that has been renamed should go stale visibly, not vanish.
+
+**Do not try to automate the citation figures.** It has been investigated and
+every route fails for a different reason, so the finding is recorded here rather
+than re-derived:
+
+| Source | Publications | Citations | h-index | Why not |
+|---|---|---|---|---|
+| **This repository** | **262** | — | — | *used* — exact, offline, most complete list that exists |
+| Google Scholar | ~230 | 5,498 | 36 | no API; automated queries are against its terms; serves CAPTCHAs and IP-blocks |
+| ResearchGate | — | — | — | no public API; automated collection prohibited |
+| OpenAlex | 216 | 3,427 | 27 | he is split across 8 author records; the ORCID-linked one holds 1 work |
+| Semantic Scholar | 166 | 3,024 | 25 | split across 5+ records |
+| ORCID | 119 | — | — | profile incomplete |
+| Crossref by ORCID | 40 | — | — | only works with the ORCID attached |
+
+A feed from OpenAlex would publish 3,427 citations where Scholar reports 5,498
+and would jump about whenever OpenAlex re-runs disambiguation. Hand-checked and
+dated is more honest than automated and wrong.
 
 ## The water drawing, and the one number pair not to touch
 
