@@ -15,13 +15,13 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f6f4ef'/%3E%3Cpath d='M2 21c5-7 9-7 14 0s9 7 14 0' stroke='%2312617f' stroke-width='1.8' fill='none'/%3E%3Cpath d='M2 26c5-7 9-7 14 0s9 7 14 0' stroke='%2312617f' stroke-opacity='.35' stroke-width='1.4' fill='none'/%3E%3Cpath d='M2 12h28' stroke='%23a9691a' stroke-width='1.2' stroke-dasharray='3 3'/%3E%3C/svg%3E">
   <style>
   /* ══════════════════════════════════════════════════════════════════
-     WATER TABLE
+     BASANT MAHESHWARI
      A researcher's page, set like an academic monograph rather than a
-     brochure. The one piece of art direction is a hydrogeological
-     section whose water table is solved from the Dupuit–Forchheimer
-     equation — the instrument of the subject's own field, and a picture
-     of the argument his research makes: recharge at the village scale
-     raises the water table, and wells that were dry come back.
+     brochure. The only art direction left is the rail: a monitoring
+     well whose level is solved from the Dupuit–Forchheimer equation,
+     kept at a contrast low enough to read as background rather than as
+     a graphic. The cross-section figure that used to sit beneath the
+     hero was removed on request — see the note above the aquifer model.
 
      The page commits to a light ground on purpose. Academic pages are
      read at length, cited, and printed; there is no dark counterpart.
@@ -68,13 +68,12 @@
   .tc{font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--water)}
 
   /* ─── Rail ─────────────────────────────────────────────────────────
-     The rail is drawn as a monitoring well sunk at the centre of the same
-     watershed the profile figure shows in section. Its water level is
-     h(L/2) from the same Dupuit–Forchheimer solution on the same seasonal
-     clock, so the level in the sidebar and the mound in the figure rise
-     and fall together — one aquifer, seen two ways. Recharge percolates
-     down through the unsaturated zone above the water table and quickens
-     with the monsoon.
+     The rail is drawn as a monitoring well sunk at the centre of a
+     watershed. Its water level is h(L/2) from the Dupuit–Forchheimer
+     solution, driven through a monsoon-and-recession clock. Recharge
+     percolates down through the unsaturated zone above the water table
+     and quickens with the monsoon. Since the cross-section figure was
+     removed this is the only drawing the aquifer model feeds.
 
      Contrast is kept deliberately low. This is a reading in the
      background, not a graphic competing with the navigation, and the
@@ -174,35 +173,8 @@
   .btn.solid:hover::before{height:0}
   .btn.solid:hover{color:var(--water)}
 
-  /* ─── The section ──────────────────────────────────────────────────
-     A hydrogeological cross-section. The water table is not drawn by
-     hand: it is solved each frame from the Dupuit–Forchheimer equation
-     for unconfined flow with areal recharge, and driven through a
-     monsoon-and-recession cycle. See the script for the derivation. */
-  .section-fig{margin:5vh 0 0;padding:26px 28px 22px;background:var(--card);border:1px solid var(--line-soft)}
-  .section-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:14px}
-  .section-fig svg{width:100%;height:auto;display:block;overflow:visible}
-  .xs-sky{fill:none}
-  .xs-soil{fill:rgba(169,105,26,.055)}
-  .xs-sat{fill:rgba(18,97,127,.13)}
-  .xs-rock{fill:rgba(21,34,43,.07)}
-  .xs-surface{fill:none;stroke:var(--ink);stroke-opacity:.5;stroke-width:1.4}
-  .xs-wt{fill:none;stroke:var(--water);stroke-width:2;stroke-linecap:round}
-  .xs-wt-ghost{fill:none;stroke:var(--water);stroke-opacity:.22;stroke-width:1.2;stroke-dasharray:4 4}
-  .xs-rockline{fill:none;stroke:var(--ink);stroke-opacity:.28;stroke-width:1.2}
-  .xs-well{stroke:var(--ink);stroke-opacity:.42;stroke-width:1.3}
-  .xs-well-water{fill:var(--water)}
-  .xs-well-dry{fill:none;stroke:var(--ochre);stroke-width:1.4}
-  .xs-dam{fill:var(--ochre);fill-opacity:.75}
-  .xs-lbl{font-family:var(--mono);font-size:8.6px;letter-spacing:.13em;text-transform:uppercase;fill:var(--faint)}
-  .xs-rain{stroke:var(--water);stroke-opacity:.35;stroke-width:1.1;stroke-linecap:round}
-  .readout{display:flex;flex-wrap:wrap;gap:26px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line-soft)}
-  .readout div{display:grid;gap:3px}
-  .readout b{font-family:var(--serif);font-size:1.3rem;font-weight:400;font-variant-numeric:tabular-nums}
-  .readout b.dry{color:var(--ochre)}
-  /* Only meaningful once the figure is wider than its container, which is
-     a phone-only condition — see the responsive block. */
-  .fig-hint{display:none}
+  /* Kept for the note under the metrics. The cross-section figure this
+     class was written for is gone. */
   .fig-note{margin:16px 0 0;font-size:.87rem;color:var(--muted);max-width:74ch}
   .fig-note code{font-family:var(--mono);font-size:.85em;background:var(--water-soft);padding:1px 5px}
 
@@ -383,13 +355,6 @@
     .pub-year{grid-template-columns:1fr;gap:12px}
     .person{grid-template-columns:1fr}
     .person .pos{white-space:normal}
-    .section-fig{padding:18px 16px 16px;margin-inline:-4px}
-    .fig-scroll{overflow-x:auto;scrollbar-width:none}
-    .fig-scroll::-webkit-scrollbar{display:none}
-    .section-fig svg{min-width:640px}
-    .fig-hint{display:block;margin:10px 0 0}
-    .readout{gap:14px 22px}
-    .readout div{flex:1 1 42%}
 
     /* The chip row becomes a single scrolling strip rather than wrapping
        to three stacked rows. Five chips with counts cannot fit across a
@@ -451,7 +416,7 @@
      Academic pages get printed and cited. Every panel prints, the
      chrome does not, and links resolve to their addresses. */
   @media print{
-    .rail,.bar,.search,.hero-actions,.section-fig,.skip{display:none!important}
+    .rail,.bar,.search,.hero-actions,.skip{display:none!important}
     .page{margin:0}
     .panel[hidden]{display:block!important}
     body{background:#fff;color:#000;font-size:11pt}
@@ -493,7 +458,7 @@
         <div class="hero-grid">
           <div>
             <p class="tc" id="hero-eyebrow">Water · Environment · Sustainability</p>
-            <h1 class="display" id="hero-headline">The water table is<br>a <em>shared</em> account.</h1>
+            <h1 class="display" id="hero-headline">Basant Maheshwari</h1>
             <p class="role" id="hero-role">Distinguished Professor at Western Sydney University. Director of the Australia India Water Centre. Leader of the MARVI programme.</p>
             <p class="bio" id="hero-bio">Thirty years of research on water and its interactions with the landscape — groundwater, irrigation, river health and urban water — built on a conviction that the people who draw from an aquifer are the ones who can manage it. MARVI turned that into method: village volunteers monitoring their own wells, and a shared record that makes a common resource visible to everyone drawing on it.</p>
             <div class="hero-actions">
@@ -507,31 +472,6 @@
             <figcaption id="hero-caption">Distinguished Professor<br>School of Science, WSU</figcaption>
           </figure>
         </div>
-
-        <figure class="section-fig">
-          <div class="section-head">
-            <div>
-              <p class="tag" style="margin:0 0 3px">Unconfined aquifer · seasonal recharge</p>
-              <p class="tag" style="margin:0;color:var(--muted)" id="xs-season">Pre-monsoon</p>
-            </div>
-            <p class="tag" style="margin:0" id="xs-clock"></p>
-          </div>
-          <div class="fig-scroll"><div id="xs"></div></div>
-          <p class="fig-hint tag">Drag the section sideways to follow the water table &#8594;</p>
-          <div class="readout">
-            <div><b id="xs-head">—</b><span class="tag">Peak head in section</span></div>
-            <div><b id="xs-wells">—</b><span class="tag">Monitored wells holding water</span></div>
-            <div><b id="xs-recharge">—</b><span class="tag">Recharge N (m/yr)</span></div>
-          </div>
-          <figcaption class="fig-note">
-            The water table here is solved, not drawn. For steady unconfined flow between two fixed heads with
-            areal recharge <code>N</code> over an aquifer of conductivity <code>K</code>, the Dupuit–Forchheimer
-            equation gives <code>h(x)² = h₁² + (h₂² − h₁²)·x/L + (N/K)·x(L − x)</code>. The last term is the
-            recharge mound: zero at both boundaries, greatest in between. Drive <code>N</code> through a monsoon
-            and a recession and the mound rises and falls — which is the argument the MARVI work makes, and the
-            reason a check dam upstream shows up as water in a well downstream.
-          </figcaption>
-        </figure>
       </div></div>
 
       <div class="body"><div class="shell">
@@ -683,7 +623,7 @@
       "portraitAlt": "Portrait of Basant Maheshwari",
       "portraitCaption": "Distinguished Professor<br>Faculty of Engineering, Computing and Science; Western Sydney University",
       "eyebrow": "Water · Environment · Sustainability",
-      "headline1": "",
+      "headline1": "Basant Maheshwari",
       "headline2": "",
       "headlineAccent": "",
       "headline3": "",
@@ -1811,9 +1751,17 @@
      only a fallback for anything content/home.json leaves out. */
   function renderHero(){
     const h = (CONTENT.HOME && CONTENT.HOME[0]) || {};
+    /* Absent and empty are different answers, and treating them alike is
+       what made the editor look broken. `undefined` means home.json says
+       nothing about this field, so the markup's fallback stands. `""`
+       means someone cleared the box on purpose — an instruction to empty
+       the element, not to restore the words they were trying to delete.
+       Clearing the headline in the CMS used to save correctly, build
+       correctly, deploy correctly and change nothing on the page, because
+       `if(h.headline1 || …)` cannot tell those two apart. */
     const set = (id, value, html) => {
       const el = document.getElementById(id);
-      if(!el || value == null || value === "") return;
+      if(!el || value == null) return;
       if(html) el.innerHTML = value; else el.textContent = value;
     };
     set("hero-eyebrow", h.eyebrow);
@@ -1823,10 +1771,14 @@
        are written as markup — they come from a trusted repository file, not
        from a visitor. */
     set("hero-caption", h.portraitCaption, true);
-    if(h.headline1 || h.headlineAccent){
-      set("hero-headline",
-        `${esc(h.headline1 || "")}<br>${esc(h.headline2 || "")}` +
-        `<em>${esc(h.headlineAccent || "")}</em>${esc(h.headline3 || "")}`, true);
+    /* Rewritten only if the file says something about the headline at all;
+       four fields cleared to "" then collapse to "" and empty the h1. */
+    if(["headline1", "headline2", "headlineAccent", "headline3"].some(k => h[k] != null)){
+      const accent = h.headlineAccent ? `<em>${esc(h.headlineAccent)}</em>` : "";
+      const line2  = `${esc(h.headline2 || "")}${accent}${esc(h.headline3 || "")}`;
+      /* Joined rather than concatenated, so a headline occupying only one
+         of the two lines does not carry a dangling <br>. */
+      set("hero-headline", [esc(h.headline1 || ""), line2].filter(Boolean).join("<br>"), true);
     }
     const img = document.getElementById("hero-portrait");
     if(img){
@@ -1946,10 +1898,13 @@
   });
 
   /* ═══════════════════════════════════════════════════════════════════
-     THE CROSS-SECTION
+     THE AQUIFER
 
-     A hydrogeological section through an unconfined aquifer, with the
-     water table solved rather than drawn.
+     An unconfined aquifer with the water table solved rather than drawn.
+     This model once fed two drawings: the cross-section figure under the
+     hero, and the monitoring well in the rail. The figure was removed on
+     request along with its headline; only the rail reads this now. The
+     derivation stays because the rail's level is the same solution.
 
      Dupuit–Forchheimer assumes flow is essentially horizontal, so the
      hydraulic gradient equals the slope of the water table. Discharge
@@ -1976,10 +1931,10 @@
      which is why the fall is slow and the rise is not.
      ═══════════════════════════════════════════════════════════════════ */
 
-  /* ─── The aquifer, shared ──────────────────────────────────────────
-     One physical model, drawn in two places: the section on the profile
-     page and the monitoring well in the rail. They read the same clock
-     and the same solution, so they can never tell different stories. */
+  /* ─── The aquifer ──────────────────────────────────────────────────
+     Kept as its own object rather than folded into railWell(): the
+     geometry and the seasonal clock are the physics, and the drawing
+     that reads them is a separate concern. */
   const AQUIFER = {
     L: 900,           /* width between the fixed heads, m */
     H1: 9.2,          /* head at the left boundary, m */
@@ -2160,7 +2115,7 @@
      obvious choice and is exactly the wrong one: it is a fixed-head
      boundary, so by definition its level never moves.
 
-     Water level is h(L/2) on the shared season, which swings roughly
+     Water level is h(L/2) on the seasonal clock, which swings roughly
      10.5 m to 14.2 m against a 22 m column — about a sixth of the rail's
      height. Above it, recharge percolates down and quickens with the
      monsoon; below it the ground is saturated. Everything is drawn at
@@ -2307,176 +2262,6 @@
     document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
 
     render();
-  })();
-
-  (function crossSection(){
-    const host = document.getElementById("xs");
-    if(!host) return;
-
-    const W = 900, H = 268;
-    const BASE_Y = 236;         /* impermeable base, in svg units */
-    const M = 7.6;              /* vertical scale: svg units per metre */
-    const {L, H1, H2, K, SURFACE} = AQUIFER;
-    /* Bound, not destructured: AQUIFER.headAt reads its geometry off
-       `this`, so a bare reference would lose it and throw. */
-    const headAt = (x, NK) => AQUIFER.headAt(x, NK);
-    const NK_PEAK = SEASON.NK_PEAK, NK_MIN = SEASON.NK_MIN;
-
-    /* Six monitored wells. `depth` is how far the bore reaches below the
-       land surface, in metres — a shallow dug well goes dry first, which
-       is the thing the readout is there to show. */
-    const WELLS = [
-      {x:0.13, depth:12.5}, {x:0.28, depth:14.0}, {x:0.42, depth:11.0},
-      {x:0.58, depth:15.0}, {x:0.73, depth:12.0}, {x:0.88, depth:14.5},
-    ];
-    const DAM_X = 0.42;
-
-    /* Land surface: a gentle undulation so the section reads as ground
-       rather than as a chart axis. Deterministic, not random. */
-    const surfaceAt = xr =>
-      SURFACE + 0.85 * Math.sin(xr * 5.1 + 0.7) + 0.5 * Math.sin(xr * 11.3 + 2.1);
-
-    const yOf = h => BASE_Y - h * M;
-    const xOf = xr => xr * W;
-
-    /* Static furniture: drawn once. Only the water table, the well
-       markers and the readout change per frame. */
-    const surfacePts = [];
-    for(let i = 0; i <= 60; i++){
-      const xr = i / 60;
-      surfacePts.push(`${xOf(xr).toFixed(1)},${yOf(surfaceAt(xr)).toFixed(1)}`);
-    }
-    const surfaceD = "M" + surfacePts.join(" L");
-
-    host.innerHTML = `
-      <svg viewBox="0 0 ${W} ${H}" role="img"
-           aria-label="Cross-section through an unconfined aquifer. The water table, solved from the Dupuit–Forchheimer equation, rises into a mound between two boundaries as monsoon recharge increases, then recedes.">
-        <path class="xs-soil" d="${surfaceD} L${W},${BASE_Y} L0,${BASE_Y} Z"/>
-        <path class="xs-sat" id="xs-sat-fill" d=""/>
-        <rect class="xs-rock" x="0" y="${BASE_Y}" width="${W}" height="${H - BASE_Y}"/>
-        <line class="xs-rockline" x1="0" y1="${BASE_Y}" x2="${W}" y2="${BASE_Y}"/>
-        <path class="xs-surface" d="${surfaceD}"/>
-        <g id="xs-rain"></g>
-        <path class="xs-wt-ghost" id="xs-ghost" d=""/>
-        <path class="xs-wt" id="xs-wt" d=""/>
-        <g id="xs-wellgroup"></g>
-        <g id="xs-dam"></g>
-        <text class="xs-lbl" x="4" y="${BASE_Y + 15}">Impermeable base</text>
-        <text class="xs-lbl" x="${W - 4}" y="${BASE_Y + 15}" text-anchor="end">Land surface &#8212; hardrock watershed</text>
-      </svg>`;
-
-    const wtEl    = host.querySelector("#xs-wt");
-    const ghostEl = host.querySelector("#xs-ghost");
-    const satEl   = host.querySelector("#xs-sat-fill");
-    const wellsEl = host.querySelector("#xs-wellgroup");
-    const damEl   = host.querySelector("#xs-dam");
-    const rainEl  = host.querySelector("#xs-rain");
-    const seasonEl   = document.getElementById("xs-season");
-    const clockEl    = document.getElementById("xs-clock");
-    const outHead    = document.getElementById("xs-head");
-    const outWells   = document.getElementById("xs-wells");
-    const outRech    = document.getElementById("xs-recharge");
-
-    /* The check dam sits on the surface at DAM_X — the intervention the
-       whole programme is about. */
-    (function drawDam(){
-      const sx = xOf(DAM_X), sy = yOf(surfaceAt(DAM_X));
-      damEl.innerHTML = `
-        <path class="xs-dam" d="M${sx - 13},${sy} L${sx - 5},${sy - 13} L${sx + 5},${sy - 13} L${sx + 13},${sy} Z"/>
-        <text class="xs-lbl" x="${sx}" y="${sy - 19}" text-anchor="middle" style="fill:var(--ochre)">Check dam</text>`;
-    })();
-
-    /* Rain ticks above the surface, their opacity following N. */
-    rainEl.innerHTML = Array.from({length:26}, (_, i) => {
-      const xr = (i + 0.5) / 26, sx = xOf(xr), sy = yOf(surfaceAt(xr));
-      return `<line class="xs-rain" x1="${sx}" y1="${(sy - 30).toFixed(1)}" x2="${(sx - 3).toFixed(1)}" y2="${(sy - 17).toFixed(1)}"/>`;
-    }).join("");
-
-    /* Peak-season water table, drawn once as a dashed ghost so the fall
-       is legible even when you arrive mid-recession. */
-    const pathFor = NK => {
-      let d = "";
-      for(let i = 0; i <= 90; i++){
-        const x = (i / 90) * L;
-        d += (i ? " L" : "M") + xOf(x / L).toFixed(1) + "," + yOf(headAt(x, NK)).toFixed(1);
-      }
-      return d;
-    };
-    ghostEl.setAttribute("d", pathFor(NK_PEAK));
-
-    const SEASONS = [
-      {upto:0.10, name:"Monsoon &#8212; recharge rising"},
-      {upto:0.26, name:"Post-monsoon &#8212; mound at its peak"},
-      {upto:0.62, name:"Recession &#8212; the mound draining"},
-      {upto:1.01, name:"Pre-monsoon &#8212; the driest the wells get"},
-    ];
-
-    function draw(phase){
-      const NK = SEASON.nkAt(phase);
-
-      const d = pathFor(NK);
-      wtEl.setAttribute("d", d);
-      satEl.setAttribute("d", `${d} L${W},${BASE_Y} L0,${BASE_Y} Z`);
-
-      /* The groundwater divide, where dh/dx = 0. Because d²(h²)/dx² is
-         -2N/K and therefore negative, the profile is concave in h² and
-         this stationary point is the maximum. Clamped into the domain:
-         with a strong boundary gradient and weak recharge the divide
-         leaves the section entirely, and the clamp then reports the
-         peak head *within* the section — which is what the readout is
-         labelled, so it stays true in both regimes. */
-      const xd = Math.min(L, Math.max(0, L / 2 + K * (H2 * H2 - H1 * H1) / (2 * (NK * K) * L)));
-      const hd = headAt(xd, NK);
-
-      let wet = 0;
-      wellsEl.innerHTML = WELLS.map(w => {
-        const sx = xOf(w.x);
-        const surf = surfaceAt(w.x);
-        const bottom = surf - w.depth;          /* well bottom, m above base */
-        const wt = headAt(w.x * L, NK);         /* water table at the well */
-        const hasWater = wt > bottom;
-        if(hasWater) wet++;
-        const yTop = yOf(surf), yBot = yOf(bottom);
-        const marker = hasWater
-          ? `<circle class="xs-well-water" cx="${sx}" cy="${yOf(wt).toFixed(1)}" r="3.4"/>`
-          : `<path class="xs-well-dry" d="M${sx - 3.6},${(yBot - 3.6).toFixed(1)} l7.2,7.2 M${sx + 3.6},${(yBot - 3.6).toFixed(1)} l-7.2,7.2"/>`;
-        return `<line class="xs-well" x1="${sx}" y1="${yTop.toFixed(1)}" x2="${sx}" y2="${yBot.toFixed(1)}"/>${marker}`;
-      }).join("");
-
-      rainEl.style.opacity = ((NK - NK_MIN) / (NK_PEAK - NK_MIN)).toFixed(3);
-
-      outHead.textContent = hd.toFixed(1) + " m";
-      outWells.textContent = wet + " of " + WELLS.length;
-      outWells.className = wet < WELLS.length ? "dry" : "";
-      outRech.textContent = (NK * K).toFixed(2);
-      seasonEl.innerHTML = (SEASONS.find(s => phase < s.upto) || SEASONS[3]).name;
-      clockEl.textContent = "Month " + String(Math.floor(phase * 12) + 1).padStart(2, "0") + " of 12";
-    }
-
-    const still = matchMedia("(prefers-reduced-motion:reduce)");
-
-    if(still.matches){
-      draw(SEASON.STILL);   /* post-monsoon peak: the most informative frame */
-      return;
-    }
-
-    /* Phase comes from absolute time rather than from a first-frame
-       origin, which is what keeps this drawing and the rail's monitoring
-       well on the same season without either knowing about the other. */
-    let raf = 0, running = false;
-    function tick(ts){
-      draw(SEASON.phaseAt(ts));
-      raf = requestAnimationFrame(tick);
-    }
-    function start(){ if(!running){ running = true; raf = requestAnimationFrame(tick); } }
-    function stop(){ running = false; cancelAnimationFrame(raf); }
-
-    draw(SEASON.phaseAt(performance.now()));
-    start();
-
-    /* requestAnimationFrame does not run in a hidden tab anyway; stopping
-       explicitly releases the loop instead of leaving it queued. */
-    document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
   })();
   </script>
 </body>

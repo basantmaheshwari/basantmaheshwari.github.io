@@ -12,23 +12,30 @@
 # Saving commits JSON to `main`. The publish workflow then runs
 # scripts/build.mjs to copy the content into index.html and deploys it.
 #
-# `base_url` points at the service that signs editors in with GitHub. It must
-# exist before saving will work — see MAINTAINING.md, "Setting up the editor".
+# Sign in with a GitHub fine-grained personal access token (Contents:
+# read/write, this repository only) — see MAINTAINING.md, "Setting up the
+# editor".
 
 backend:
   name: github
   repo: basantmaheshwari/basantmaheshwari.github.io
   branch: main
-  # Sign-in goes through a small authentication service, because a static
-  # page cannot hold an OAuth secret. This one is an existing shared worker
-  # and is NOT owned by this account — if it is ever withdrawn, sign-in here
-  # stops with it. Two ways out, neither urgent:
-  #   * Sveltia's personal access token button needs no worker at all.
-  #   * Or deploy sveltia-cms-auth on Basant's own Cloudflare account and
-  #     point base_url at that instead.
-  # If "Sign in with GitHub" refuses this origin, add
-  # https://basantmaheshwari.github.io to the worker's ALLOWED_ORIGINS.
-  base_url: https://sveltia-cms-auth.marvi-groundwater.workers.dev
+  # Sign-in used to route through a shared Cloudflare Worker at
+  # sveltia-cms-auth.marvi-groundwater.workers.dev, which this account never
+  # owned. That worker has since been deleted — every path on it now answers
+  # 404 with Cloudflare error 1042 — so "Sign in with GitHub" could not
+  # complete, which is what made the editor look broken.
+  #
+  # A personal access token needs no worker and nothing to keep running, so
+  # that is the path now. auth_methods is not decoration: with neither
+  # base_url nor auth_methods, Sveltia falls back to Netlify's hosted OAuth
+  # client, which cannot work for a site published on GitHub Pages. Pinning
+  # it to [token] removes that path and leaves one button that works.
+  #
+  # GitHub caps fine-grained tokens at about a year. When one expires the
+  # editor simply stops saving, with no warning: issue a new one at
+  # github.com/settings/personal-access-tokens and sign in again.
+  auth_methods: [token]
   commit_messages:
     create: 'Edit {{collection}} in the website editor'
     update: 'Edit {{collection}} in the website editor'
